@@ -57,9 +57,6 @@ class Convex:
 #--------------------------------------------------------------------------------------------------------------- m2
 #
 
-def decide_corner(m1:HalfPlane, m2:HalfPlane,objective:TwoDObjective) -> Point:
-    raise Exception("Not implemented yet")
-
 def calculate_v(halfPlane, added_constraints, objective):
     raise Exception("Not implemented yet")
 
