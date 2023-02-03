@@ -13,5 +13,7 @@ def main():
     print(p2.x, p2.y)
     print(p3.x, p3.y)
 
+    
+
 if __name__ == "__main__":
     main()

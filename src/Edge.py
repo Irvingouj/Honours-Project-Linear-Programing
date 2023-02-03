@@ -37,9 +37,9 @@ class Edge:
     
     def update_range(self, point:Point) -> None:
         # update the range of the edge to include the point
-        if point.x < self.range[0]:
+        if point.x > self.range[0]:
             self.range = (point.x, self.range[1])
-        elif point.x > self.range[1]:
+        elif point.x < self.range[1]:
             self.range = (self.range[0], point.x)
         else:
             return
@@ -48,3 +48,7 @@ class Edge:
         # return the end points of the edge
         return (Point(self.range[0], (self.c - self.a * self.range[0])/self.b), Point(self.range[1], (self.c - self.a * self.range[1])/self.b))
 
+    def range(self) -> Tuple[float,float]:
+        return self.range
+    def __str__(self) -> str:
+        return self.end_points()[0].__str__() + " " + self.end_points()[1].__str__() + " "+ str(self.a)+"x+" +str(self.b)+ "y<="+str(self.c)
