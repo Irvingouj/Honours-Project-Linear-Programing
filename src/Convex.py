@@ -1,11 +1,14 @@
 from Edge import Edge
 from typing import List, Set
+from ObjectiveFunction import MaxOrMin, ObjectiveFunction
 from Point import Point
 
 
 class Convex:
     def __init__(self,edges:List[Edge]) -> None:
-        self.edges = edges
+        self.edges:List[Edge] = []
+        for edge in edges:
+            self.add_edge(edge)
 
     def is_inside(self, point:Point) -> bool:
         for edge in self.edges:
@@ -14,21 +17,13 @@ class Convex:
         return True
 
     def add_edge(self, new_edge:Edge) -> None:
-        #calculate the intersection of the new edge with all the other edges
-        #if the intersection is on the edge, then update the range of the edges to include the intersection
         toRemove = []
-        print("new edge: ", new_edge)
         for edge in self.edges:
-            intersection = new_edge.find_intersection(edge)
-            print("intersection: ", intersection , " edge1: [", edge , "] edge2: [", new_edge, "]" )
-            if intersection is None:
-                endpoints = edge.end_points()
-                # if niether end point is in the area, then the edge is not in the area, remove it
-                if not self.is_inside(endpoints[0]) and not self.is_inside(endpoints[1]):
+            if edge.is_intersect_with(new_edge):
+                new_edge.intersect_and_update_range(edge)
+            else:
+                if not new_edge.is_in_area(edge.end_points()[0]) and not new_edge.is_in_area(edge.end_points()[1]):
                     toRemove.append(edge)
-            else:#update the range of the edges
-                edge.update_range(intersection)
-                new_edge.update_range(intersection)
 
         # remove the edges that are not in the area
         for edge in toRemove:
@@ -46,4 +41,42 @@ class Convex:
     def get_edges(self) -> List[Edge]:
         return self.edges
 
+    def intersect_two_edges(edge1:Edge, edge2:Edge) -> Point:
+        point = edge1.find_intersection(edge2)
+        if point is None:
+            return None
+        else:
+            edge1.find_intersection(edge2)
+            return point
+    
+    def find_optimal(self,obj:ObjectiveFunction) -> List[Point]:
+        # find the optimal point in the convex
+        # return a list of points
 
+        optimal_values = []
+        current_optimal = None
+        for edge in self.edges:
+            point = edge.end_points()[0]
+            print(current_optimal)
+            if current_optimal is None:
+                current_optimal = point
+                optimal_values.append(current_optimal)
+            else:
+                if obj.maxOrMin == MaxOrMin.MAX:
+                    if obj.value(point) > obj.value(current_optimal):
+                        current_optimal = point
+                        optimal_values.clear()
+                        optimal_values.append(current_optimal)
+                    elif obj.value(point) == obj.value(current_optimal):
+                        optimal_values.append(current_optimal)
+                else:
+                    if obj.value(point) < obj.value(current_optimal):
+                        current_optimal = point
+                        optimal_values.clear()
+                        optimal_values.append(current_optimal)
+                    elif obj.value(point) == obj.value(current_optimal):
+                        optimal_values.append(current_optimal)
+        
+        print("optimal_values" + str(optimal_values))
+        return optimal_values
+        

@@ -3,15 +3,24 @@ from Point import Point
 from Line import Line
 
 def main():
-    edge1 = Edge(line=Line(1,2,3), range= (-10, 10), direction= True)
-    edge2 = Edge(line=Line(-1, 2, 3), range= (-10, 10),direction= True)
-    edge3 = Edge(line=Line(0.1, -2, 3), range= (-10, 10),direction= False)
-    p1 = edge1.find_intersection(edge2)
-    p2 = edge1.find_intersection(edge3)
-    p3 = edge2.find_intersection(edge3)
-    print(p1.x, p1.y)
-    print(p2.x, p2.y)
-    print(p3.x, p3.y)
+    edge1 = Edge(line=Line(1,2,3))
+    edge2 = Edge(line=Line(-1, 2, 3))
+    edge3 = Edge(line=Line(1, -2, 3))
+    edge4 = Edge(line=Line(-1, -2, 3))
+    special_edge = Edge(line=Line(-1, -2, 6))
+    
+    ## intersect all edges between each other
+    edges  = [special_edge,edge1, edge2, edge3, edge4]
+    for edgei in edges:
+        for edgej in edges:
+            edgei.intersect_and_update_range(edgej)
+
+
+
+    #print all the edges
+    for edge in edges:
+        print(edge)
+
 
     
 
