@@ -1,6 +1,6 @@
-from Edge import Edge
-from Point import Point
-from Line import Line
+from Classes.Edge import Edge
+from Classes.Point import Point
+from Classes.Line import Line
 
 def main():
     edge1 = Edge(line=Line(1,2,3))

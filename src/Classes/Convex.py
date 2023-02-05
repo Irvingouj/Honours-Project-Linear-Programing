@@ -1,16 +1,31 @@
 from Classes.Edge import Edge
 from Classes.Point import Point
 from Classes.ObjectiveFunction import MaxOrMin, ObjectiveFunction
+from Classes.Line import Line
 from typing import List, Set
+
+max = 1.8*10308;
+edge_up = Edge(line=Line(0,1,max))
+edge_down = Edge(line=Line(0,-1,max))
+edge_left = Edge(line=Line(-1,0.00001,max))
+edge_right = Edge(line=Line(1,0.00001,max))
 
 
 class Convex:
-    def __init__(self,edges:List[Edge]) -> None:
+    def __init__(self,edges:List[Edge],bounded:str = "above") -> None:
         self.edges:List[Edge] = []
+        # self.add_edge(edge_left)
+        # self.add_edge(edge_right)
+        # if bounded == "above":
+        #     self.add_edge(edge_up)
+        # if bounded == "below":
+        #     self.add_edge(edge_down)
         for edge in edges:
             self.add_edge(edge)
 
     def is_inside(self, point:Point) -> bool:
+        if len(self.edges) == 0:
+            return True
         for edge in self.edges:
             if not edge.is_in_area(point):
                 return False
@@ -57,7 +72,7 @@ class Convex:
         current_optimal = None
         for edge in self.edges:
             point = edge.end_points()[0]
-            print(current_optimal)
+            print("points :",point)
             if current_optimal is None:
                 current_optimal = point
                 optimal_values.append(current_optimal)
@@ -77,6 +92,5 @@ class Convex:
                     elif obj.value(point) == obj.value(current_optimal):
                         optimal_values.append(current_optimal)
         
-        print("optimal_values" + str(optimal_values))
         return optimal_values
         

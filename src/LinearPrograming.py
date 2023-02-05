@@ -1,35 +1,38 @@
 from io import TextIOWrapper
 from typing import List, Tuple
-from Classes.Constrains import Constrains
+
+from Classes.Constraints import Constraints
 from Classes.ObjectiveFunction import ObjectiveFunction
 from Classes.Convex import Convex
+from Classes.ConvexSolver import ConvexSolver
 import os
+
+from Classes.Point import Point
 
 def main():
     dirname = os.path.dirname(__file__)
     file_path = os.path.join(dirname, "LinearPrograms","bounded_problem1")
     file = open(file_path, 'r')
+    point = solve_with_convex(file)
+    print("the maximum point is ",point)
+    
+def solve_with_convex(file:TextIOWrapper) -> Point:
     program = parse_file(file)
-    c:Convex = Convex([])
-    for constrains in program[1]:
-        c.add_edge(constrains.to_edge())
-    edges = c.get_edges()
-
-    for edge in edges:
-        print(edge)
-    print(c.find_optimal(program[0]))
+    solver = ConvexSolver()
+    return solver.solve(program[0], program[1])
+    
     
 
 
-def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constrains]]:
+def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constraints]]:
     lines = file.readlines()
     ## remove \n at the end of the line
     lines = [line.strip() for line in lines]
     objective_function = ObjectiveFunction.from_string(lines[0])
-    constrains = []
+    Constraints_list = []
     for line in lines[1:]:
-        constrains.append(Constrains.from_string(line))
-    return objective_function, constrains
+        Constraints_list.append(Constraints.from_string(line))
+    return objective_function, Constraints_list
     
 
 

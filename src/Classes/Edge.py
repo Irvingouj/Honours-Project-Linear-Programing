@@ -84,7 +84,7 @@ class Edge:
             return EdgeDirection.FACING_LEFT
         else:
             return EdgeDirection.FACING_RIGHT
-
+    
     def __str__(self) -> str:
         range:str = "range = [" + str(self.range[0]) + " " + str(self.range[1]) + "]"
         endPoints:str = "[left:" + self.end_points()[0].__str__() + " , right = " + self.end_points()[1].__str__() + "]"
