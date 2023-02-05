@@ -5,7 +5,7 @@ from Classes.Convex import Convex
 from Classes.Point import Point
 from Classes.Solver import Solver
 from Classes.OneDConstraint import OneDConstraint
-from Classes.oneDLinearProgram import solve_1d_linear_program
+from Classes import OneDLinearProgram
 
 
 def corner(obj:ObjectiveFunction)->Point:
@@ -33,8 +33,11 @@ class ConvexSolver(Solver):
         v = corner(obj)
         for idx,c in enumerate(cons):
             if not v.is_inside(c):
-                one_d_constraints = to_1d_constraint(cons[:idx])
-                x = solve_1d_linear_program(one_d_constraints,obj.a >= 0);
+                one_d_constraints = to_1d_constraint(cons[:idx+1])
+                x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,obj.a >= 0);
                 v = c.find_point_with_x(x)
+            else:
+                # placeholder, not doing anything
+                continue
         return v
         

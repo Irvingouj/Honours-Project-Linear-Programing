@@ -8,7 +8,11 @@ class OneDConstraint:
     
     @classmethod
     def from_constraint(cls, constraint:Constraints) -> 'OneDConstraint':
-        cls(constraint.a, constraint.c)
+       return cls(constraint.a, constraint.c)
     
+    # which side of the constraint is facing, left is true, right is false
     def direction(self) -> bool:
         return self.a > 0
+
+    def value(self) -> float:
+        return self.c/self.a

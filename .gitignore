@@ -1,2 +1,4 @@
 #ignore pychache
 *.pyc
+
+__pycache__

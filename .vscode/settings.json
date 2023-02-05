@@ -1,7 +1,8 @@
 {
     "python.analysis.extraPaths": [
         "./src",
-        "./src/Classes"
+        "./src/Classes",
+        "./src"
     ],
     "python.formatting.provider": "black"
 }
