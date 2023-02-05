@@ -9,9 +9,13 @@ import os
 
 from Classes.Point import Point
 
+bounded_prefix = "bounded_problem"
+infeasible_prefix = "infeasible_problem"
+unbounded_prefix = "unbounded_problem"
+
 def main():
     dirname = os.path.dirname(__file__)
-    file_path = os.path.join(dirname, "LinearPrograms","bounded_problem1")
+    file_path = os.path.join(dirname, "LinearPrograms",infeasible_prefix + "1")
     file = open(file_path, 'r')
     point = solve_with_convex(file)
     print("the maximum point is ",point)
@@ -28,6 +32,7 @@ def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constraints]]
     lines = file.readlines()
     ## remove \n at the end of the line
     lines = [line.strip() for line in lines]
+    lines = [line for line in lines if len(line) > 0]
     objective_function = ObjectiveFunction.from_string(lines[0])
     Constraints_list = []
     for line in lines[1:]:

@@ -20,12 +20,15 @@ def corner(obj:ObjectiveFunction)->Point:
             res = p;
     return res
 
-def to_1d_constraint(cons:List[Constraints])->List[Constraints]:
+def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[Constraints]:
     # convert the 2d constraint to 1d constraint
-    res = []
+    one_d = []
     for c in cons:
-        res.append(OneDConstraint.from_constraint(c))
-    return res
+        p = curr.find_intersection(c)
+        if p is not None:
+            one_d.append(OneDConstraint(c.a,p.x))
+
+    return one_d
 
 
 class ConvexSolver(Solver):
@@ -33,7 +36,7 @@ class ConvexSolver(Solver):
         v = corner(obj)
         for idx,c in enumerate(cons):
             if not v.is_inside(c):
-                one_d_constraints = to_1d_constraint(cons[:idx+1])
+                one_d_constraints = to_1d_constraint(c,cons[:idx])
                 x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,obj.a >= 0);
                 v = c.find_point_with_x(x)
             else:

@@ -24,7 +24,7 @@ class Constraints:
     @classmethod
     def from_string(cls, string:str) -> 'Constraints':
         pattern = re.compile(r'\s?[+-]?([0-9]*[.])?[0-9]+x\s?\+\s?[+-]?([0-9]*[.])?[0-9]+y\s?(<=|>=)\s?[+-]?([0-9]*[.])?[0-9]+')
-        if pattern.match(string) is None:
+        if  pattern.match(string) is None:
             raise ValueError('Invalid string : ' + string + ' does not match pattern')
         a_str = re.search(r'[+-]?([0-9]*[.])?[0-9]+x', string).group(0).split('x')[0]
         b_str = re.search(r'[+-]?([0-9]*[.])?[0-9]+y', string).group(0).split('y')[0]
@@ -57,4 +57,7 @@ class Constraints:
 
     def find_point_with_x(self, x:float) -> Point:
         return Point(x, (self.c - self.a * x) / self.b)
+
+    def __str__(self) -> str:
+        return str(self.a) + 'x + ' + str(self.b) + 'y <= ' + str(self.c)
 
