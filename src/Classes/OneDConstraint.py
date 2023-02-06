@@ -16,3 +16,6 @@ class OneDConstraint:
 
     def value(self) -> float:
         return self.c/self.a
+    
+    def __str__(self):
+        return str(self.a) + 'x <= ' + str(self.c)

@@ -30,7 +30,7 @@ class Constraints:
         b_str = re.search(r'[+-]?([0-9]*[.])?[0-9]+y', string).group(0).split('y')[0]
         a = float(a_str)
         b = float(b_str)
-        lessOrGreater = GreaterOrLess.GREATER if string.split('y')[1].split('=')[0].strip() == '<=' else GreaterOrLess.LESS
+        lessOrGreater = GreaterOrLess.GREATER if string.find('>=') != -1 else GreaterOrLess.LESS
         c = float(string.split('=')[1])
         return cls(a,b,lessOrGreater,c)
 

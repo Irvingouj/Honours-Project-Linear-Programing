@@ -15,7 +15,7 @@ unbounded_prefix = "unbounded_problem"
 
 def main():
     dirname = os.path.dirname(__file__)
-    file_path = os.path.join(dirname, "LinearPrograms",infeasible_prefix + "1")
+    file_path = os.path.join(dirname, "LinearPrograms",bounded_prefix + "3")
     file = open(file_path, 'r')
     point = solve_with_convex(file)
     print("the maximum point is ",point)
