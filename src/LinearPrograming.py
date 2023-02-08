@@ -32,7 +32,7 @@ def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constraints]]
     lines = file.readlines()
     ## remove \n at the end of the line
     lines = [line.strip() for line in lines]
-    lines = [line for line in lines if len(line) > 0]
+    lines = [line for line in lines if len(line) > 0 and line[0] != '#' ]
     objective_function = ObjectiveFunction.from_string(lines[0])
     Constraints_list = []
     for line in lines[1:]:
