@@ -21,8 +21,8 @@ def main():
     program = parse_file(file);
     point = solve_with_convex(program)
     point2 = solve_with_os_tool(program)
-    print("the maximum point is ",point)
-    print("the maximum point is ",point2)
+    print("the maximum point is: Convex solver",point)
+    print("the maximum point is: OS Solver ",point2)
     
 def solve_with_convex(program) -> Point:
     solver = ConvexSolver()

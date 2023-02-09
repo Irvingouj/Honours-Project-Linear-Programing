@@ -22,9 +22,6 @@ def corner(obj:ObjectiveFunction)->Point:
 
 def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstraint]:
 
-    if len(cons) == 0:
-        return [OneDConstraint(curr.a ,curr.c)]
-    
     # if the constrain is vertical, we rotate all the constraints by 90 degree
     if curr.is_vertical():
         cons = [c.rotate() for c in cons]
@@ -45,10 +42,13 @@ def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstrai
 
     return one_d
 
+M = 18500
 
 class ConvexSolver(Solver):
     def solve(self, obj:ObjectiveFunction, cons:List[Constraints]) -> Point:
-        v = corner(obj)
+        v = corner(obj);
+        cons = [self._m1(obj),self._m2(obj)] + cons
+        
         for idx,c in enumerate(cons):
             if not v.is_inside(c):
                 one_d_constraints = to_1d_constraint(c,cons[:idx])
@@ -58,4 +58,19 @@ class ConvexSolver(Solver):
                 # placeholder, not doing anything
                 continue
         return v
+    
+
+
+    def _m1(self,obj:ObjectiveFunction)->Constraints:
+        if (obj.a > 0):
+            return Constraints(1,0,M)
+        else:
+            return Constraints(-1,0,M)
+        
+    def _m2(self,obj:ObjectiveFunction)->Constraints:
+        if (obj.b > 0):
+            return Constraints(0,1,M)
+        else:
+            return Constraints(0,-1,M)
+        
         
