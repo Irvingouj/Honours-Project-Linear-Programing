@@ -21,6 +21,12 @@ def corner(obj:ObjectiveFunction)->Point:
     return res
 
 def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstraint]:
+    
+    # if the constrain is vertical, we rotate all the constraints by 90 degree
+    if curr.is_vertical():
+        cons = [c.rotate() for c in cons]
+        curr = curr.rotate()
+
     # convert the 2d constraint to 1d constraint
     one_d = []
     for c in cons:
@@ -38,7 +44,7 @@ class ConvexSolver(Solver):
             if not v.is_inside(c):
                 one_d_constraints = to_1d_constraint(c,cons[:idx])
                 x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,obj.a <= 0);
-                v = c.find_point_with_x(x)
+                v = c.find_point_with_x(x) if not c.is_vertical() else c.find_point_with_y(x)
             else:
                 # placeholder, not doing anything
                 continue

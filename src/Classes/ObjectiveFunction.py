@@ -35,3 +35,6 @@ class ObjectiveFunction:
     
     def __str__(self) -> str:
         return ('max' if self.maxOrMin == MaxOrMin.MAX else 'min') + ' ' + str(self.a) + 'x + ' + str(self.b) + 'y'
+
+    def to_or_string(self) -> str:
+        return  str(self.a) + '*x + ' + str(self.b) + '*y'

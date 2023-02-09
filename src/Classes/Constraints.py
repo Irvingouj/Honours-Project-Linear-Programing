@@ -57,6 +57,18 @@ class Constraints:
 
     def find_point_with_x(self, x:float) -> Point:
         return Point(x, (self.c - self.a * x) / self.b)
+    
+    def find_point_with_y(self, y:float) -> Point:
+        return Point((self.c - self.b * y) / self.a, y)
+    
+    def is_vertical(self) -> bool:
+        return self.b == 0
+
+    def rotate(self) -> 'Constraints':
+        return Constraints(self.b, -self.a, self.c)
+    
+    def to_or_string(self) -> str:
+        return str(self.a) + '*x + ' + str(self.b) + '*y <= ' + str(self.c)
 
     def __str__(self) -> str:
         return str(self.a) + 'x + ' + str(self.b) + 'y <= ' + str(self.c)

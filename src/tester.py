@@ -5,7 +5,6 @@ from Classes.Constraints import Constraints
 from Classes.ObjectiveFunction import ObjectiveFunction
 from Classes.Convex import Convex
 from Classes.ConvexSolver import ConvexSolver
-from Classes.OsToolSolver import OsToolSolver
 import os
 
 from Classes.Point import Point
@@ -16,21 +15,17 @@ unbounded_prefix = "unbounded_problem"
 
 def main():
     dirname = os.path.dirname(__file__)
-    file_path = os.path.join(dirname, "LinearPrograms",bounded_prefix + "1")
+    file_path = os.path.join(dirname, "LinearPrograms",bounded_prefix + "3")
     file = open(file_path, 'r')
-    program = parse_file(file);
-    point = solve_with_convex(program)
-    point2 = solve_with_os_tool(program)
+    point = solve_with_convex(file)
     print("the maximum point is ",point)
-    print("the maximum point is ",point2)
     
-def solve_with_convex(program) -> Point:
+def solve_with_convex(file:TextIOWrapper) -> Point:
+    program = parse_file(file)
     solver = ConvexSolver()
     return solver.solve(program[0], program[1])
     
-def solve_with_os_tool(program):
-    solver = OsToolSolver()
-    return solver.solve(program[0], program[1]) 
+    
 
 
 def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constraints]]:
