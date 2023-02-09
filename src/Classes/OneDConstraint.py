@@ -1,4 +1,5 @@
 from Classes.Constraints import Constraints
+from Classes.Point import Point
 
 class OneDConstraint:
     # ax <= c
@@ -7,7 +8,7 @@ class OneDConstraint:
         self.c = c
     
     @classmethod
-    def from_constraint(cls, constraint:Constraints) -> 'OneDConstraint':
+    def from_constraint(cls, constraint:Constraints,p:Point) -> 'OneDConstraint':
        return cls(constraint.a, constraint.c)
     
     # which side of the constraint is facing, left is true, right is false

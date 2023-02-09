@@ -13,14 +13,17 @@ def corner(obj:ObjectiveFunction)->Point:
     points = [Point(max,max),Point(max,-max),Point(-max,max),Point(-max,-max)]
     #find the point that minimize obj
     res = None;
-    val = float('inf')
+    val = float('-inf')
     for p in points:
-        if obj.value(p) < val:
+        if obj.value(p) > val:
             val = obj.value(p)
             res = p;
     return res
 
 def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstraint]:
+
+    if len(cons) == 0:
+        return [OneDConstraint(curr.a ,curr.c)]
     
     # if the constrain is vertical, we rotate all the constraints by 90 degree
     if curr.is_vertical():
@@ -32,7 +35,13 @@ def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstrai
     for c in cons:
         p = curr.find_intersection(c)
         if p is not None:
-            one_d.append(OneDConstraint(1,p.x))
+            # TODO: figure out the direction, how do I know which side of the constraint is facing
+            p1 = curr.find_point_with_x(p.x+1)
+            if(c.is_inside(p1)):
+                one_d.append(OneDConstraint(-1,-p.x))
+            else:
+                one_d.append(OneDConstraint(1,p.x))
+
 
     return one_d
 
@@ -43,8 +52,8 @@ class ConvexSolver(Solver):
         for idx,c in enumerate(cons):
             if not v.is_inside(c):
                 one_d_constraints = to_1d_constraint(c,cons[:idx])
-                x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,obj.a <= 0);
-                v = c.find_point_with_x(x) if not c.is_vertical() else c.find_point_with_y(x)
+                x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,objective=obj.get_direction_for_x_axis());
+                v = c.find_point_with_x(x)
             else:
                 # placeholder, not doing anything
                 continue

@@ -33,6 +33,9 @@ class ObjectiveFunction:
         b = float(b_str)
         return cls(a,b,maxOrMin)
     
+    def get_direction_for_x_axis(self) -> bool:
+        return self.a / self.b > 0
+    
     def __str__(self) -> str:
         return ('max' if self.maxOrMin == MaxOrMin.MAX else 'min') + ' ' + str(self.a) + 'x + ' + str(self.b) + 'y'
 

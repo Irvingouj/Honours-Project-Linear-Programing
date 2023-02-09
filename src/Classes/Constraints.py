@@ -69,6 +69,14 @@ class Constraints:
     
     def to_or_string(self) -> str:
         return str(self.a) + '*x + ' + str(self.b) + '*y <= ' + str(self.c)
+    #returns 1 or -1 or 0 if facing up or down
+    def facing_direction_on_x_axis(self, ) -> int:
+        if self.a == 0:
+            return 0
+        if self.c > 0:
+            return 1 if self.a > 0 else -1
+        else:
+            return -1 if self.a > 0 else 1
 
     def __str__(self) -> str:
         return str(self.a) + 'x + ' + str(self.b) + 'y <= ' + str(self.c)
