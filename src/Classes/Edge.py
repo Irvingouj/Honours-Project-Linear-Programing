@@ -77,6 +77,9 @@ class Edge:
             self.range = (x, self.range[1])
         else:
             self.range = (self.range[0], x)
+
+    def to_line(self) -> Line:
+        return Line(self.a, self.b, self.c)
        
 
     def facing_direction(self) -> EdgeDirection:

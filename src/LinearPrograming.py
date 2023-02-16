@@ -1,6 +1,6 @@
 from io import TextIOWrapper
 from typing import List, Tuple
-
+from termcolor import colored
 from Classes.Constraints import Constraints
 from Classes.ObjectiveFunction import ObjectiveFunction
 from Classes.Convex import Convex
@@ -16,7 +16,7 @@ unbounded_prefix = "unbounded_problem"
 
 def main():
     dirname = os.path.dirname(__file__)
-    file_path = os.path.join(dirname, "LinearPrograms",bounded_prefix + "1")
+    file_path = os.path.join(dirname, "LinearPrograms",bounded_prefix + "9")
     file = open(file_path, 'r')
     program = parse_file(file);
     point = solve_with_convex(program)
@@ -24,6 +24,37 @@ def main():
     print("the maximum point is: Convex solver",point)
     print("the maximum point is: OS Solver ",point2)
     
+def test_all():
+    dirname = os.path.dirname(__file__)
+    file_path = os.path.join(dirname, "LinearPrograms")
+    for file in os.listdir(file_path):
+        if file.startswith(bounded_prefix):
+            print("testing file: ", file)
+            test_file(file)
+
+        if file.startswith(infeasible_prefix):
+            print("testing file: ", file)
+            test_file(file)
+
+def test_file(file_name):
+    dirname = os.path.dirname(__file__)
+    file_path = os.path.join(dirname, "LinearPrograms",file_name)
+    file = open(file_path, 'r')
+    program = parse_file(file);
+    point2 = solve_with_os_tool(program)
+    try:
+        point = solve_with_convex(program)
+    except:
+        if point2 is None:
+            print("the problem is infeasible and the solver found it")
+        else:
+            print(colored("the problem is feasible but solution gives as infeasible", "red"))
+    else:
+        print("the maximum point is: Convex solver",point)
+        print("the maximum point is: OS Solver ",point2)
+        if point != point2:
+            print(colored("the two solvers found different points", "red"))
+
 def solve_with_convex(program) -> Point:
     solver = ConvexSolver()
     return solver.solve(program[0], program[1])

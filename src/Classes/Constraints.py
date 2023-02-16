@@ -5,6 +5,8 @@ from Classes.Line import Line
 from enum import Enum
 import re
 
+from Classes.Vector import Vector
+
 class GreaterOrLess(Enum):
     GREATER = 0
     LESS = 1
@@ -12,6 +14,8 @@ class GreaterOrLess(Enum):
 class Constraints:
     # always less than
     def __init__(self,a:float,b:float,lessOrGreater:GreaterOrLess = GreaterOrLess.LESS, c:float = 0) -> None:
+        if a == 0 and b == 0:
+            raise ValueError('Cannot create constraint with a=0 and b=0')
         if lessOrGreater == GreaterOrLess.LESS:
             self.a = a
             self.b = b
@@ -37,7 +41,7 @@ class Constraints:
     def to_edge(self) -> Edge:
         return Edge(line=Line(self.a,self.b,self.c))
 
-    def is_inside(self, point) -> bool:
+    def contains(self, point) -> bool:
         return self.a * point.x + self.b * point.y <= self.c
     
     def find_all_intersection_with_Constraints(self, cons:List['Constraints']) -> List[Point]:
@@ -65,10 +69,13 @@ class Constraints:
         return self.b == 0
 
     def rotate(self) -> 'Constraints':
-        return Constraints(self.b, -self.a, self.c)
+        return Constraints(self.b, -self.a, c = self.c)
     
     def to_or_string(self) -> str:
         return str(self.a) + '*x + ' + str(self.b) + '*y <= ' + str(self.c)
+    
+    def to_line(self) -> Line:
+        return Line(self.a, self.b, self.c)
     #returns 1 or -1 or 0 if facing up or down
     def facing_direction_on_x_axis(self, ) -> int:
         if self.a == 0:
@@ -80,4 +87,45 @@ class Constraints:
 
     def __str__(self) -> str:
         return str(self.a) + 'x + ' + str(self.b) + 'y <= ' + str(self.c)
+    
+    def is_parallel(self, other:'Constraints') -> bool:
+        if self.a == 0 and other.a == 0:
+            return True
+        if self.b == 0 and other.b == 0:
+            return True
+        return self.a * other.b == self.b * other.a
+    
+    
+    def facing_direction_vector(self) -> 'Vector':
+        return Vector([-self.a, -self.b])
+    
+    def is_parallel_and_contains_each_other(self, other:'Constraints') -> bool:
+        return self.is_parallel(other)  and self.facing_direction_vector() == other.facing_direction_vector()
+    
+    def is_parallel_but_facing_different_direction(self, other:'Constraints') -> bool:
+        return self.is_parallel(other) and self.facing_direction_vector() != other.facing_direction_vector()
+    
+    def is_parallel_but_share_no_common_area(self, other:'Constraints') -> bool:
+        if not self.is_parallel(other):
+            return False
+        
+        p1 = None
+        p2 = None
+        if self.a == 0: # horizontal line
+            p1 = self.find_point_with_x(0)
+            p2 = other.find_point_with_x(0)
+
+        elif self.b == 0: # vertical line
+            p1 = self.find_point_with_y(0)
+            p2 = other.find_point_with_y(0)
+
+        else:
+            p1 = self.find_point_with_x(0)
+            p2 = other.find_point_with_x(0)
+
+        return not( self.contains(p2) or other.contains(p1))
+    
+            
+    
+
 

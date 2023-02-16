@@ -14,8 +14,8 @@ class OsToolSolver(Solver):
         if not solver:
             return
         
-        x = solver.NumVar(0, solver.infinity(), 'x')
-        y = solver.NumVar(0, solver.infinity(), 'y')
+        x = solver.NumVar(-solver.infinity(), solver.infinity(), 'x')
+        y = solver.NumVar(-solver.infinity(), solver.infinity(), 'y')
  
 
         for c in cons:

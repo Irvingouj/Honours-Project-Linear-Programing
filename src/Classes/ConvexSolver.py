@@ -31,10 +31,13 @@ def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstrai
     one_d = []
     for c in cons:
         p = curr.find_intersection(c)
+        if c.is_parallel_but_share_no_common_area(curr):
+            raise Exception("Infeasible")
+
         if p is not None:
             # TODO: figure out the direction, how do I know which side of the constraint is facing
             p1 = curr.find_point_with_x(p.x+1)
-            if(c.is_inside(p1)):
+            if(c.contains(p1)):
                 one_d.append(OneDConstraint(-1,-p.x))
             else:
                 one_d.append(OneDConstraint(1,p.x))
@@ -44,33 +47,39 @@ def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstrai
 
 M = 18500
 
+def get_one_d_optimize_direction(obj:ObjectiveFunction, curr:Constraints)->bool:
+    # projection of objective function on to the constraint
+    proj = obj.to_vector().projection_on_to(curr.to_edge().to_line().to_vector().find_orthogonal_vector());
+    return proj.arr[0] > 0;
+
 class ConvexSolver(Solver):
     def solve(self, obj:ObjectiveFunction, cons:List[Constraints]) -> Point:
-        v = corner(obj);
+        v = self._m1(obj).find_intersection(self._m2(obj));
         cons = [self._m1(obj),self._m2(obj)] + cons
-        
         for idx,c in enumerate(cons):
             if not v.is_inside(c):
                 one_d_constraints = to_1d_constraint(c,cons[:idx])
-                x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,objective=obj.get_direction_for_x_axis());
-                v = c.find_point_with_x(x)
-            else:
-                # placeholder, not doing anything
-                continue
+                if not c.is_vertical():
+                    x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
+                    v = c.find_point_with_x(x)
+                else:
+                    y = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
+                    v = c.find_point_with_y(y)
+            
         return v
     
 
 
     def _m1(self,obj:ObjectiveFunction)->Constraints:
         if (obj.a > 0):
-            return Constraints(1,0,M)
+            return Constraints(1,0,c=M)
         else:
-            return Constraints(-1,0,M)
+            return Constraints(-1,0,c=M)
         
     def _m2(self,obj:ObjectiveFunction)->Constraints:
         if (obj.b > 0):
-            return Constraints(0,1,M)
+            return Constraints(0,1,c=M)
         else:
-            return Constraints(0,-1,M)
+            return Constraints(0,-1,c=M)
         
         

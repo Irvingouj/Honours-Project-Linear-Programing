@@ -2,6 +2,7 @@ from enum import Enum
 import re
 
 from Classes.Point import Point
+from Classes.Vector import Vector
 
 class MaxOrMin(Enum):
     MAX = 0
@@ -41,3 +42,6 @@ class ObjectiveFunction:
 
     def to_or_string(self) -> str:
         return  str(self.a) + '*x + ' + str(self.b) + '*y'
+
+    def to_vector(self) -> 'Vector':
+        return Vector([self.a, self.b])

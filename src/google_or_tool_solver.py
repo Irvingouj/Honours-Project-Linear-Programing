@@ -8,20 +8,20 @@ def main():
     if not solver:
         return
     
-    x = solver.NumVar(0, solver.infinity(), 'x')
-    y = solver.NumVar(0, solver.infinity(), 'y')
+    x = solver.NumVar(-solver.infinity(), solver.infinity(), 'x')
+    y = solver.NumVar(-solver.infinity(), solver.infinity(), 'y')
     # Constraint 0: x + 2y <= 14.
     # Constraint 0: x + 2y <= 14.
 
-    solver.Add(eval("x + 2 * y <= 14.0"))
+    solver.Add(6*x-2*y<=-10)
 
     # Constraint 1: 3x - y >= 0.
-    solver.Add(3 * x - y >= 0.0)
+    solver.Add(12*x + 9*y >=10)
 
     # Constraint 2: x - y <= 2.
-    solver.Add(x - y <= 2.0)
+    solver.Add(-3*x + 6*y <=100)
 
-    solver.Maximize(3 * x + 4 * y)
+    solver.Minimize(5*x-3*y)
 
     status = solver.Solve()
 
