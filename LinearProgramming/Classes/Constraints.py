@@ -105,6 +105,9 @@ class Constraints:
     def is_parallel_but_facing_different_direction(self, other:'Constraints') -> bool:
         return self.is_parallel(other) and self.facing_direction_vector() != other.facing_direction_vector()
     
+    def flip_sign(self) -> 'Constraints':
+        return Constraints(-self.a, -self.b, c = -self.c)
+    
     def is_parallel_but_share_no_common_area(self, other:'Constraints') -> bool:
         if not self.is_parallel(other):
             return False

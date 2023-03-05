@@ -6,7 +6,8 @@
     ],
     "python.formatting.provider": "black",
     "cSpell.words": [
-        "pywraplp"
+        "pywraplp",
+        "twod"
     ],
     "python.testing.unittestArgs": [
         "-v",
