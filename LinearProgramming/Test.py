@@ -1,5 +1,4 @@
-
-from LinearPrograming import test_all
+from LinearProgramming import test_all
 
 
 if __name__ == "__main__":
