@@ -5,7 +5,7 @@ from LinearProgramming.Classes.Line import Line
 from enum import Enum
 import re
 
-from Classes.Vector import Vector
+from LinearProgramming.Classes.Vector import Vector
 
 class GreaterOrLess(Enum):
     GREATER = 0

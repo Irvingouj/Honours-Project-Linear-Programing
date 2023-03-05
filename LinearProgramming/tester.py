@@ -2,8 +2,8 @@ from io import TextIOWrapper
 from typing import List, Tuple
 
 from LinearProgramming.Classes.Constraints import Constraints
-from LinearProgramming.LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
-from LinearProgramming.LinearProgramming.Classes.ConvexSolver import ConvexSolver
+from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
+from LinearProgramming.Classes.ConvexSolver import ConvexSolver
 import os
 
 from LinearProgramming.Classes.Point import Point

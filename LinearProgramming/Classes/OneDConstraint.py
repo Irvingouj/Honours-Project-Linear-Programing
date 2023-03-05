@@ -1,4 +1,4 @@
-from Classes.Constraints import Constraints
+from LinearProgramming.Classes.Constraints import Constraints
 from LinearProgramming.Classes.Point import Point
 
 class OneDConstraint:

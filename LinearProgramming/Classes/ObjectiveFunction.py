@@ -2,7 +2,7 @@ from enum import Enum
 import re
 
 from LinearProgramming.Classes.Point import Point
-from Classes.Vector import Vector
+from LinearProgramming.Classes.Vector import Vector
 
 class MaxOrMin(Enum):
     MAX = 0
