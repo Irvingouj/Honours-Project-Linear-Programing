@@ -75,7 +75,3 @@ def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constraints]]
         Constraints_list.append(Constraints.from_string(line))
     return objective_function, Constraints_list
     
-
-
-if __name__ == "__main__":
-    main()
