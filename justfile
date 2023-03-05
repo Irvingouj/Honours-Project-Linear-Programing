@@ -9,5 +9,8 @@ add:
 commit target:
   git commit -m "{{target}}"
 
-push target: add && commit
+push target:
   git push
+
+freeze:
+  pip freeze > requirements.txt
