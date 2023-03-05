@@ -1,11 +1,11 @@
 from io import TextIOWrapper
 from typing import List, Tuple
 from termcolor import colored
-from Classes.Constraints import Constraints
+from LinearProgramming.Classes.Constraints import Constraints
 from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
 from LinearProgramming.Classes.Convex import Convex
 from LinearProgramming.Classes.ConvexSolver import ConvexSolver
-from Classes.OsToolSolver import OsToolSolver
+from LinearProgramming.Classes.OsToolSolver import OsToolSolver
 import os
 
 from LinearProgramming.Classes.Point import Point

@@ -1,3 +1,3 @@
 if __name__ == "__main__":
-    import LinearProgramming.Test
-    LinearProgramming.Test.test_all()
+    import LinearProgramming.main as main
+    main.test_all();

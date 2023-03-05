@@ -1,11 +1,8 @@
 from typing import List
 from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
-from Classes.Constraints import Constraints
-from LinearProgramming.Classes.Convex import Convex
+from LinearProgramming.Classes.Constraints import Constraints
 from LinearProgramming.Classes.Point import Point
-from Classes.Solver import Solver
-from Classes.OneDConstraint import OneDConstraint
-from Classes import OneDLinearProgram
+from LinearProgramming.Classes.Solver import Solver
 from ortools.linear_solver import pywraplp
 
 class OsToolSolver(Solver):
