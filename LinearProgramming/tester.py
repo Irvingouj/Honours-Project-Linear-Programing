@@ -1,10 +1,9 @@
 from io import TextIOWrapper
 from typing import List, Tuple
 
-from Classes.Constraints import Constraints
-from Classes.ObjectiveFunction import ObjectiveFunction
-from Classes.Convex import Convex
-from Classes.ConvexSolver import ConvexSolver
+from LinearProgramming.Classes.Constraints import Constraints
+from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
+from LinearProgramming.Classes.ConvexSolver import ConvexSolver
 import os
 
 from Classes.Point import Point
