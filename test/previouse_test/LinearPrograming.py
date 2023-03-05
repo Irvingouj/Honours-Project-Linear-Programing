@@ -2,13 +2,13 @@ from io import TextIOWrapper
 from typing import List, Tuple
 from termcolor import colored
 from Classes.Constraints import Constraints
-from Classes.ObjectiveFunction import ObjectiveFunction
-from Classes.Convex import Convex
-from Classes.ConvexSolver import ConvexSolver
+from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
+from LinearProgramming.Classes.Convex import Convex
+from LinearProgramming.Classes.ConvexSolver import ConvexSolver
 from Classes.OsToolSolver import OsToolSolver
 import os
 
-from Classes.Point import Point
+from LinearProgramming.Classes.Point import Point
 
 bounded_prefix = "bounded_problem"
 infeasible_prefix = "infeasible_problem"

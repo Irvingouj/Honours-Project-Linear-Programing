@@ -1,8 +1,8 @@
-from Classes.Convex import Convex
-from Classes.ObjectiveFunction import MaxOrMin, ObjectiveFunction
-from Classes.Edge import Edge
-from Classes.Line import Line
-from Classes.Point import Point
+from LinearProgramming.Classes.Convex import Convex
+from LinearProgramming.Classes.ObjectiveFunction import MaxOrMin, ObjectiveFunction
+from LinearProgramming.Classes.Edge import Edge
+from LinearProgramming.Classes.Line import Line
+from LinearProgramming.Classes.Point import Point
 
 convex:Convex = Convex([])
 obj = ObjectiveFunction(1,1,MaxOrMin.MAX)

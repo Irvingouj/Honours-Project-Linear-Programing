@@ -2,11 +2,11 @@ from io import TextIOWrapper
 from typing import List, Tuple
 
 from LinearProgramming.Classes.Constraints import Constraints
-from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
-from LinearProgramming.Classes.ConvexSolver import ConvexSolver
+from LinearProgramming.LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
+from LinearProgramming.LinearProgramming.Classes.ConvexSolver import ConvexSolver
 import os
 
-from Classes.Point import Point
+from LinearProgramming.Classes.Point import Point
 
 bounded_prefix = "bounded_problem"
 infeasible_prefix = "infeasible_problem"

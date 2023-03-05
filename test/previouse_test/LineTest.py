@@ -1,5 +1,5 @@
-from Classes.Line import Line 
-from Classes.Point import Point
+from LinearProgramming.Classes.Line import Line 
+from LinearProgramming.Classes.Point import Point
 
 def main():
     line1 = Line(1, 2, 3)

@@ -1,7 +1,7 @@
 from typing import List
-from Classes.Point import Point
-from Classes.Edge import Edge
-from Classes.Line import Line
+from LinearProgramming.Classes.Point import Point
+from LinearProgramming.Classes.Edge import Edge
+from LinearProgramming.Classes.Line import Line
 from enum import Enum
 import re
 

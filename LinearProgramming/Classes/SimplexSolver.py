@@ -1,7 +1,7 @@
 from typing import List
-from Classes.ObjectiveFunction import ObjectiveFunction
+from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
 from Classes.Constraints import Constraints
-from Classes.Point import Point
+from LinearProgramming.Classes.Point import Point
 from Classes.Solver import Solver
 
 class SimplexSolver(Solver):

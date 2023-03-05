@@ -1,4 +1,4 @@
-from Classes.Point import Point
+from LinearProgramming.Classes.Point import Point
 from Classes.Vector import Vector
 
 class Line:

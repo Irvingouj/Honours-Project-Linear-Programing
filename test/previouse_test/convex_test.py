@@ -1,6 +1,6 @@
-from Classes.Convex import Convex
-from Classes.Edge import Edge
-from Classes.Line import Line
+from LinearProgramming.Classes.Convex import Convex
+from LinearProgramming.Classes.Edge import Edge
+from LinearProgramming.Classes.Line import Line
 import matplotlib.pyplot as plt
 
 def main():
