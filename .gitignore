@@ -1,7 +1,7 @@
 #ignore pychache
 *.pyc
 
-Lib/*
-Scripts/*
+Lib
+Scripts
 
 __pycache__
