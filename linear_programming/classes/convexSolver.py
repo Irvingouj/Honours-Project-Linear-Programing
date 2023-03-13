@@ -1,11 +1,10 @@
 from typing import List
-from .edge import Edge
 from .point import Point
-from .line import Line
-from .objectiveFunction import ObjectiveFunction,MaxOrMin
+from .oneDLinearProgram import solve_1d_linear_program
+from .objectiveFunction import ObjectiveFunction
+from .solver import Solver
 from .constraints import Constraints
 from .oneDConstraint import OneDConstraint
-from .oneDLinearProgram import solve_1d_linear_program
 
 
 def corner(obj:ObjectiveFunction)->Point:
@@ -60,10 +59,10 @@ class ConvexSolver(Solver):
             if not v.is_inside(c):
                 one_d_constraints = to_1d_constraint(c,cons[:idx])
                 if not c.is_vertical():
-                    x = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
+                    x = solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
                     v = c.find_point_with_x(x)
                 else:
-                    y = OneDLinearProgram.solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
+                    y = solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
                     v = c.find_point_with_y(y)
             
         return v
