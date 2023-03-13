@@ -1,8 +1,9 @@
 from io import TextIOWrapper
 from typing import List, Tuple
 from termcolor import colored
-from .classes import ObjectiveFunction, Constraints, OsToolSolver, ConvexSolver, Point
+from .classes import OsToolSolver, ConvexSolver, Point
 from pathlib import Path
+from utils.problem_reader import parse_file
 
 import os
 
@@ -23,7 +24,6 @@ def main():
     print("the maximum point is: OS Solver ",point2)
     
 def test_all():
-    print(project_root)
     file_path = os.path.join(project_root, program_data_dir_name)
     for file in os.listdir(file_path):
         if file.startswith(bounded_prefix):
@@ -61,14 +61,4 @@ def solve_with_os_tool(program):
     return solver.solve(program[0], program[1]) 
 
 
-def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constraints]]:
-    lines = file.readlines()
-    ## remove \n at the end of the line
-    lines = [line.strip() for line in lines]
-    lines = [line for line in lines if len(line) > 0 and line[0] != '#' ]
-    objective_function = ObjectiveFunction.from_string(lines[0])
-    Constraints_list = []
-    for line in lines[1:]:
-        Constraints_list.append(Constraints.from_string(line))
-    return objective_function, Constraints_list
-    
+
