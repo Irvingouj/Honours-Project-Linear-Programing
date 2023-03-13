@@ -1,6 +1,7 @@
 from typing import List
+import numpy as np
 
-error = 0.001
+error = 0.0001
 
 class Point:
     def __init__(self, x:float, y:float):
@@ -12,7 +13,7 @@ class Point:
 
     def __eq__(self, o: object) -> bool:
         if isinstance(o, Point):
-            return o.x - error<= self.x <= o.x+error and o.y-error<= self.y <= o.y+error
+            return np.allclose([self.x,self.y],[o.x,o.y],atol=error)
         return False
     
     def __ne__(self, __o: object) -> bool:

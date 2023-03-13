@@ -10,6 +10,7 @@ def read_bounded_problem(problem_number):
     program = parse_file(file);
     return program
 
+Program = Tuple[ObjectiveFunction,List[Constraints]]
 def parse_file(file:TextIOWrapper) -> Tuple[ObjectiveFunction,List[Constraints]]:
     lines = file.readlines()
     ## remove \n at the end of the line

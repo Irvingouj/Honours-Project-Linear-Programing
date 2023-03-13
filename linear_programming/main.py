@@ -56,7 +56,7 @@ def solve_with_convex(program) -> Point:
     solver = ConvexSolver()
     return solver.solve(program[0], program[1])
     
-def solve_with_os_tool(program):
+def solve_with_os_tool(program) -> Point:
     solver = OsToolSolver()
     return solver.solve(program[0], program[1]) 
 
