@@ -1,11 +1,9 @@
 from typing import List
-from LinearProgramming.Classes.Point import Point
-from LinearProgramming.Classes.Edge import Edge
-from LinearProgramming.Classes.Line import Line
 from enum import Enum
 import re
-
-from LinearProgramming.Classes.Vector import Vector
+from .edge import Edge
+from .line import Line
+from .point import Point
 
 class GreaterOrLess(Enum):
     GREATER = 0

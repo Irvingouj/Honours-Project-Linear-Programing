@@ -1,7 +1,7 @@
-from LinearProgramming.Classes.Edge import Edge
-from LinearProgramming.Classes.Point import Point
-from LinearProgramming.Classes.ObjectiveFunction import MaxOrMin, ObjectiveFunction
-from LinearProgramming.Classes.Line import Line
+from .edge import Edge
+from .point import Point
+from .line import Line
+from .objectiveFunction import ObjectiveFunction,MaxOrMin
 from typing import List, Set
 
 max = 1.8*10308;
