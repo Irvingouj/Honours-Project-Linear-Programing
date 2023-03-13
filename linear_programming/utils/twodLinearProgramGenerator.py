@@ -1,6 +1,6 @@
-from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
-from LinearProgramming.Classes.Constraints import Constraints, GreaterOrLess
-from LinearProgramming.Classes.Point import Point
+from linear_programming.classes.objectiveFunction import ObjectiveFunction
+from linear_programming.classes.constraints import Constraints, GreaterOrLess
+from linear_programming.classes.point import Point
 
 import random
 from typing import List, Tuple
