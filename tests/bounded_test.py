@@ -1,5 +1,6 @@
 from linear_programming.utils.problem_reader import read_bounded_problem,Program
-from linear_programming.main import solve_with_convex,solve_with_os_tool
+from linear_programming.classes.convexSolver import solve_with_convex
+from linear_programming.classes.osToolSolver import solve_with_os_tool
 import unittest
 
 class TestBoundedProblem(unittest.TestCase):

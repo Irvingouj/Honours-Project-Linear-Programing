@@ -82,3 +82,7 @@ class ConvexSolver(Solver):
             return Constraints(0,-1,c=M)
         
         
+
+def solve_with_convex(program) -> Point:
+    solver = ConvexSolver()
+    return solver.solve(program[0], program[1])

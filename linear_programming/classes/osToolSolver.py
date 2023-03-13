@@ -32,3 +32,7 @@ class OsToolSolver(Solver):
         
         return None
         
+
+def solve_with_os_tool(program) -> Point:
+    solver = OsToolSolver()
+    return solver.solve(program[0], program[1]) 
