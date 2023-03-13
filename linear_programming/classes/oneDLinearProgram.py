@@ -1,5 +1,5 @@
 from typing import List
-from LinearProgramming.Classes.OneDConstraint import OneDConstraint
+from .oneDConstraint import OneDConstraint
 
 POSITIVE = True
 NEGATIVE = False

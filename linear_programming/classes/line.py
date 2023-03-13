@@ -1,5 +1,5 @@
-from LinearProgramming.Classes.Point import Point
-from LinearProgramming.Classes.Vector import Vector
+from .point import Point
+from .vector import Vector
 
 class Line:
     # ax + by = c

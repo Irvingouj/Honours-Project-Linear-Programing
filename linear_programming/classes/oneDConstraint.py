@@ -1,5 +1,6 @@
-from LinearProgramming.Classes.Constraints import Constraints
-from LinearProgramming.Classes.Point import Point
+from .point import Point
+from .constraints import Constraints
+
 
 class OneDConstraint:
     # ax <= c

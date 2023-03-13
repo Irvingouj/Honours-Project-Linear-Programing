@@ -1,22 +1,24 @@
 from io import TextIOWrapper
 from typing import List, Tuple
 from termcolor import colored
-from LinearProgramming.Classes.Constraints import Constraints
-from LinearProgramming.Classes.ObjectiveFunction import ObjectiveFunction
-from LinearProgramming.Classes.Convex import Convex
-from LinearProgramming.Classes.ConvexSolver import ConvexSolver
-from LinearProgramming.Classes.OsToolSolver import OsToolSolver
+from .classes.objectiveFunction import ObjectiveFunction
+from .classes.constraints import Constraints
+from .classes.osToolSolver import OsToolSolver
+from .classes.convexSolver import ConvexSolver
+from .classes.point import Point
+from pathlib import Path
+
 import os
 
-from LinearProgramming.Classes.Point import Point
 
 bounded_prefix = "bounded_problem"
 infeasible_prefix = "infeasible_problem"
 unbounded_prefix = "unbounded_problem"
+program_data_dir_name = "linear_program_data"
+project_root = Path(__file__).parent.parent
 
 def main():
-    dirname = os.path.dirname(__file__)
-    file_path = os.path.join(dirname, "LinearPrograms",bounded_prefix + "9")
+    file_path = os.path.join(project_root, program_data_dir_name,bounded_prefix + "9")
     file = open(file_path, 'r')
     program = parse_file(file);
     point = solve_with_convex(program)
@@ -25,8 +27,8 @@ def main():
     print("the maximum point is: OS Solver ",point2)
     
 def test_all():
-    dirname = os.path.dirname(__file__)
-    file_path = os.path.join(dirname, "LinearPrograms")
+    print(project_root)
+    file_path = os.path.join(project_root, program_data_dir_name)
     for file in os.listdir(file_path):
         if file.startswith(bounded_prefix):
             print("testing file: ", file)
@@ -37,8 +39,7 @@ def test_all():
             test_file(file)
 
 def test_file(file_name):
-    dirname = os.path.dirname(__file__)
-    file_path = os.path.join(dirname, "LinearPrograms",file_name)
+    file_path = os.path.join(project_root, program_data_dir_name,file_name)
     file = open(file_path, 'r')
     program = parse_file(file);
     point2 = solve_with_os_tool(program)

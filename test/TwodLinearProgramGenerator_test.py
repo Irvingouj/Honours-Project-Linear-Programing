@@ -1,6 +1,6 @@
 import unittest
-from LinearProgramming.Utils.twodLinearProgramGenerator import generate_random_2d_feasible_linear_program, generate_to_file
-from LinearProgramming.Classes.OsToolSolver import OsToolSolver
+from linear_programming.utils.twodLinearProgramGenerator import generate_random_2d_feasible_linear_program, generate_to_file
+from linear_programming.classes.osToolSolver import OsToolSolver
 import os
 class TestGenerateRandomLP(unittest.TestCase):
     def test_generates_correct_number_of_constraints(self):

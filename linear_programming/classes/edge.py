@@ -1,5 +1,6 @@
-from LinearProgramming.Classes.Line import Line
-from LinearProgramming.Classes.Point import Point
+from .point import Point
+from .line import Line
+
 from enum import Enum
 from typing import Tuple
 
