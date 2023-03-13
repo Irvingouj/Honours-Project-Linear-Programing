@@ -1,11 +1,7 @@
 from io import TextIOWrapper
 from typing import List, Tuple
 from termcolor import colored
-from .classes.objectiveFunction import ObjectiveFunction
-from .classes.constraints import Constraints
-from .classes.osToolSolver import OsToolSolver
-from .classes.convexSolver import ConvexSolver
-from .classes.point import Point
+from .classes import ObjectiveFunction, Constraints, OsToolSolver, ConvexSolver, Point
 from pathlib import Path
 
 import os

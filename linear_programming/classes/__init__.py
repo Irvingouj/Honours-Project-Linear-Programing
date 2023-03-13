@@ -5,3 +5,5 @@ from .objectiveFunction import ObjectiveFunction,MaxOrMin
 from .constraints import Constraints
 from .oneDConstraint import OneDConstraint
 from .oneDLinearProgram import solve_1d_linear_program
+from .osToolSolver import OsToolSolver
+from .convexSolver import ConvexSolver
