@@ -8,7 +8,7 @@ bounded_prefix = "bounded_problem"
 infeasible_prefix = "infeasible_problem"
 unbounded_prefix = "unbounded_problem"
 program_data_dir_name = "linear_program_data"
-project_root = Path(__file__).parent.parent
+project_root = Path(__file__).parent.parent.parent
 
 def read_bounded_problem(problem_number):
     file_path = os.path.join(project_root, program_data_dir_name,bounded_prefix + str(problem_number))
