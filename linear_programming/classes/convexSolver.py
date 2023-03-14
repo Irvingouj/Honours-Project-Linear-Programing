@@ -1,6 +1,7 @@
 from typing import List
 
 from linear_programming.utils.exceptions import NoSolutionException
+from linear_programming.utils.problem_reader import Program
 from .point import Point
 from .oneDLinearProgram import solve_1d_linear_program
 from .objectiveFunction import ObjectiveFunction
@@ -9,19 +10,24 @@ from .constraints import Constraints
 from .oneDConstraint import OneDConstraint
 
 
-def corner(obj:ObjectiveFunction)->Point:
-    max = 18500
-    points = [Point(max,max),Point(max,-max),Point(-max,max),Point(-max,-max)]
-    #find the point that minimize obj
-    res = None;
+def corner(obj: ObjectiveFunction) -> Point:
+    """
+    find the corner point of the objective function
+    """
+    max_value = 18500
+    points = [Point(max_value, max_value), Point(max_value, -max_value),
+              Point(-max_value, max_value), Point(-max_value, -max_value)]
+    # find the point that minimize obj
+    res = None
     val = float('-inf')
     for p in points:
         if obj.value(p) > val:
             val = obj.value(p)
-            res = p;
+            res = p
     return res
 
-def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstraint]:
+
+def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDConstraint]:
 
     # if the constrain is vertical, we rotate all the constraints by 90 degree
     if curr.is_vertical():
@@ -38,53 +44,55 @@ def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstrai
         if p is not None:
             # TODO: figure out the direction, how do I know which side of the constraint is facing
             p1 = curr.find_point_with_x(p.x+1)
-            if(c.contains(p1)):
-                one_d.append(OneDConstraint(-1,-p.x))
+            if (c.contains(p1)):
+                one_d.append(OneDConstraint(-1, -p.x))
             else:
-                one_d.append(OneDConstraint(1,p.x))
-
+                one_d.append(OneDConstraint(1, p.x))
 
     return one_d
 
+
 M = 18500
 
-def get_one_d_optimize_direction(obj:ObjectiveFunction, curr:Constraints)->bool:
+
+def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> bool:
     # projection of objective function on to the constraint
-    proj = obj.to_vector().projection_on_to(curr.to_edge().to_line().to_vector().find_orthogonal_vector());
-    return proj.arr[0] > 0;
+    proj = obj.to_vector().projection_on_to(
+        curr.to_edge().to_line().to_vector().find_orthogonal_vector())
+    return proj.arr[0] > 0
+
 
 class ConvexSolver(Solver):
-    def solve(self, obj:ObjectiveFunction, cons:List[Constraints]) -> Point:
-        v = self._m1(obj).find_intersection(self._m2(obj));
-        cons = [self._m1(obj),self._m2(obj)] + cons
-        for idx,c in enumerate(cons):
+    def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
+        v = self._m1(obj).find_intersection(self._m2(obj))
+        cons = [self._m1(obj), self._m2(obj)] + cons
+        for idx, c in enumerate(cons):
             if not v.is_inside(c):
-                one_d_constraints = to_1d_constraint(c,cons[:idx])
+                one_d_constraints = to_1d_constraint(c, cons[:idx])
                 if not c.is_vertical():
-                    x = solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
+                    x = solve_1d_linear_program(
+                        one_d_constraints, get_one_d_optimize_direction(obj, c))
                     v = c.find_point_with_x(x)
                 else:
-                    y = solve_1d_linear_program(one_d_constraints,get_one_d_optimize_direction(obj,c));
+                    y = solve_1d_linear_program(
+                        one_d_constraints, get_one_d_optimize_direction(obj, c))
                     v = c.find_point_with_y(y)
-            
+
         return v
-    
 
-
-    def _m1(self,obj:ObjectiveFunction)->Constraints:
-        if (obj.a > 0):
-            return Constraints(1,0,c=M)
+    def _m1(self, obj: ObjectiveFunction) -> Constraints:
+        if obj.a > 0:
+            return Constraints(1, 0, c=M)
         else:
-            return Constraints(-1,0,c=M)
-        
-    def _m2(self,obj:ObjectiveFunction)->Constraints:
-        if (obj.b > 0):
-            return Constraints(0,1,c=M)
-        else:
-            return Constraints(0,-1,c=M)
-        
-        
+            return Constraints(-1, 0, c=M)
 
-def solve_with_convex(program) -> Point:
+    def _m2(self, obj: ObjectiveFunction) -> Constraints:
+        if obj.b > 0:
+            return Constraints(0, 1, c=M)
+        else:
+            return Constraints(0, -1, c=M)
+
+
+def solve_with_convex(program: Program) -> Point:
     solver = ConvexSolver()
     return solver.solve(program[0], program[1])

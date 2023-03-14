@@ -6,7 +6,7 @@ def main():
     # point2 = solve_with_os_tool(program)
     # print("the maximum point is: Convex solver",point)
     # print("the maximum point is: OS Solver ",point2)
-    
+
 # def test_all():
 #     for file in os.listdir(file_path):
 #         if file.startswith(bounded_prefix):
@@ -16,8 +16,3 @@ def main():
 #         if file.startswith(infeasible_prefix):
 #             print("testing file: ", file)
 #             test_file(file)
-
-
-
-
-

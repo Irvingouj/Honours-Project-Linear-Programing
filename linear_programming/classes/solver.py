@@ -4,7 +4,8 @@ from .point import Point
 from .objectiveFunction import ObjectiveFunction
 from .constraints import Constraints
 
+
 class Solver(ABC):
     @abstractmethod
-    def solve(self, obj:ObjectiveFunction, cons:List[Constraints]) -> List[Point]:
+    def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> List[Point]:
         pass

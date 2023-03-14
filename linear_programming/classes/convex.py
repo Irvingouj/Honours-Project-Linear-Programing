@@ -1,19 +1,19 @@
 from .edge import Edge
 from .point import Point
 from .line import Line
-from .objectiveFunction import ObjectiveFunction,MaxOrMin
+from .objectiveFunction import ObjectiveFunction, MaxOrMin
 from typing import List, Set
 
-max = 1.8*10308;
-edge_up = Edge(line=Line(0,1,max))
-edge_down = Edge(line=Line(0,-1,max))
-edge_left = Edge(line=Line(-1,0.00001,max))
-edge_right = Edge(line=Line(1,0.00001,max))
+max = 1.8*10308
+edge_up = Edge(line=Line(0, 1, max))
+edge_down = Edge(line=Line(0, -1, max))
+edge_left = Edge(line=Line(-1, 0.00001, max))
+edge_right = Edge(line=Line(1, 0.00001, max))
 
 
 class Convex:
-    def __init__(self,edges:List[Edge],bounded:str = "above") -> None:
-        self.edges:List[Edge] = []
+    def __init__(self, edges: List[Edge], bounded: str = "above") -> None:
+        self.edges: List[Edge] = []
         # self.add_edge(edge_left)
         # self.add_edge(edge_right)
         # if bounded == "above":
@@ -23,7 +23,7 @@ class Convex:
         for edge in edges:
             self.add_edge(edge)
 
-    def is_inside(self, point:Point) -> bool:
+    def is_inside(self, point: Point) -> bool:
         if len(self.edges) == 0:
             return True
         for edge in self.edges:
@@ -31,7 +31,7 @@ class Convex:
                 return False
         return True
 
-    def add_edge(self, new_edge:Edge) -> None:
+    def add_edge(self, new_edge: Edge) -> None:
         toRemove = []
         for edge in self.edges:
             if edge.is_intersect_with(new_edge):
@@ -56,15 +56,15 @@ class Convex:
     def get_edges(self) -> List[Edge]:
         return self.edges
 
-    def intersect_two_edges(edge1:Edge, edge2:Edge) -> Point:
+    def intersect_two_edges(edge1: Edge, edge2: Edge) -> Point:
         point = edge1.find_intersection(edge2)
         if point is None:
             return None
         else:
             edge1.find_intersection(edge2)
             return point
-    
-    def find_optimal(self,obj:ObjectiveFunction) -> List[Point]:
+
+    def find_optimal(self, obj: ObjectiveFunction) -> List[Point]:
         # find the optimal point in the convex
         # return a list of points
 
@@ -72,7 +72,7 @@ class Convex:
         current_optimal = None
         for edge in self.edges:
             point = edge.end_points()[0]
-            print("points :",point)
+            print("points :", point)
             if current_optimal is None:
                 current_optimal = point
                 optimal_values.append(current_optimal)
@@ -91,6 +91,5 @@ class Convex:
                         optimal_values.append(current_optimal)
                     elif obj.value(point) == obj.value(current_optimal):
                         optimal_values.append(current_optimal)
-        
+
         return optimal_values
-        
