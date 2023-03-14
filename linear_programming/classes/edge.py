@@ -74,9 +74,6 @@ class Edge:
         # return the end points of the edge
         return (Point(self.range[0], (self.c - self.a * self.range[0])/self.b), Point(self.range[1], (self.c - self.a * self.range[1])/self.b))
 
-    def range(self) -> Tuple[float, float]:
-        return self.range
-
     def update_range(self, x: float, discard: ToThe) -> None:
         if discard == ToThe.LEFT:
             self.range = (x, self.range[1])

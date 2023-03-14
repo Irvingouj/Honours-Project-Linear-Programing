@@ -4,6 +4,7 @@ from .vector import Vector
 
 class Line:
     # ax + by = c
+    # pylint: disable=C0103
     def __init__(self, a: float, b: float, c: float):
         if c < 0:
             self.a = -a

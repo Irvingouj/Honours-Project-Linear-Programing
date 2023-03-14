@@ -1,18 +1,18 @@
+from typing import List, Set
 from .edge import Edge
 from .point import Point
 from .line import Line
 from .objectiveFunction import ObjectiveFunction, MaxOrMin
-from typing import List, Set
 
-max = 1.8*10308
-edge_up = Edge(line=Line(0, 1, max))
-edge_down = Edge(line=Line(0, -1, max))
-edge_left = Edge(line=Line(-1, 0.00001, max))
-edge_right = Edge(line=Line(1, 0.00001, max))
+MAX = 1.8*10308
+edge_up = Edge(line=Line(0, 1, MAX))
+edge_down = Edge(line=Line(0, -1, MAX))
+edge_left = Edge(line=Line(-1, 0.00001, MAX))
+edge_right = Edge(line=Line(1, 0.00001, MAX))
 
 
 class Convex:
-    def __init__(self, edges: List[Edge], bounded: str = "above") -> None:
+    def __init__(self, edges: List[Edge]) -> None:
         self.edges: List[Edge] = []
         # self.add_edge(edge_left)
         # self.add_edge(edge_right)
@@ -32,23 +32,23 @@ class Convex:
         return True
 
     def add_edge(self, new_edge: Edge) -> None:
-        toRemove = []
+        to_remove = []
         for edge in self.edges:
             if edge.is_intersect_with(new_edge):
                 new_edge.intersect_and_update_range(edge)
             else:
                 if not new_edge.is_in_area(edge.end_points()[0]) and not new_edge.is_in_area(edge.end_points()[1]):
-                    toRemove.append(edge)
+                    to_remove.append(edge)
 
         # remove the edges that are not in the area
-        for edge in toRemove:
+        for edge in to_remove:
             self.edges.remove(edge)
         # add the new edge
         self.edges.append(new_edge)
 
     def get_vertices(self) -> Set[Point]:
         # return the vertices of the convex
-        vertices = {}
+        vertices = set()
         for edge in self.edges:
             vertices.add(edge.end_points()[0])
         return vertices
@@ -56,7 +56,7 @@ class Convex:
     def get_edges(self) -> List[Edge]:
         return self.edges
 
-    def intersect_two_edges(edge1: Edge, edge2: Edge) -> Point:
+    def intersect_two_edges(self,edge1: Edge, edge2: Edge) -> Point:
         point = edge1.find_intersection(edge2)
         if point is None:
             return None

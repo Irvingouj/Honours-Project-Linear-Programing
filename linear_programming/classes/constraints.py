@@ -4,6 +4,7 @@ import re
 from .edge import Edge
 from .line import Line
 from .point import Point
+from .vector import Vector
 
 
 class GreaterOrLess(Enum):
