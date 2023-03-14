@@ -1,4 +1,6 @@
 from typing import List
+
+from linear_programming.utils.exceptions import NoSolutionException
 from .point import Point
 from .oneDLinearProgram import solve_1d_linear_program
 from .objectiveFunction import ObjectiveFunction
@@ -31,7 +33,7 @@ def to_1d_constraint(curr:Constraints,cons:List[Constraints])->List[OneDConstrai
     for c in cons:
         p = curr.find_intersection(c)
         if c.is_parallel_but_share_no_common_area(curr):
-            raise Exception("Infeasible")
+            raise NoSolutionException("No solution")
 
         if p is not None:
             # TODO: figure out the direction, how do I know which side of the constraint is facing

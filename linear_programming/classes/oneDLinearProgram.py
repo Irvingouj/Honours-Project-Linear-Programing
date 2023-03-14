@@ -1,8 +1,11 @@
 from typing import List
 from .oneDConstraint import OneDConstraint
+from linear_programming.utils.exceptions import NoSolutionException
 
 POSITIVE = True
 NEGATIVE = False
+
+
 
 
 def solve_1d_linear_program(oneDConstraints: List[OneDConstraint],objective: bool) -> float:
@@ -15,7 +18,7 @@ def solve_1d_linear_program(oneDConstraints: List[OneDConstraint],objective: boo
         else:
             left = constrain.value()
         if(left > right):
-            raise Exception("No solution")
+            raise NoSolutionException("No solution")
     if(objective == POSITIVE):
         return right
     else:
