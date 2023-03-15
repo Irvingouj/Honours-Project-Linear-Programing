@@ -1,5 +1,5 @@
 import unittest
-from linear_programming.utils.twodLinearProgramGenerator import generate_random_2d_feasible_linear_program, generate_to_file
+from linear_programming.utils.linear_program_generator import generate_random_2d_feasible_linear_program, generate_to_file
 from linear_programming.classes.osToolSolver import OsToolSolver
 import os
 
