@@ -26,6 +26,13 @@ def read_infeasible_problem(problem_number):
     program = parse_file(file)
     return program
 
+def read_unexpected_problem(filename: str):
+    file_path = os.path.join(
+        project_root, program_data_dir_name, 'problems_unexpected', filename)
+    file = open(file_path, 'r', encoding='utf-8')
+    program = parse_file(file)
+    return program
+
 
 Program = Tuple[ObjectiveFunction, List[Constraints]]
 

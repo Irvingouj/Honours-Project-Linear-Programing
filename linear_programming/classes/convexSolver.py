@@ -1,7 +1,7 @@
+import sys
 from typing import List
 
 from linear_programming.utils.exceptions import NoSolutionException
-from linear_programming.utils.problem_reader import Program
 from .point import Point
 from .oneDLinearProgram import solve_1d_linear_program
 from .objectiveFunction import ObjectiveFunction
@@ -39,10 +39,9 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
     for c in cons:
         p = curr.find_intersection(c)
         if c.is_parallel_but_share_no_common_area(curr):
-            raise NoSolutionException("No solution")
+            raise NoSolutionException("No solution as the constraints are parallel and share no common area")
 
         if p is not None:
-            # TODO: figure out the direction, how do I know which side of the constraint is facing
             p1 = curr.find_point_with_x(p.x+1)
             if (c.contains(p1)):
                 one_d.append(OneDConstraint(-1, -p.x))
@@ -52,7 +51,7 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
     return one_d
 
 
-M = 18500
+M = sys.maxsize/2
 
 
 def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> bool:
@@ -93,6 +92,6 @@ class ConvexSolver(Solver):
             return Constraints(0, -1, c=M)
 
 
-def solve_with_convex(program: Program) -> Point:
+def solve_with_convex(program) -> Point:
     solver = ConvexSolver()
     return solver.solve(program[0], program[1])

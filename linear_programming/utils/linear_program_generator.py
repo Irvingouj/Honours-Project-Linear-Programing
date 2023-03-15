@@ -5,6 +5,7 @@ import os
 from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.classes.constraints import Constraints, GreaterOrLess
 from linear_programming.classes.point import Point
+from linear_programming.classes.oneDConstraint import OneDConstraint
 from .problem_reader import project_root, Program,bounded_prefix
 
 
@@ -30,6 +31,23 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 100) -> Progra
 
     return (ObjectiveFunction(a=random.randint(1, max_value), b=random.randint(1, max_value)), cons)
 
+OneDProgram = Tuple[bool, List[OneDConstraint]]
+def gen_random_1d_feasible(num_constrains: int,  max_value: int = 100) -> OneDProgram:
+    p_1 = random.randint(-max_value, max_value)
+    
+    cons = []
+    while len(cons) < num_constrains:
+        a = random.randint(-max_value, max_value) 
+        if a == 0:
+            continue
+        con = OneDConstraint(a, random.randint(10*max_value, 10*max_value*max_value))
+        if not con.contains(p_1):
+            continue
+        cons.append(con)
+        
+    return (True, cons)
+        
+    
 
 def generate_to_file(num_of_constraints: int,  max_value: int = 100) -> str:
     obj, cons = gen_random_2d_feasible(

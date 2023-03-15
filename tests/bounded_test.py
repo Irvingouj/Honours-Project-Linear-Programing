@@ -1,14 +1,26 @@
-from linear_programming.utils.problem_reader import read_bounded_problem, read_infeasible_problem, Program
+import unittest
+from linear_programming.utils.exceptions import NoSolutionException
+from linear_programming.utils.problem_reader import read_bounded_problem, Program, read_unexpected_problem
 from linear_programming.classes.convexSolver import solve_with_convex
 from linear_programming.classes.osToolSolver import solve_with_os_tool
-import unittest
 
 
 class TestBoundedProblems(unittest.TestCase):
     def __test__program(self, program: Program):
+        try:
+            convex_sol = solve_with_convex(program)
+        except NoSolutionException as err:
+            print(err)
+            convex_sol = None
+        google_os_sol = solve_with_os_tool(program)
+        self.assertTrue(convex_sol == google_os_sol)
+        
+    def test_problem_unexpected(self):
+        program: Program = read_unexpected_problem('bounded_problems1')
         convex_sol = solve_with_convex(program)
         google_os_sol = solve_with_os_tool(program)
         self.assertTrue(convex_sol == google_os_sol)
+        
 
     def test_problem_1(self):
         program: Program = read_bounded_problem(1)
@@ -40,4 +52,32 @@ class TestBoundedProblems(unittest.TestCase):
 
     def test_problem_8(self):
         program: Program = read_bounded_problem(8)
+        self.__test__program(program)
+
+    def test_problem_9(self):
+        program: Program = read_bounded_problem(9)
+        self.__test__program(program)
+        
+    def test_problem_10(self):
+        program: Program = read_bounded_problem(10)
+        self.__test__program(program)
+        
+    def test_problem_11(self):
+        program: Program = read_bounded_problem(11)
+        self.__test__program(program)
+        
+    def test_problem_12(self):
+        program: Program = read_bounded_problem(12)
+        self.__test__program(program)
+        
+    def test_problem_13(self):
+        program: Program = read_bounded_problem(13)
+        self.__test__program(program)
+        
+    def test_problem_14(self):
+        program: Program = read_bounded_problem(14)
+        self.__test__program(program)
+        
+    def test_problem_15(self):
+        program: Program = read_bounded_problem(15)
         self.__test__program(program)
