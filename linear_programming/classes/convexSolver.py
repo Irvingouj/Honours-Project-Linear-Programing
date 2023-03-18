@@ -9,6 +9,8 @@ from .solver import Solver
 from .constraints import Constraints
 from .oneDConstraint import OneDConstraint
 
+import linear_programming.utils.debug as dbg
+
 
 def corner(obj: ObjectiveFunction) -> Point:
     """
@@ -51,7 +53,8 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
     return one_d
 
 
-M = sys.maxsize/2
+# M = sys.maxsize/1000
+M = 20000000
 
 
 def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> bool:
@@ -66,7 +69,9 @@ class ConvexSolver(Solver):
         v = self._m1(obj).find_intersection(self._m2(obj))
         cons = [self._m1(obj), self._m2(obj)] + cons
         for idx, c in enumerate(cons):
+            
             if not v.is_inside(c):
+                print(f"v: {v} is not inside {c}")
                 one_d_constraints = to_1d_constraint(c, cons[:idx])
                 if not c.is_vertical():
                     x = solve_1d_linear_program(
@@ -76,6 +81,7 @@ class ConvexSolver(Solver):
                     y = solve_1d_linear_program(
                         one_d_constraints, get_one_d_optimize_direction(obj, c))
                     v = c.find_point_with_y(y)
+                print(f"v: {v} is updated")
 
         return v
 

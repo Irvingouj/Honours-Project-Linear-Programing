@@ -1,3 +1,4 @@
+import time
 import unittest
 from linear_programming.utils.exceptions import NoSolutionException
 from linear_programming.utils.problem_reader import read_bounded_problem, Program, read_unexpected_problem
@@ -7,12 +8,24 @@ from linear_programming.classes.osToolSolver import solve_with_os_tool
 
 class TestBoundedProblems(unittest.TestCase):
     def __test__program(self, program: Program):
+        con_time = time.time()
         try:
             convex_sol = solve_with_convex(program)
         except NoSolutionException as err:
             print(err)
             convex_sol = None
+        con_end = time.time()
+        
+        os_time = time.time()
         google_os_sol = solve_with_os_tool(program)
+        os_end = time.time()
+        
+        with open('time_comparison_bounded.txt', 'a+',encoding='utf-8') as f:
+            res = f'convex time: {str(con_end - con_time)} os time: {str(os_end - os_time)} for n = {str(len(program[1]))} \n'
+            lines = f.readlines()
+            if res not in lines:
+                f.write(res)
+            
         self.assertTrue(convex_sol == google_os_sol)
         
     def test_problem_unexpected(self):
