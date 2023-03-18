@@ -69,7 +69,6 @@ class ConvexSolver(Solver):
         v = self._m1(obj).find_intersection(self._m2(obj))
         cons = [self._m1(obj), self._m2(obj)] + cons
         for idx, c in enumerate(cons):
-            
             if not v.is_inside(c):
                 # print(f"v: {v} is not inside {c}")
                 one_d_constraints = to_1d_constraint(c, cons[:idx])

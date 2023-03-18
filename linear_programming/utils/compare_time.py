@@ -1,3 +1,4 @@
+import random
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException
@@ -5,6 +6,7 @@ from linear_programming.utils.linear_program_generator import gen_random_2d_feas
 from typing import Tuple
 from linear_programming.utils.problem_reader import Program
 from linear_programming.classes.point import Point
+from linear_programming.utils.problem_reader import project_root
 import time
         
 
@@ -18,10 +20,8 @@ def test_data_feasible(range:range):
         os_res,os_time = solve_with_time(os_tool_solve, program)
         try:
             con_res,con_time = solve_with_time(convex_solve, program)
-        except NoSolutionException as err:
-            if not os_res == None:
-                write_bad_program(program, None, os_res,err)
-                raise NoSolutionException(f"convex solver has no solution and os tool has solution: {os_res} \n")
+        except NoSolutionException:
+            con_res = None
             
             
         
@@ -45,10 +45,13 @@ def solve_with_time(solver, program) -> Tuple[Point, float]:
     return res, end-start
 
 def write_bad_program(program:Program, con_res:Point, os_res:Point,err):
-    with open('bad_program.txt', 'a+',encoding='utf-8') as f:
-        f.write(str(err)+"\n")
-        f.write(f"convex result: {con_res} os tool result: {os_res}\n")
+    bad_program_dir = project_root.joinpath("linear_program_data", "problems_unexpected")
+    filename = bad_program_dir.joinpath(f"{con_res}!={os_res}__{random.random()}.txt")
+    program_path = bad_program_dir.joinpath(filename)
+    with open(program_path, 'a+',encoding='utf-8') as f:
+        f.write("#" +str(err)+"\n")
+        f.write(f"# convex result: {con_res} os tool result: {os_res}\n")
         f.write(str(program[0])+"\n")
         for line in program[1]:
             f.write(str(line)+"\n")
-        f.write("-----------------program end-----------------")
+        f.write("#-----------------program end-----------------")

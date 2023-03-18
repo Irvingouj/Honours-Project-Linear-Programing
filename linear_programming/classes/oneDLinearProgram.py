@@ -20,7 +20,7 @@ def solve_1d_linear_program(one_d_constraints: List[OneDConstraint], objective: 
 
     def raise_for_violation(constraint: OneDConstraint):
         flag = constraint.direction() == Facing.LEFT and constraint.value() < left
-        flag = constraint.direction() == Facing.RIGHT and constraint.value() > right
+        flag = flag or constraint.direction() == Facing.RIGHT and constraint.value() > right
         
         # debugging purpose, I only need add 1 breakpoint here
         if flag:

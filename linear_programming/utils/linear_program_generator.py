@@ -11,13 +11,13 @@ from .problem_reader import project_root, Program,bounded_prefix,infeasible_pref
 
 LINEAR_PROGRAMS_DIR = project_root.joinpath("linear_program_data")
 
-def rand_int_in_range(min: int, max: int) -> int:
-    res =  random.randint(min, max)
+def rand_float_in_range(min: int, max: int) -> int:
+    res =  random.uniform(min, max)
     while res == 0:
         res =  random.randint(min, max)
     return res
 
-def gen_random_2d_feasible(num_constrains: int,  max_value: int = 100) -> Program:
+def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program:
     p_1 = Point(random.randint(0, max_value), random.randint(0, max_value))
     p_2 = Point(random.randint(0, max_value), random.randint(0, max_value))
     p_3 = Point(random.randint(0, max_value), random.randint(0, max_value))
@@ -28,8 +28,8 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 100) -> Progra
         return c.contains(p_1) or c.contains(p_2) or c.contains(p_3)
 
     while len(cons) < num_constrains:
-        a = rand_int_in_range(-max_value, max_value)
-        b = rand_int_in_range(-max_value, max_value)
+        a = rand_float_in_range(-max_value, max_value)
+        b = rand_float_in_range(-max_value, max_value)
         
         c = Constraints(a=a, b=b,
                         lessOrGreater=GreaterOrLess.LESS, c=random.randint(10*max_value, 10*max_value*max_value))
@@ -60,7 +60,7 @@ def gen_random_1d_feasible(num_constrains: int,  max_value: int = 100) -> OneDPr
         
     return (True, cons)
         
-def gen_random_2d_infeasible(num_constrains: int,  max_value: int = 100) -> Program:
+def gen_random_2d_infeasible(num_constrains: int,  max_value: int = 10) -> Program:
     p_1 = Point(random.randint(0, max_value), random.randint(0, max_value))
     # 3 points generate a plane
     cons = []
@@ -69,8 +69,8 @@ def gen_random_2d_infeasible(num_constrains: int,  max_value: int = 100) -> Prog
         return not c.contains(p_1)
 
     while len(cons) < num_constrains:
-        a = rand_int_in_range(-max_value, max_value)
-        b = rand_int_in_range(-max_value, max_value)
+        a = rand_float_in_range(-max_value, max_value)
+        b = rand_float_in_range(-max_value, max_value)
         
         c = Constraints(a=a, b=b,
                         lessOrGreater=GreaterOrLess.LESS, c=random.randint(10*max_value, 10*max_value*max_value))

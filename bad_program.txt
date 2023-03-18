@@ -1,5 +1,5 @@
-result not equal
-convex result: (22.43897,34.05724) os tool result: None
+#result not equal
+#convex result: (22.43897,34.05724) os tool result: None
 max 97x + 19y
 -76x + 59y <= 1567
 -92x + -95y <= 29152
