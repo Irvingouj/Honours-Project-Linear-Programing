@@ -1,0 +1,2 @@
+convex time: 0.0 os time: 0.00099945068359375 for n=4 
+convex time: 0.0260009765625 os time: 0.032998085021972656 for n=1000 

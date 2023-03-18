@@ -8,11 +8,17 @@ import unittest
 
 class TestInfeasibleProblems(unittest.TestCase):
     def __test__program(self, program: Program):
+        google_os_sol = solve_with_os_tool(program)
         try:
             convex_sol = solve_with_convex(program)
         except NoSolutionException:
-            google_os_sol = solve_with_os_tool(program)
             self.assertTrue(google_os_sol == None)
+            return
+        
+        if google_os_sol is not None:
+            raise Exception('THis problem should be infeasible')
+         
+        raise Exception('Convex solver should raise NoSolutionException')
 
     def test_problem_1(self):
         program: Program = read_infeasible_problem(1)
@@ -40,4 +46,8 @@ class TestInfeasibleProblems(unittest.TestCase):
 
     def test_problem_7(self):
         program: Program = read_infeasible_problem(7)
+        self.__test__program(program)
+        
+    def test_problem_8(self):
+        program: Program = read_infeasible_problem(8)
         self.__test__program(program)

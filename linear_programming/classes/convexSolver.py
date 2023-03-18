@@ -71,7 +71,7 @@ class ConvexSolver(Solver):
         for idx, c in enumerate(cons):
             
             if not v.is_inside(c):
-                print(f"v: {v} is not inside {c}")
+                # print(f"v: {v} is not inside {c}")
                 one_d_constraints = to_1d_constraint(c, cons[:idx])
                 if not c.is_vertical():
                     x = solve_1d_linear_program(
@@ -81,7 +81,7 @@ class ConvexSolver(Solver):
                     y = solve_1d_linear_program(
                         one_d_constraints, get_one_d_optimize_direction(obj, c))
                     v = c.find_point_with_y(y)
-                print(f"v: {v} is updated")
+                # print(f"v: {v} is updated")
 
         return v
 
