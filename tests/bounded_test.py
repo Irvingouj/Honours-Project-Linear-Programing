@@ -21,9 +21,12 @@ class TestBoundedProblems(unittest.TestCase):
         os_end = time.time()
         
         with open('time_comparison_bounded.txt', 'a+',encoding='utf-8') as f:
-            res = f'convex time: {str(con_end - con_time)} os time: {str(os_end - os_time)} for n = {str(len(program[1]))} \n'
+            n = len(program[1])
+            res = f'convex time: {str(con_end - con_time)} os time: {str(os_end - os_time)} for n={n} \n'
+            f.seek(0)
             lines = f.readlines()
-            if res not in lines:
+            n_in_lines = [line.split("n=")[1].removesuffix(' \n') for line in lines]
+            if str(n) not in n_in_lines:
                 f.write(res)
             
         self.assertTrue(convex_sol == google_os_sol)
@@ -93,4 +96,8 @@ class TestBoundedProblems(unittest.TestCase):
         
     def test_problem_15(self):
         program: Program = read_bounded_problem(15)
+        self.__test__program(program)
+
+    def test_problem_16(self):
+        program: Program = read_bounded_problem(16)
         self.__test__program(program)

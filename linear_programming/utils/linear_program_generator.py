@@ -23,7 +23,7 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 100) -> Progra
         return c.contains(p_1) or c.contains(p_2) or c.contains(p_3)
 
     while len(cons) < num_constrains:
-        c = Constraints(a=random.randint(1, max_value), b=random.randint(1, max_value),
+        c = Constraints(a=random.randint(-max_value, max_value), b=random.randint(-max_value, max_value),
                         lessOrGreater=GreaterOrLess.LESS, c=random.randint(10*max_value, 10*max_value*max_value))
 
         if if_feasible_constraint(c) or if_feasible_constraint(c.flip_sign()):
