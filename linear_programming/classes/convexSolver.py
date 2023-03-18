@@ -96,6 +96,11 @@ class ConvexSolver(Solver):
         else:
             return Constraints(0, -1, c=M)
 
+    def if_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> bool:
+        obj_vector = obj.to_vector()
+        obj_vector.rotate_to_top() 
+        return False
+
 
 def solve_with_convex(program) -> Point:
     solver = ConvexSolver()

@@ -133,3 +133,10 @@ class Constraints:
             p2 = other.find_point_with_x(0)
 
         return not (self.contains(p2) or other.contains(p1))
+
+    def facing_normal_vector(self) -> 'Vector':
+        return Vector([-self.b, self.a]).normalize()
+    
+    def get_rotate_around_origin(self, angle: float) -> 'Constraints':
+        new_facing_vector = self.facing_direction_vector().get_rotate(angle)
+        return Constraints(-new_facing_vector.get(0), -new_facing_vector.get(1), c=self.c)

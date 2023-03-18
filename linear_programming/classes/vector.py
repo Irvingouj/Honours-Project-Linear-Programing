@@ -1,4 +1,7 @@
+import math
 from typing import List
+
+import numpy as np
 
 
 class Vector:
@@ -23,7 +26,7 @@ class Vector:
 
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, self.__class__):
-            return [self.arr[i] == __o.arr[i] for i in range(len(self.arr))].count(False) == 0
+            return np.allclose(self.arr, __o.arr)
         return False
 
     def __ne__(self, __o: object) -> bool:
@@ -44,3 +47,22 @@ class Vector:
 
     def is_parallel_to(self, other: 'Vector') -> bool:
         return self.find_orthogonal_vector() * other == 0
+
+    def get_rotate(self,degree) -> 'Vector':
+        x = self.arr[0]
+        y = self.arr[1]
+        sin = math.sin(degree)
+        cos = math.cos(degree)
+        return Vector([x*cos - y*sin, x*sin + y*cos])
+    
+    def get(self, index):
+        return self.arr[index]
+    
+    def degree_needed_to_rotate_to(self, other: 'Vector') -> float:
+        x1 = self.arr[0]
+        x2 = other.arr[0]
+        y1= self.arr[1]
+        y2= other.arr[1]
+        dot = x1*x2 + y1*y2      # dot product between [x1, y1] and [x2, y2]
+        det = x1*y2 - y1*x2      # determinant
+        return math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
