@@ -19,8 +19,8 @@ def analysis_bad_program(filename):
     cons = program[1]
     idx_differ = []
     for i in range(4,len(cons)+1):
-        p_os = OsToolSolver().solve(program[0],  cons[:i])
-        p_con = ConvexSolver().solve(program[0], cons[:i])
+        p_os = os_solve(program[0],  cons[:i])
+        p_con = con_solve(program[0], cons[:i])
         print("--------------------------------------" + str(i))
         print(p_con)
         print(p_os)
@@ -28,6 +28,9 @@ def analysis_bad_program(filename):
         if(p_con != p_os):
             write_bad_program((program[0],cons[:i+1]), p_con, p_os, "result not equal at index" + str(i))
             idx_differ.append(i)
+            break
+        if (p_con == None == p_os):
+            print("no solution")
             break
     print("done")
     print(idx_differ)
@@ -68,4 +71,4 @@ def analysis_bad_program_no_export(filename):
 #         cons_removed.append(con_removed)
             
 
-analysis_bad_program_no_export(short)
+analysis_bad_program("bounded_problems1")

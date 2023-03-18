@@ -3,7 +3,6 @@ from linear_programming.classes import constraints
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException
-from linear_programming.utils.problem_reader import Program
 
 
 def con_solve(obj,cons):
