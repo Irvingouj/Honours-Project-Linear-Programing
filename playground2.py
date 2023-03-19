@@ -1,14 +1,16 @@
 import math
 from linear_programming.classes.convexSolver import ConvexSolver
+from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.classes.vector import Vector
 from linear_programming.classes.constraints import Constraints
 from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.utils.problem_reader import read_bounded_problem, read_unbounded_problem
 
-obj,cons = read_bounded_problem(3)
-solver = ConvexSolver();
-res = solver.check_unbounded(obj,cons)
-
+obj,cons = read_unbounded_problem(3)
+# solver = ConvexSolver()
+# res = solver.check_unbounded(obj,cons)
+solver = OsToolSolver()
+res= solver.solve(obj,cons)
 print(res)
 # c1 = Constraints(1,1,c=1)
 # c2 = Constraints(1,-1,c=1)

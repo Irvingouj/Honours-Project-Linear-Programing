@@ -1,9 +1,12 @@
+from ast import Tuple
 from typing import List
+
+import numpy as np
 from linear_programming.classes.vector import Vector
 
 from linear_programming.utils.exceptions import NoSolutionException
 from .point import Point
-from .oneDLinearProgram import solve_1d_linear_program
+from .oneDLinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
 from .objectiveFunction import ObjectiveFunction
 from .solver import Solver
 from .constraints import Constraints
@@ -30,7 +33,6 @@ def corner(obj: ObjectiveFunction) -> Point:
 
 
 def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDConstraint]:
-
     # if the constrain is vertical, we rotate all the constraints by 90 degree
     if curr.is_vertical():
         cons = [c.rotate() for c in cons]
@@ -70,7 +72,6 @@ class ConvexSolver(Solver):
         cons = [self._m1(obj), self._m2(obj)] + cons
         for idx, c in enumerate(cons):
             if not v.is_inside(c):
-                # print(f"v: {v} is not inside {c}")
                 one_d_constraints = to_1d_constraint(c, cons[:idx])
                 if not c.is_vertical():
                     x = solve_1d_linear_program(
@@ -80,7 +81,6 @@ class ConvexSolver(Solver):
                     y = solve_1d_linear_program(
                         one_d_constraints, get_one_d_optimize_direction(obj, c))
                     v = c.find_point_with_y(y)
-                # print(f"v: {v} is updated")
 
         return v
 
@@ -95,24 +95,57 @@ class ConvexSolver(Solver):
             return Constraints(0, 1, c=M)
         else:
             return Constraints(0, -1, c=M)
+        
+    class CheckBoundResult:
+        def __init__(self, bounded:bool, unbound_certificate:Vector = None, bound_certificate:Tuple(int,int) = None):
+            assert isinstance(bounded,bool)
+            assert isinstance(unbound_certificate,Vector) or unbound_certificate == None
+            assert isinstance(bound_certificate,tuple) or bound_certificate == None
+            
+            # if bounded, the bound
+            self.bounded = bounded
+            self.unbound_certificate = unbound_certificate
+            self.bound_certificate = bound_certificate
+            
+            # only one of them can be None, and at least one of them must be None, XOR
+            assert (bound_certificate == None) != (unbound_certificate == None)
+        def __str__(self):
+            if self.bounded:
+                return f"bounded, bound certificate: {self.bound_certificate}"
+            else:
+                return f"unbounded, unbound certificate: {self.unbound_certificate}"
 
-    def check_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Vector:
+    def check_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> CheckBoundResult:
         obj_vector = obj.to_vector()
         degree_needed = obj_vector.degree_needed_to_rotate_to(Vector([0,1]))
         rotated_cons = [c.get_rotate_around_origin(degree_needed) for c in cons]
-        dbg.print_cons(rotated_cons, "rotated_cons")
         cons_facing_normal_vector = [c.facing_normal_vector() for c in rotated_cons]
-        dbg.print_cons(cons_facing_normal_vector, "cons_facing_normal_vector")
         one_d_cons = [OneDConstraint(-c.arr[0], c.arr[1]) for c in cons_facing_normal_vector]
-        dbg.print_cons(one_d_cons, "one_d_cons")
-        try:
-            res = solve_1d_linear_program(one_d_cons, True)
-        except NoSolutionException:
-            # do something here
-            pass
+        dx,left,right = solve_1d_linear_program_with_left_and_right_index(one_d_cons, True)
         
+        # no solution, the problem is bounded
+        if dx == None:
+            return self.CheckBoundResult(bounded=True,bound_certificate=(left,right))
         
-        return Vector([res, 1]).get_rotate(-degree_needed)
+
+        # dx exist, which means the direction of unboundedness is (dx,1)
+        H_prime = []
+        for idx,vector in enumerate(cons_facing_normal_vector):
+            eta_x = vector.get(0)
+            eta_y = vector.get(1)
+            # d_x*eta_x + d_y*eta_y = 0 but d_y = 1
+            # d_x = -eta_x/eta_y
+            #need to do some thing if eta_y is 0 :TODO
+            if eta_y != 0 and np.allclose(dx,-eta_x/eta_y):
+                H_prime.append(cons[idx])
+
+        # pg 81, convert to 1d again and check for feasibility
+        # we ignore paralell constraints for now                
+        if len(H_prime) > 1:
+            raise NotImplementedError("Not implemented yet")
+        
+        result = self.CheckBoundResult(bounded=False,unbound_certificate=Vector([dx, 1]).get_rotate(-degree_needed))
+        return result
 
 
 def solve_with_convex(program) -> Point:

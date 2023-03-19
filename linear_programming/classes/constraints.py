@@ -10,6 +10,12 @@ from .vector import Vector
 class GreaterOrLess(Enum):
     GREATER = 0
     LESS = 1
+    
+class Direction(Enum):
+    LEFT = 0
+    RIGHT = 1
+    UP = 2
+    DOWN = 3
 
 
 class Constraints:
@@ -49,14 +55,6 @@ class Constraints:
 
     def contains(self, point) -> bool:
         return self.a * point.x + self.b * point.y <= self.c
-
-    def find_all_intersection_with_Constraints(self, cons: List['Constraints']) -> List[Point]:
-        points = []
-        for con in cons:
-            point = self.find_intersection(con)
-            if point is not None:
-                points.append(point)
-        return points
 
     def find_intersection(self, edge: 'Constraints') -> Point:
         return self.to_edge().find_intersection(edge.to_edge())
@@ -140,3 +138,29 @@ class Constraints:
     def get_rotate_around_origin(self, angle: float) -> 'Constraints':
         new_facing_vector = self.facing_direction_vector().get_rotate(angle)
         return Constraints(-new_facing_vector.get(0), -new_facing_vector.get(1), c=self.c)
+
+
+    def get_moved(self,direction:Direction, distance:float) -> 'Constraints':
+        if direction == Direction.LEFT:
+            return Constraints(self.a, self.b, c=self.c - distance)
+        elif direction == Direction.RIGHT:
+            return Constraints(self.a, self.b, c=self.c + distance)
+        elif direction == Direction.UP:
+            return Constraints(self.a, self.b, c=self.c + distance)
+        elif direction == Direction.DOWN:
+            return Constraints(self.a, self.b, c=self.c - distance)
+        
+    def move(self,direction:Direction, distance:float):
+        if direction == Direction.LEFT:
+            self.c -= distance
+        elif direction == Direction.RIGHT:
+            self.c += distance
+        elif direction == Direction.UP:
+            self.c += distance
+        elif direction == Direction.DOWN:
+            self.c -= distance
+            
+    def rotate_around_origin(self, angle: float):
+        new_facing_vector = self.facing_direction_vector().get_rotate(angle)
+        self.a = -new_facing_vector.get(0)
+        self.b = -new_facing_vector.get(1)

@@ -11,6 +11,7 @@ from .solver import Solver
 class OsToolSolver(Solver):
     def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
         solver = pywraplp.Solver.CreateSolver('GLOP')
+        
         if not solver:
             raise Exception('Could not create solver')
 
