@@ -1,6 +1,7 @@
-from typing import List
 from enum import Enum
 import re
+import numpy as np
+
 from .edge import Edge
 from .line import Line
 from .point import Point
@@ -54,7 +55,8 @@ class Constraints:
         return Edge(line=Line(self.a, self.b, self.c))
 
     def contains(self, point) -> bool:
-        return self.a * point.x + self.b * point.y <= self.c
+        # computer arithmetic is not precise enough
+        return self.a * point.x + self.b * point.y < self.c or np.isclose(self.a * point.x + self.b * point.y, self.c)
 
     def find_intersection(self, edge: 'Constraints') -> Point:
         return self.to_edge().find_intersection(edge.to_edge())
