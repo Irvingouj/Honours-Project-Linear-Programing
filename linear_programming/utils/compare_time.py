@@ -36,16 +36,17 @@ def solve_calculate_time(program) -> Tuple[float, float]:
     os_time_end = time.time()
     
     cons_time_start = time.time()
+    con_res = None
     try:
         con_res = convex_solver.solve(program[0], program[1])
     except NoSolutionException as exc:
         if os_res is not None:
             write_bad_program(program, None, os_res,"convex solver has no solution but os tool has")
-        raise ResultNotEqualException("convex solver has no solution but os tool has solution") from exc
+            raise ResultNotEqualException("convex solver has no solution but os tool has solution") from exc
     except UnboundedException as exc:
         if os_res is not None:
             write_bad_program(program, None, os_res,"convex solver has no solution but os tool has")
-        raise ResultNotEqualException("convex solver is unbounded  but os tool has solution") from exc
+            raise ResultNotEqualException("convex solver is unbounded  but os tool has solution") from exc
         
     if os_res != con_res:
         write_bad_program(program, con_res, os_res,"result not equal")
