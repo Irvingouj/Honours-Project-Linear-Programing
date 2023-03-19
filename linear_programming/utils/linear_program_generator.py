@@ -16,6 +16,7 @@ def rand_float_in_range(min: int, max: int) -> int:
     res =  random.uniform(min, max)
     while res == 0:
         res =  random.randint(min, max)
+    res = round(res, 4)
     return res
 def random_constraint(max_value: int = 100) -> Constraints:
     a = rand_float_in_range(-max_value, max_value)
@@ -30,10 +31,12 @@ def random_constraint(max_value: int = 100) -> Constraints:
     return Constraints(a=a, b=b, lessOrGreater=GreaterOrLess.LESS, c=c)
 
 def random_obj() -> ObjectiveFunction:
-    res = ObjectiveFunction(a=random.randint(-10, 10), b=random.randint(-10, 10))
-    while res.a == 0 and res.b == 0:
-        res = ObjectiveFunction(a=random.randint(-10, 10), b=random.randint(-10, 10))
-    return res
+    a = rand_float_in_range(-10, 10)
+    b = rand_float_in_range(-10, 10)
+    while a == 0 and b == 0:
+        a = rand_float_in_range(-10, 10)
+        b = rand_float_in_range(-10, 10)
+    return ObjectiveFunction(a=a, b=b)
 
 def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program:
     p_1 = Point(random.randint(0, max_value), random.randint(0, max_value))

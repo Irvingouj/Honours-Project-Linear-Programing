@@ -152,9 +152,9 @@ class ConvexSolver(Solver):
             for h_i in H_prime:
                 one_d = OneDConstraint(h_i.a,h_i.c)
                 one_d_again.append(one_d)
-        dx_prime,__,_ = solve_1d_linear_program_with_left_and_right_index(one_d_again, True)
-        if dx_prime == None:
-            raise NoSolutionException("No solution as the constraints are parallel and share no common area")
+            dx_prime,__,_ = solve_1d_linear_program_with_left_and_right_index(one_d_again, True)
+            if dx_prime == None:
+                raise NoSolutionException("No solution as the constraints are parallel and share no common area")
         
         result = self.CheckBoundResult(bounded=False,unbound_certificate=Vector([dx, 1]).get_rotate(-degree_needed))
         return result
