@@ -1,4 +1,6 @@
-def print_cons(cons):
+def print_cons(cons,title=""):
+    if title != "":
+        print(title)
     for c in cons:
         print(c)
         

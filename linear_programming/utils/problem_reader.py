@@ -26,6 +26,13 @@ def read_infeasible_problem(problem_number):
     program = parse_file(file)
     return program
 
+def read_unbounded_problem(problem_number):
+    file_path = os.path.join(
+        project_root, program_data_dir_name, unbounded_prefix + str(problem_number))
+    file = open(file_path, 'r')
+    program = parse_file(file)
+    return program
+
 
 Program = Tuple[ObjectiveFunction, List[Constraints]]
 

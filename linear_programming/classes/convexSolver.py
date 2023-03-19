@@ -1,5 +1,5 @@
-import sys
 from typing import List
+from linear_programming.classes.vector import Vector
 
 from linear_programming.utils.exceptions import NoSolutionException
 from .point import Point
@@ -96,10 +96,23 @@ class ConvexSolver(Solver):
         else:
             return Constraints(0, -1, c=M)
 
-    def if_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> bool:
+    def check_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Vector:
         obj_vector = obj.to_vector()
-        obj_vector.rotate_to_top() 
-        return False
+        degree_needed = obj_vector.degree_needed_to_rotate_to(Vector([0,1]))
+        rotated_cons = [c.get_rotate_around_origin(degree_needed) for c in cons]
+        dbg.print_cons(rotated_cons, "rotated_cons")
+        cons_facing_normal_vector = [c.facing_normal_vector() for c in rotated_cons]
+        dbg.print_cons(cons_facing_normal_vector, "cons_facing_normal_vector")
+        one_d_cons = [OneDConstraint(-c.arr[0], c.arr[1]) for c in cons_facing_normal_vector]
+        dbg.print_cons(one_d_cons, "one_d_cons")
+        try:
+            res = solve_1d_linear_program(one_d_cons, True)
+        except NoSolutionException:
+            # do something here
+            pass
+        
+        
+        return Vector([res, 1]).get_rotate(-degree_needed)
 
 
 def solve_with_convex(program) -> Point:

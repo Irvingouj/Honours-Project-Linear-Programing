@@ -1,6 +1,8 @@
 import math
 import random
 import unittest
+
+import numpy as np
 from linear_programming.classes.vector import Vector
 
 class TestVector(unittest.TestCase):
@@ -39,4 +41,19 @@ class TestVector(unittest.TestCase):
             rotated = v1.get_rotate(degree=degree)
             degree_get = v1.degree_needed_to_rotate_to(rotated)
             self.assertAlmostEqual(degree, degree_get)
+
+    def test_degree_against_it_self2(self):
+        v1= Vector([1,1])
+        pi = math.pi
+        []
+        for degree in np.arange(-pi,pi,0.1):
+            rotated = v1.get_rotate(degree=degree)
+            degree_get = v1.degree_needed_to_rotate_to(rotated)
+            self.assertAlmostEqual(degree, degree_get)
+            
+            vector_get_from_rotation = v1.get_rotate(degree=degree_get)
+            self.assertEqual(vector_get_from_rotation, rotated)
+            degree_get_again = v1.degree_needed_to_rotate_to(vector_get_from_rotation)
+            self.assertAlmostEqual(degree_get, degree_get_again)
+
         

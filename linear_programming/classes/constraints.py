@@ -135,7 +135,7 @@ class Constraints:
         return not (self.contains(p2) or other.contains(p1))
 
     def facing_normal_vector(self) -> 'Vector':
-        return Vector([-self.b, self.a]).normalize()
+        return Vector([-self.a, -self.b]).normalize()
     
     def get_rotate_around_origin(self, angle: float) -> 'Constraints':
         new_facing_vector = self.facing_direction_vector().get_rotate(angle)

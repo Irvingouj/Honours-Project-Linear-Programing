@@ -26,7 +26,9 @@ class OneDConstraint:
     
     def contains(self, value:float) -> bool:
         return self.a*value <= self.c
-    
+   
+    # def value_str(self) -> str:
+    #     return f"x<= {self.value()}" 
 
     def __str__(self):
         return str(self.a) + '*x <= ' + str(self.c)
