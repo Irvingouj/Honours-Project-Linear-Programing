@@ -2,8 +2,9 @@ from argparse import ArgumentParser
 import argparse
 import re
 import linear_programming.utils.linear_program_generator as gen
-import linear_programming.utils.compare_time as compare_time
 import linear_programming.utils.problem_writer as writer
+import linear_programming.utils.compare_time as compare_time
+from linear_programming.utils.problem_reader import ProblemType
 
 
 def main():
@@ -24,7 +25,9 @@ def main():
     solve_parser = subparsers.add_parser('test')
     solve_parser.add_argument('-s', '--start', type=int,default=10)
     solve_parser.add_argument('-e', '--end', type=int,default=3000)
-    solve_parser.add_argument('-t', '--step', type=int,default=100)
+    solve_parser.add_argument('-p', '--step', type=int,default=100)
+    solve_parser.add_argument('-t', '--type', type=str,choices=['bounded','infeasible','unbounded'])
+    solve_parser.add_argument('-n', '--name', type=str,default="result.txt")
     
 
     def range_type(arg_value, pat=re.compile(r"^\d+,\d+,\d+$")):
@@ -58,5 +61,13 @@ def main():
         start = args.start
         end = args.end
         step = args.step
-        compare_time.test_data_feasible(range(start,end,step))
+        type_para = None
+        if args.type == 'bounded':
+            type_para = ProblemType.BOUNDED
+        elif args.type == 'infeasible':
+            type_para = ProblemType.INFEASIBLE
+        elif args.type == 'unbounded':
+            type_para = ProblemType.UNBOUNDED
+            
+        compare_time.test_with_time(type_para,range(start,end,step),args.name)
         
