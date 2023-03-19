@@ -1,5 +1,5 @@
 import unittest
-from  linear_programming.utils.linear_program_generator import gen_random_2d_feasible,generate_to_file_bounded
+from  linear_programming.utils.linear_program_generator import gen_random_2d_feasible
 from linear_programming.classes.osToolSolver import OsToolSolver
 import os
 
@@ -27,14 +27,6 @@ class TestGenerateRandomLP(unittest.TestCase):
         solver = OsToolSolver()
         res = solver.solve(cons=cons, obj=obj)
         self.assertIsNotNone(res)
-
-    def test_file_created(self):
-        # Generate a new LP file and check if it exists
-        file_path = generate_to_file_bounded(2, 100)
-        self.assertTrue(os.path.isfile(file_path))
-
-        # Clean up the test file
-        os.remove(file_path)
 
 
 if __name__ == '__main__':

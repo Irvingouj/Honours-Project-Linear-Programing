@@ -1,9 +1,10 @@
 import time
 import unittest
 from linear_programming.utils.exceptions import NoSolutionException
-from linear_programming.utils.problem_reader import read_bounded_problem, Program, read_unexpected_problem
 from linear_programming.classes.convexSolver import solve_with_convex
 from linear_programming.classes.osToolSolver import solve_with_os_tool
+from linear_programming.utils.problem_reader import read_problem,ProblemType,read_unexpected_problem
+from linear_programming.utils.types import Program
 
 
 class TestBoundedProblems(unittest.TestCase):
@@ -39,65 +40,65 @@ class TestBoundedProblems(unittest.TestCase):
         
 
     def test_problem_1(self):
-        program: Program = read_bounded_problem(1)
+        program: Program = read_problem(ProblemType.BOUNDED, 1)
         self.__test__program(program)
 
     def test_problem_2(self):
-        program: Program = read_bounded_problem(2)
+        program: Program = read_problem(ProblemType.BOUNDED,2)
         self.__test__program(program)
 
     def test_problem_3(self):
-        program: Program = read_bounded_problem(3)
+        program: Program = read_problem(ProblemType.BOUNDED,3)
         self.__test__program(program)
 
     def test_problem_4(self):
-        program: Program = read_bounded_problem(4)
+        program: Program = read_problem(ProblemType.BOUNDED,4)
         self.__test__program(program)
 
     def test_problem_5(self):
-        program: Program = read_bounded_problem(5)
+        program: Program = read_problem(ProblemType.BOUNDED,5)
         self.__test__program(program)
 
     def test_problem_6(self):
-        program: Program = read_bounded_problem(6)
+        program: Program = read_problem(ProblemType.BOUNDED,6)
         self.__test__program(program)
 
     def test_problem_7(self):
-        program: Program = read_bounded_problem(7)
+        program: Program = read_problem(ProblemType.BOUNDED,7)
         self.__test__program(program)
 
     def test_problem_8(self):
-        program: Program = read_bounded_problem(8)
+        program: Program = read_problem(ProblemType.BOUNDED,8)
         self.__test__program(program)
 
     def test_problem_9(self):
-        program: Program = read_bounded_problem(9)
+        program: Program = read_problem(ProblemType.BOUNDED,9)
         self.__test__program(program)
         
     def test_problem_10(self):
-        program: Program = read_bounded_problem(10)
+        program: Program = read_problem(ProblemType.BOUNDED,10)
         self.__test__program(program)
         
     def test_problem_11(self):
-        program: Program = read_bounded_problem(11)
+        program: Program = read_problem(ProblemType.BOUNDED,11)
         self.__test__program(program)
         
     def test_problem_12(self):
-        program: Program = read_bounded_problem(12)
+        program: Program = read_problem(ProblemType.BOUNDED,12)
         self.__test__program(program)
         
     def test_problem_13(self):
-        program: Program = read_bounded_problem(13)
+        program: Program = read_problem(ProblemType.BOUNDED,13)
         self.__test__program(program)
         
     def test_problem_14(self):
-        program: Program = read_bounded_problem(14)
+        program: Program = read_problem(ProblemType.BOUNDED,14)
         self.__test__program(program)
         
     def test_problem_15(self):
-        program: Program = read_bounded_problem(15)
+        program: Program = read_problem(ProblemType.BOUNDED,15)
         self.__test__program(program)
 
     def test_problem_16(self):
-        program: Program = read_bounded_problem(16)
+        program: Program = read_problem(ProblemType.BOUNDED,16)
         self.__test__program(program)

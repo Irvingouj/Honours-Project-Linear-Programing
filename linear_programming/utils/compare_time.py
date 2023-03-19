@@ -6,7 +6,7 @@ from linear_programming.utils.linear_program_generator import gen_random_2d_feas
 from typing import Tuple
 from linear_programming.utils.problem_reader import Program
 from linear_programming.classes.point import Point
-from linear_programming.utils.problem_reader import project_root
+from linear_programming.utils.problem_reader import PROJECT_ROOT
 import time
         
 
@@ -45,7 +45,7 @@ def solve_with_time(solver, program) -> Tuple[Point, float]:
     return res, end-start
 
 def write_bad_program(program:Program, con_res:Point, os_res:Point,err):
-    bad_program_dir = project_root.joinpath("linear_program_data", "problems_unexpected")
+    bad_program_dir = PROJECT_ROOT.joinpath("linear_program_data", "problems_unexpected")
     filename = bad_program_dir.joinpath(f"{con_res}!={os_res}__{random.random()}.txt")
     program_path = bad_program_dir.joinpath(filename)
     with open(program_path, 'a+',encoding='utf-8') as f:

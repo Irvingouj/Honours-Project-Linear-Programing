@@ -1,16 +1,15 @@
 import random
 from typing import List, Tuple
-import os
 
 from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.classes.constraints import Constraints, GreaterOrLess
 from linear_programming.classes.point import Point
 from linear_programming.classes.oneDConstraint import OneDConstraint
 from linear_programming.classes.vector import Vector
-from .problem_reader import project_root, Program,bounded_prefix,infeasible_prefix
+from linear_programming.utils.types import Program
+from linear_programming.utils.problem_reader import PROJECT_ROOT
 
-
-LINEAR_PROGRAMS_DIR = project_root.joinpath("linear_program_data")
+LINEAR_PROGRAMS_DIR = PROJECT_ROOT.joinpath("linear_program_data")
 
 def rand_float_in_range(min: int, max: int) -> int:
     res =  random.uniform(min, max)
@@ -123,61 +122,3 @@ def gen_random_2d_unbounded(num_constrains:int, max_value:int = 10) -> Program:
         
 
     return (obj, res)
-    
-def save_to_file(file_type:str,obj:ObjectiveFunction,constraints:List[Constraints])->str:
-    assert file_type in ["bounded", "unbounded", "infeasible"]
-    file_prefix = f"{file_type}_problem"
-    
-    files = [f for f in os.listdir(
-        LINEAR_PROGRAMS_DIR) if f.startswith(file_prefix)]
-    
-    file_name = f"{file_prefix}{len(files)+1}"
-    file_path = os.path.join(LINEAR_PROGRAMS_DIR, file_name)
-    file = open(file_path, 'w', encoding='utf-8')
-    file.write(f"# type = {file_type} problem generated randomly,n = {len(constraints)}\n")
-    file.write(str(obj))
-    for con in constraints:
-        file.write("\n")
-        file.write(str(con))
-    file.close()
-    return file_path   
-    
-    
-
-def generate_to_file_bounded(num_of_constraints: int,  max_value: int = 100) -> str:
-    obj, cons = gen_random_2d_feasible(
-        num_of_constraints, max_value)
-    files = [f for f in os.listdir(
-        LINEAR_PROGRAMS_DIR) if f.startswith(bounded_prefix)]
-    
-    print(files)
-    file_name = f"{bounded_prefix}{len(files)+1}"
-            
-    file_path = os.path.join(LINEAR_PROGRAMS_DIR, file_name)
-    file = open(file_path, 'w', encoding='utf-8')
-    file.write(f"# problem generated randomly,n = {num_of_constraints}\n")
-    file.write(str(obj))
-    for con in cons:
-        file.write("\n")
-        file.write(str(con))
-    file.close()
-    return file_path
-
-def generate_to_file_infeasible(num_of_constraints: int,  max_value: int = 100) -> str:
-    obj, cons = gen_random_2d_infeasible(
-        num_of_constraints, max_value)
-    files = [f for f in os.listdir(
-        LINEAR_PROGRAMS_DIR) if f.startswith(infeasible_prefix)]
-    
-    print(files)
-    file_name = f"{infeasible_prefix}{len(files)+1}"
-            
-    file_path = os.path.join(LINEAR_PROGRAMS_DIR, file_name)
-    file = open(file_path, 'w', encoding='utf-8')
-    file.write(f"# problem generated randomly,n = {num_of_constraints}\n")
-    file.write(str(obj))
-    for con in cons:
-        file.write("\n")
-        file.write(str(con))
-    file.close()
-    return file_path

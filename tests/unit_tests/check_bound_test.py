@@ -2,7 +2,7 @@ import unittest
 from linear_programming.classes.constraints import Constraints
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.objectiveFunction import ObjectiveFunction
-from linear_programming.utils.problem_reader import read_bounded_problem
+from linear_programming.utils.problem_reader import read_problem,ProblemType
 
 class TestCheckBound(unittest.TestCase):
     def test_check_bound(self):
@@ -22,7 +22,7 @@ class TestCheckBound(unittest.TestCase):
     def test_boundedness_for_1_to_10(self):
         solver = ConvexSolver()
         for i in range(1,11):
-            program = read_bounded_problem(i)
+            program = read_problem(ProblemType.UNBOUNDED,i)
             result = solver.check_unbounded(program[0], program[1])
             self.assertTrue(result.bounded)
             

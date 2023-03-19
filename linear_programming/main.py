@@ -3,6 +3,7 @@ import argparse
 import re
 import linear_programming.utils.linear_program_generator as gen
 import linear_programming.utils.compare_time as compare_time
+import linear_programming.utils.problem_writer as writer
 
 
 def main():
@@ -46,7 +47,7 @@ def main():
         else:
             raise ValueError('invalid type')
         
-        path = gen.save_to_file(args.type,program[0],program[1])
+        path = writer.save_to_file(args.type,program[0],program[1])
 
         print(f"Generated file: {path}")
 
