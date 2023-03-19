@@ -11,7 +11,7 @@ def evaluate_y(constraints: Constraints, x: np.ndarray)->Tuple[np.ndarray, str]:
     constraints_str = str(constraints)
     return (constraints.c - constraints.a*x)/constraints.b,constraints_str
 
-def show_feasible_region(constraints: List[Constraints],x_left=-100, x_right=100, y_bottom=-100, y_top=100):
+def show_feasible_region(obj,constraints: List[Constraints],x_left=-100, x_right=100, y_bottom=-100, y_top=100):
 
     d = np.linspace(x_left,x_right,(x_right-x_left)*10)
     x,y = np.meshgrid(d,d)
@@ -25,7 +25,7 @@ def show_feasible_region(constraints: List[Constraints],x_left=-100, x_right=100
 
 
     # plot the lines defining the constraints
-    x = np.linspace(-100, 100, 2000)
+    x = np.linspace(x_left, x_right, x_right-x_left)
     y_list = [evaluate_y(constraint, x) for constraint in constraints]
 
     for y, label in y_list:
@@ -33,6 +33,7 @@ def show_feasible_region(constraints: List[Constraints],x_left=-100, x_right=100
     plt.xlim(x_left,x_right)
     plt.ylim(y_bottom,y_top)
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.quiver(0, 0, obj.a, obj.b, angles='xy', scale_units='xy', scale=1, label='obj',color = np.random.rand(3,))
     plt.xlabel(r'$x$')
     plt.ylabel(r'$y$')
     plt.show()
