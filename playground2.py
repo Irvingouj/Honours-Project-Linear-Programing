@@ -5,8 +5,9 @@ from linear_programming.classes.vector import Vector
 from linear_programming.classes.constraints import Constraints
 from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.utils.problem_reader import read_bounded_problem, read_unbounded_problem
+import linear_programming.utils.linear_program_generator as gen
 
-obj,cons = read_unbounded_problem(3)
+obj,cons = gen.gen_random_2d_unbounded(5)
 # solver = ConvexSolver()
 # res = solver.check_unbounded(obj,cons)
 solver = OsToolSolver()

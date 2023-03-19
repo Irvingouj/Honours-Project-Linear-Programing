@@ -6,6 +6,7 @@ from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.classes.constraints import Constraints, GreaterOrLess
 from linear_programming.classes.point import Point
 from linear_programming.classes.oneDConstraint import OneDConstraint
+from linear_programming.classes.vector import Vector
 from .problem_reader import project_root, Program,bounded_prefix,infeasible_prefix
 
 
@@ -15,6 +16,23 @@ def rand_float_in_range(min: int, max: int) -> int:
     res =  random.uniform(min, max)
     while res == 0:
         res =  random.randint(min, max)
+    return res
+def random_constraint(max_value: int = 100) -> Constraints:
+    a = rand_float_in_range(-max_value, max_value)
+    while(a == 0):
+        a = rand_float_in_range(-max_value, max_value)
+    b = rand_float_in_range(-max_value, max_value)
+    while(b == 0):
+        b = rand_float_in_range(-max_value, max_value)
+        
+    c = rand_float_in_range(10*max_value, 10*max_value*max_value)
+    
+    return Constraints(a=a, b=b, lessOrGreater=GreaterOrLess.LESS, c=c)
+
+def random_obj() -> ObjectiveFunction:
+    res = ObjectiveFunction(a=random.randint(-10, 10), b=random.randint(-10, 10))
+    while res.a == 0 and res.b == 0:
+        res = ObjectiveFunction(a=random.randint(-10, 10), b=random.randint(-10, 10))
     return res
 
 def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program:
@@ -81,6 +99,29 @@ def gen_random_2d_infeasible(num_constrains: int,  max_value: int = 10) -> Progr
             cons.append(c.flip_sign())
 
     return (ObjectiveFunction(a=random.randint(1, max_value), b=random.randint(1, max_value)), cons)
+
+def gen_random_2d_unbounded(num_constrains:int, max_value:int = 10) -> Program:
+    # start_point = Point(random.randint(-max_value, max_value), random.randint(-max_value, max_value))
+    direction_vector = Vector([random.uniform(-max_value, max_value), random.uniform(-max_value, max_value)])
+    #if a constrain intersects with a ray, and it is facing the direction of the ray, then thats fine
+    #if a constrain intersects with a ray, and it is facing the opposite direction of the ray, then we need to flip the sign of the constraint
+    res = []
+    while len(res) < num_constrains:
+        c = random_constraint(max_value)
+        if c.facing_direction_vector()*direction_vector > 0:
+            res.append(c)
+        elif c.facing_direction_vector()*direction_vector < 0:
+            res.append(c.get_flip_sign())
+
+
+    obj = random_obj()
+    while obj.to_vector()*direction_vector < 0:
+        obj = random_obj()
+        
+
+    return (obj, res)
+    
+    
 
 def generate_to_file_bounded(num_of_constraints: int,  max_value: int = 100) -> str:
     obj, cons = gen_random_2d_feasible(
