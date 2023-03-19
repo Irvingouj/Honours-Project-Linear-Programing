@@ -55,3 +55,11 @@ def show_vectors(vectors: List[Vector], names: List[str]):
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$y$')
     plt.show()
+
+    
+def draw_time_against_n(times: List[float], n: List[int], title: str):
+    plt.title(title)
+    plt.plot(n, times)
+    plt.xlabel('n')
+    plt.ylabel('time')
+    plt.show()

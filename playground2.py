@@ -4,14 +4,18 @@ from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.classes.vector import Vector
 from linear_programming.classes.constraints import Constraints
 from linear_programming.classes.objectiveFunction import ObjectiveFunction
-from linear_programming.utils.problem_reader import read_bounded_problem, read_unbounded_problem
+import linear_programming.utils.problem_reader as reader
 import linear_programming.utils.linear_program_generator as gen
 
-obj,cons = gen.gen_random_2d_unbounded(5)
+obj,cons = reader.read_infeasible_problem(4)
 # solver = ConvexSolver()
 # res = solver.check_unbounded(obj,cons)
 solver = OsToolSolver()
 res= solver.solve(obj,cons)
+print(res)
+
+con_solver = ConvexSolver()
+res = con_solver.solve(obj,cons)
 print(res)
 # c1 = Constraints(1,1,c=1)
 # c2 = Constraints(1,-1,c=1)

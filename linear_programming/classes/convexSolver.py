@@ -4,7 +4,7 @@ from typing import List
 import numpy as np
 from linear_programming.classes.vector import Vector
 
-from linear_programming.utils.exceptions import NoSolutionException
+from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
 from .point import Point
 from .oneDLinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
 from .objectiveFunction import ObjectiveFunction
@@ -68,8 +68,14 @@ def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> b
 
 class ConvexSolver(Solver):
     def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
-        v = self._m1(obj).find_intersection(self._m2(obj))
-        cons = [self._m1(obj), self._m2(obj)] + cons
+        bound_res = self.check_unbounded(obj, cons)
+        if not bound_res.bounded:
+            raise UnboundedException("The problem is unbounded",ray = bound_res.unbound_certificate)
+        h1_idx = bound_res.bound_certificate[0]
+        h2_idx = bound_res.bound_certificate[1]
+        h1 = cons[h1_idx]
+        h2 = cons[h2_idx]
+        v = h1.find_intersection(h2)
         for idx, c in enumerate(cons):
             if not v.is_inside(c):
                 one_d_constraints = to_1d_constraint(c, cons[:idx])
@@ -129,7 +135,7 @@ class ConvexSolver(Solver):
         
 
         # dx exist, which means the direction of unboundedness is (dx,1)
-        H_prime = []
+        H_prime:List[Constraints] = []
         for idx,vector in enumerate(cons_facing_normal_vector):
             eta_x = vector.get(0)
             eta_y = vector.get(1)
@@ -137,12 +143,18 @@ class ConvexSolver(Solver):
             # d_x = -eta_x/eta_y
             #need to do some thing if eta_y is 0 :TODO
             if eta_y != 0 and np.allclose(dx,-eta_x/eta_y):
-                H_prime.append(cons[idx])
+                H_prime.append(rotated_cons[idx])
 
         # pg 81, convert to 1d again and check for feasibility
         # we ignore paralell constraints for now                
         if len(H_prime) > 1:
-            raise NotImplementedError("Not implemented yet")
+            one_d_again = []
+            for h_i in H_prime:
+                one_d = OneDConstraint(h_i.a,h_i.c)
+                one_d_again.append(one_d)
+        dx_prime,__,_ = solve_1d_linear_program_with_left_and_right_index(one_d_again, True)
+        if dx_prime == None:
+            raise NoSolutionException("No solution as the constraints are parallel and share no common area")
         
         result = self.CheckBoundResult(bounded=False,unbound_certificate=Vector([dx, 1]).get_rotate(-degree_needed))
         return result

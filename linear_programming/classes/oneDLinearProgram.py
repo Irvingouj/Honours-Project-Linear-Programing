@@ -63,6 +63,9 @@ def solve_1d_linear_program_with_left_and_right_index(one_d_constraints: List[On
 
     used_constraints = []
     for idx,constraint in enumerate(one_d_constraints):
+        if constraint.a == 0:
+            # means any x will do
+            continue
         if constraint.direction() == Facing.LEFT and constraint.value() < left:
             right_idx = idx
             return None,right_idx,left_idx

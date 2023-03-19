@@ -121,6 +121,24 @@ def gen_random_2d_unbounded(num_constrains:int, max_value:int = 10) -> Program:
 
     return (obj, res)
     
+def save_to_file(file_type:str,obj:ObjectiveFunction,constraints:List[Constraints])->str:
+    assert file_type in ["bounded", "unbounded", "infeasible"]
+    file_prefix = f"{file_type}_problem"
+    
+    files = [f for f in os.listdir(
+        LINEAR_PROGRAMS_DIR) if f.startswith(file_prefix)]
+    
+    file_name = f"{file_prefix}{len(files)+1}"
+    file_path = os.path.join(LINEAR_PROGRAMS_DIR, file_name)
+    file = open(file_path, 'w', encoding='utf-8')
+    file.write(f"# type = {file_type} problem generated randomly,n = {len(constraints)}\n")
+    file.write(str(obj))
+    for con in constraints:
+        file.write("\n")
+        file.write(str(con))
+    file.close()
+    return file_path   
+    
     
 
 def generate_to_file_bounded(num_of_constraints: int,  max_value: int = 100) -> str:
