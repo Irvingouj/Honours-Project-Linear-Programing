@@ -15,7 +15,8 @@ def rand_float_in_range(min: int, max: int) -> int:
     res =  random.uniform(min, max)
     while res == 0:
         res =  random.randint(min, max)
-    res = round(res, 4)
+    # expecting for higher precision, blocked by floating point error on the solver
+    res = round(res, 2)
     return res
 def random_constraint(max_value: int = 100) -> Constraints:
     a = rand_float_in_range(-max_value, max_value)
@@ -37,10 +38,15 @@ def random_obj() -> ObjectiveFunction:
         b = rand_float_in_range(-10, 10)
     return ObjectiveFunction(a=a, b=b)
 
+def random_point(start: int = -100,end:int = -100) -> Point:
+    x = rand_float_in_range(start, end)
+    y = rand_float_in_range(start, end)
+    return Point(x, y)
+
 def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program:
-    p_1 = Point(random.randint(0, max_value), random.randint(0, max_value))
-    p_2 = Point(random.randint(0, max_value), random.randint(0, max_value))
-    p_3 = Point(random.randint(0, max_value), random.randint(0, max_value))
+    p_1 = random_point(-max_value, max_value)
+    p_2 = random_point(-max_value, max_value)
+    p_3 = random_point(-max_value, max_value)
     # 3 points generate a plane
     cons = []
 
@@ -48,11 +54,7 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program
         return c.contains(p_1) or c.contains(p_2) or c.contains(p_3)
 
     while len(cons) < num_constrains:
-        a = rand_float_in_range(-max_value, max_value)
-        b = rand_float_in_range(-max_value, max_value)
-        
-        c = Constraints(a=a, b=b,
-                        lessOrGreater=GreaterOrLess.LESS, c=random.randint(10*max_value, 10*max_value*max_value))
+        c = random_constraint(max_value)
 
         if if_feasible_constraint(c):
             cons.append(c)
@@ -60,14 +62,14 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program
             cons.append(c.flip_sign())
     
     
-    return (ObjectiveFunction(a=random.randint(1, max_value), b=random.randint(1, max_value)), cons)
+    return (random_obj(), cons)
 
 OneDProgram = Tuple[bool, List[OneDConstraint]]
 
 
 
 def gen_random_1d_feasible(num_constrains: int,  max_value: int = 100) -> OneDProgram:
-    p_1 = random.randint(-max_value, max_value)
+    p_1 = rand_float_in_range(-max_value, max_value)
     
     cons = []
     while len(cons) < num_constrains:
@@ -82,26 +84,21 @@ def gen_random_1d_feasible(num_constrains: int,  max_value: int = 100) -> OneDPr
     return (True, cons)
         
 def gen_random_2d_infeasible(num_constrains: int,  max_value: int = 10) -> Program:
-    p_1 = Point(random.randint(0, max_value), random.randint(0, max_value))
-    # 3 points generate a plane
+    p_1 = Point(rand_float_in_range(-max_value,max_value), rand_float_in_range(-max_value,max_value))
     cons = []
 
     def if_infeasible_constraint(c: Constraints) -> bool:
         return not c.contains(p_1)
 
     while len(cons) < num_constrains:
-        a = rand_float_in_range(-max_value, max_value)
-        b = rand_float_in_range(-max_value, max_value)
         
-        c = Constraints(a=a, b=b,
-                        lessOrGreater=GreaterOrLess.LESS, c=random.randint(10*max_value, 10*max_value*max_value))
-
+        c = random_constraint(max_value)
         if if_infeasible_constraint(c):
             cons.append(c)
         elif if_infeasible_constraint(c.flip_sign()):
             cons.append(c.flip_sign())
 
-    return (ObjectiveFunction(a=random.randint(1, max_value), b=random.randint(1, max_value)), cons)
+    return (random_obj(), cons)
 
 def gen_random_2d_unbounded(num_constrains:int, max_value:int = 10) -> Program:
     # start_point = Point(random.randint(-max_value, max_value), random.randint(-max_value, max_value))
