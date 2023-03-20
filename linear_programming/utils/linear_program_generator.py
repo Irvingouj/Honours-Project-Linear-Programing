@@ -58,7 +58,8 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program
             cons.append(c)
         elif if_feasible_constraint(c.flip_sign()):
             cons.append(c.flip_sign())
-
+    
+    
     return (ObjectiveFunction(a=random.randint(1, max_value), b=random.randint(1, max_value)), cons)
 
 OneDProgram = Tuple[bool, List[OneDConstraint]]

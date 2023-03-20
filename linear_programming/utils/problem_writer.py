@@ -27,9 +27,11 @@ def save_to_file(file_type:str,obj:ObjectiveFunction,constraints:List[Constraint
     file.close()
     return file_path   
 
-def write_bad_program(program:Program, con_res:Point, os_res:Point, err):
+def write_bad_program(program:Program, con_res:Point, os_res:Point, err,name = None):
     bad_program_dir = PROJECT_ROOT.joinpath("linear_program_data", "problems_unexpected")
     filename = bad_program_dir.joinpath(f"{con_res}!={os_res}__{random.random()}.txt")
+    if name is not None:
+        filename = bad_program_dir.joinpath(f"{name}.txt")
     program_path = bad_program_dir.joinpath(filename)
     with open(program_path, 'a+',encoding='utf-8') as f:
         f.write("#" +str(err)+"\n")

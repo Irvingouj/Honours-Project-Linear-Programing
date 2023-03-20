@@ -37,6 +37,7 @@ def solve_calculate_time(program) -> Tuple[float, float]:
     
     cons_time_start = time.time()
     con_res = None
+
     try:
         con_res = convex_solver.solve(program[0], program[1])
     except NoSolutionException as exc:
@@ -53,6 +54,7 @@ def solve_calculate_time(program) -> Tuple[float, float]:
         raise ResultNotEqualException("result not equal")
     
     cons_time_end = time.time()
+    
     
     return cons_time_end - cons_time_start, os_time_end - os_time_start
 

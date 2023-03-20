@@ -40,14 +40,15 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
 
     # convert the 2d constraint to 1d constraint
     one_d = []
-    for c in cons:
-        p = curr.find_intersection(c)
-        if c.is_parallel_but_share_no_common_area(curr):
+    for h in cons:
+        if h.is_parallel_but_share_no_common_area(curr):
             raise NoSolutionException("No solution as the constraints are parallel and share no common area")
 
+        p = curr.find_intersection(h)
         if p is not None:
-            p1 = curr.find_point_with_x(p.x+1)
-            if (c.contains(p1)):
+            # plus 1000 to get the direction of the one dimension constraint
+            p1 = curr.find_point_with_x(p.x+1000)
+            if (h.contains(p1)):
                 one_d.append(OneDConstraint(-1, -p.x))
             else:
                 one_d.append(OneDConstraint(1, p.x))

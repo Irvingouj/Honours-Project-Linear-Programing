@@ -26,6 +26,23 @@ def find_first_line_diff(obj,cons):
             return i,p_os,p_cons
     return None,None,None
 
+def trim_off_and_try_again(num,obj,cons):
+    """
+    return true means that the results are the same 
+    """
+    cons = cons[num:]
+    diff,os_res,cons_res = find_first_line_diff(obj,cons)
+    # it is the same
+    if(diff == None):
+        return True
+    return False
+
+def result_is_not_same(obj,cons):
+    diff,os_res,cons_res = find_first_line_diff(obj,cons)
+    if(diff == None):
+        return False
+    return True
+
 def re_arrange_cons(obj,cons) -> constraints.Constraints:
     """
     this method grabs the first bad constraint and moves it to the top of the list

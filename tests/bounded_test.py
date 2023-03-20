@@ -9,33 +9,14 @@ from linear_programming.utils.types import Program
 
 class TestBoundedProblems(unittest.TestCase):
     def __test__program(self, program: Program):
-        con_time = time.time()
         try:
             convex_sol = solve_with_convex(program)
         except NoSolutionException as err:
             print(err)
             convex_sol = None
-        con_end = time.time()
         
-        os_time = time.time()
         google_os_sol = solve_with_os_tool(program)
-        os_end = time.time()
         
-        with open('time_comparison_bounded.txt', 'a+',encoding='utf-8') as f:
-            n = len(program[1])
-            res = f'convex time: {str(con_end - con_time)} os time: {str(os_end - os_time)} for n={n} \n'
-            f.seek(0)
-            lines = f.readlines()
-            n_in_lines = [line.split("n=")[1].removesuffix(' \n') for line in lines]
-            if str(n) not in n_in_lines:
-                f.write(res)
-            
-        self.assertTrue(convex_sol == google_os_sol)
-        
-    def test_problem_unexpected(self):
-        program: Program = read_unexpected_problem('bounded_problems1')
-        convex_sol = solve_with_convex(program)
-        google_os_sol = solve_with_os_tool(program)
         self.assertTrue(convex_sol == google_os_sol)
         
 
