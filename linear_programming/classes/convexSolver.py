@@ -46,8 +46,9 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
 
         p = curr.find_intersection(h)
         if p is not None:
-            # plus 1000 to get the direction of the one dimension constraint
-            p1 = curr.find_point_with_x(p.x+1000)
+            # plus 10000 to get the direction of the one dimension constraint, there's gotta be a better way
+            # TODO: find a better way
+            p1 = curr.find_point_with_x(p.x+10000)
             if (h.contains(p1)):
                 one_d.append(OneDConstraint(-1, -p.x))
             else:
