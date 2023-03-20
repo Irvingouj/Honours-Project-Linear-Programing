@@ -24,6 +24,7 @@ def find_first_line_diff(obj,cons):
         p_cons = con_solve(obj, cons[:i])
         if(p_cons != p_os):
             return i,p_os,p_cons
+    return None,None,None
 
 def re_arrange_cons(obj,cons) -> constraints.Constraints:
     """

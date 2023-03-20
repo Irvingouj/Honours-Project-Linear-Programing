@@ -75,6 +75,11 @@ class ConvexSolver(Solver):
         h2_idx = bound_res.bound_certificate[1]
         h1 = cons[h1_idx]
         h2 = cons[h2_idx]
+        cons.remove(h1)
+        cons.remove(h2)
+        cons.insert(0, h1)
+        cons.insert(1, h2)
+
         v = h1.find_intersection(h2)
         for idx, c in enumerate(cons):
             if not v.is_inside(c):
