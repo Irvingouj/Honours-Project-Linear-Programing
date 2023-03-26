@@ -66,3 +66,8 @@ class Vector:
         dot = x1*x2 + y1*y2      # dot product between [x1, y1] and [x2, y2]
         det = x1*y2 - y1*x2      # determinant
         return math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
+
+    
+    
+    def is_perpendicular_to(self, other: 'Vector') -> bool:
+        return self * other == 0
