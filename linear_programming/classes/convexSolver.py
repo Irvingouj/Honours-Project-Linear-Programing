@@ -6,11 +6,11 @@ from linear_programming.classes.vector import Vector
 
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
 from .point import Point
-from .oneDLinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
+from .one_d_LinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
 from .objectiveFunction import ObjectiveFunction
 from .solver import Solver
 from .constraints import Constraints
-from .oneDConstraint import OneDConstraint
+from .one_d_constraint import OneDConstraint
 
 import linear_programming.utils.debug as dbg
 

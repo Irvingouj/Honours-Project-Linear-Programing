@@ -1,6 +1,6 @@
 from typing import List, Tuple
 from linear_programming.utils.exceptions import NoSolutionException
-from .oneDConstraint import Facing, OneDConstraint
+from .one_d_constraint import Facing, OneDConstraint
 
 POSITIVE = True
 NEGATIVE = False
