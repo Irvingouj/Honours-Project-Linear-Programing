@@ -1,5 +1,5 @@
-from .point import Point
-from .constraints import Constraints
+from linear_programming.classes.point import Point
+from linear_programming.classes.constraints import Constraints
 from enum import Enum
 
 class Facing(Enum):
