@@ -3,7 +3,7 @@ from typing import List
 from .point import Point
 from .objectiveFunction import ObjectiveFunction
 from .constraints import Constraints
-from .one_d_constraint import OneDConstraint
+from .one_d.one_d_constraint import OneDConstraint
 from .solver import Solver
 
 
