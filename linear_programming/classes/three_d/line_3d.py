@@ -12,3 +12,6 @@ class Line3d:
     def from_two_points(cls,point1:Point3D,point2:Point3D) -> 'Line3d':
         vec = Vector([point2.x-point1.x,point2.y-point1.y,point2.z-point1.z])
         return cls(point1,vec)
+
+    def __str__(self) -> str:
+        return f'{self.point} + t *{self.vector}'

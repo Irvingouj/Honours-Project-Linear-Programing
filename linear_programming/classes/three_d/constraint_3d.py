@@ -149,22 +149,17 @@ class Constraints3D:
     def contain_line(self, line: Line3d) -> bool:
         """
         returns true if the line is contained in the constraint
+        cross product of the two vectors that span the vector space is perpendicular to the line if the line is contained in the plane
         """
         if not self.contains(line.point):
             return False
 
         vec_space = self.get_vector_space();
-        A = np.array([
-            [vec_space[0][0], vec_space[1][0]],
-            [vec_space[0][1], vec_space[1][1]],
-            [vec_space[0][2], vec_space[1][2]]
-          ])
-
+        cross_product = np.cross(np.array(vec_space[0].arr), np.array(vec_space[1].arr)) 
         b = np.array(line.vector.arr)
         
+        return np.isclose(np.dot(cross_product, b), 0)
         
-        
-
         
     
     def __str__(self) -> str:

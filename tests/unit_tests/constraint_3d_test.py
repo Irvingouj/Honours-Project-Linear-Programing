@@ -86,6 +86,9 @@ class TestConstraints3D(unittest.TestCase):
         
         self.assertTrue(c1.contains(line.point))
         self.assertTrue(c2.contains(line.point))
+
+        self.assertTrue(c1.contain_line(line))
+        self.assertTrue(c2.contain_line(line))
         
         
         
