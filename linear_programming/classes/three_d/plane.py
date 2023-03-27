@@ -48,6 +48,8 @@ class Plane:
 
     def get_signed_distance_to_point(self, point: Point3D) -> float:
         return (self.a * point.x + self.b * point.y + self.c * point.z + self.d) / math.sqrt(self.a ** 2 + self.b ** 2 + self.c ** 2)
+    
+        
 
     def __str__(self) -> str:
         return f"{self.a}x + {self.b}y + {self.c}z + {self.d} = 0"

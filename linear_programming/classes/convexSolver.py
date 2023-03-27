@@ -5,31 +5,13 @@ import numpy as np
 from linear_programming.classes.vector import Vector
 
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
-from .point import Point
 from linear_programming.classes.one_d.one_d_LinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
+from linear_programming.classes.one_d.one_d_constraint import OneDConstraint
+from .point import Point
 from .objectiveFunction import ObjectiveFunction
 from .solver import Solver
 from .constraints import Constraints
-from linear_programming.classes.one_d.one_d_constraint import OneDConstraint
 
-import linear_programming.utils.debug as dbg
-
-
-def corner(obj: ObjectiveFunction) -> Point:
-    """
-    find the corner point of the objective function
-    """
-    max_value = 18500
-    points = [Point(max_value, max_value), Point(max_value, -max_value),
-              Point(-max_value, max_value), Point(-max_value, -max_value)]
-    # find the point that minimize obj
-    res = None
-    val = float('-inf')
-    for p in points:
-        if obj.value(p) > val:
-            val = obj.value(p)
-            res = p
-    return res
 
 
 def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDConstraint]:
@@ -59,10 +41,6 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
                 one_d.append(OneDConstraint(1, p.x))
 
     return one_d
-
-
-# M = sys.maxsize/1000
-M = 20000000
 
 
 def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> bool:
@@ -101,17 +79,6 @@ class ConvexSolver(Solver):
 
         return v
 
-    def _m1(self, obj: ObjectiveFunction) -> Constraints:
-        if obj.a > 0:
-            return Constraints(1, 0, c=M)
-        else:
-            return Constraints(-1, 0, c=M)
-
-    def _m2(self, obj: ObjectiveFunction) -> Constraints:
-        if obj.b > 0:
-            return Constraints(0, 1, c=M)
-        else:
-            return Constraints(0, -1, c=M)
         
     class CheckBoundResult:
         def __init__(self, bounded:bool, unbound_certificate:Vector = None, bound_certificate:Tuple(int,int) = None):
@@ -170,7 +137,41 @@ class ConvexSolver(Solver):
         result = self.CheckBoundResult(bounded=False,unbound_certificate=Vector([dx, 1]).get_rotate(-degree_needed))
         return result
 
+        
+        
+        
+
+    def _m1(self, obj: ObjectiveFunction) -> Constraints:
+        if obj.a > 0:
+            return Constraints(1, 0, c=M)
+        else:
+            return Constraints(-1, 0, c=M)
+
+    def _m2(self, obj: ObjectiveFunction) -> Constraints:
+        if obj.b > 0:
+            return Constraints(0, 1, c=M)
+        else:
+            return Constraints(0, -1, c=M)
+
 
 def solve_with_convex(program) -> Point:
     solver = ConvexSolver()
     return solver.solve(program[0], program[1])
+
+def corner(obj: ObjectiveFunction) -> Point:
+    """
+    find the corner point of the objective function
+    """
+    max_value = 18500
+    points = [Point(max_value, max_value), Point(max_value, -max_value),
+              Point(-max_value, max_value), Point(-max_value, -max_value)]
+    # find the point that minimize obj
+    res = None
+    val = float('-inf')
+    for p in points:
+        if obj.value(p) > val:
+            val = obj.value(p)
+            res = p
+    return res
+# M = sys.maxsize/1000
+M = 20000000
