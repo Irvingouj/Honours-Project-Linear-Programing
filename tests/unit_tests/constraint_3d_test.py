@@ -1,8 +1,9 @@
 import unittest
+from random import randint
 from linear_programming.classes.three_d import Constraints3D
 from linear_programming.classes.three_d import Point3D
-from random import randint
 
+# pylint: disable=C0103
 class TestConstraints3D(unittest.TestCase):
     
     def __random_constraint3d(self):
@@ -50,32 +51,43 @@ class TestConstraints3D(unittest.TestCase):
         self.assertAlmostEqual(p2.x * c1.a + p2.y * c1.b + p2.z * c1.c,c1.d)
     
     def test_random_point(self):
-        c1 = Constraints3D(2, 3, -4, d=5)
+        c1 = self.__random_constraint3d()
         p = c1.find_random_point_on_plane()
         p_on_plane = p.x * c1.a + p.y * c1.b + p.z * c1.c == c1.d
         self.assertTrue(p_on_plane)
         
     def test_perpendicular(self):
-        c1 = Constraints3D(2, 3, -4, d=5)
+        c1 = self.__random_constraint3d()
         perpendicular_vec = c1.get_perpendicular_vector()
         vec_space = c1.get_vector_space()
         
-        self.assertTrue(perpendicular_vec*vec_space[0] == 0)
-        self.assertTrue(perpendicular_vec*vec_space[1] == 0)
+        self.assertAlmostEqual(perpendicular_vec*vec_space[0], 0)
+        self.assertAlmostEqual(perpendicular_vec*vec_space[1], 0)
         
     def test_facing_direction(self):
-        c1 = Constraints3D(2, 3, -4, d=5)
+        c1 = self.__random_constraint3d()
         facing_direction_vec = c1.facing_direction_vector()
         p = c1.find_random_point_on_plane()
         
         vec_space = c1.get_vector_space()
         
-        p1 = Point3D(p.x + facing_direction_vec[0], p.y + facing_direction_vec[1], p.z + facing_direction_vec[2])
+        p1 = Point3D(p.x + facing_direction_vec[0], p.y + 
+                     facing_direction_vec[1], p.z + facing_direction_vec[2])
         
-        self.assertTrue(facing_direction_vec*vec_space[0] == 0)
-        self.assertTrue(facing_direction_vec*vec_space[1] == 0)
+        self.assertAlmostEqual(facing_direction_vec*vec_space[0], 0)
+        self.assertAlmostEqual(facing_direction_vec*vec_space[1], 0)
         self.assertTrue(c1.contains(p1))
-        
 
+    def test_intersection(self):
+        c1 = self.__random_constraint3d()
+        c2 = self.__random_constraint3d()
+        
+        line = c1.find_intersection(c2)
+        
+        self.assertTrue(c1.contains(line.point))
+        self.assertTrue(c2.contains(line.point))
+        
+        
+        
 if __name__ == '__main__':
     unittest.main()

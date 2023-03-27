@@ -3,10 +3,10 @@ from typing import Tuple
 import numpy as np
 
 from linear_programming.classes.constraints import GreaterOrLess
-
 from linear_programming.classes.three_d.plane import Plane
 from linear_programming.classes.three_d.point3d import Point3D
 from linear_programming.classes.vector import Vector
+from linear_programming.classes.three_d.line_3d import Line3d
 
 
 class Constraints3D:
@@ -52,8 +52,32 @@ class Constraints3D:
         # computer arithmetic is not precise enough
         return self.a * point.x + self.b * point.y + self.c * point.z < self.d or np.isclose(self.a * point.x + self.b * point.y + self.c * point.z, self.d)
 
-    def find_intersection(self, other: 'Constraints3D') -> Point3D:
-        return self.to_plane().find_intersection(other.to_plane())
+    def find_intersection(self, other: 'Constraints3D') -> Line3d:
+        if self.facing_direction_vector().normalize()* other.facing_direction_vector().normalize() == 1:
+            raise ValueError('The two constraints are parallel')
+        
+        a1 = self.a
+        a2 = self.b
+        a3 = self.c
+        l1 = self.d
+        
+        b1 = other.a
+        b2 = other.b
+        b3 = other.c
+        l2 = other.d
+        
+        A = np.array([[a1,a2],[b1,b2]])
+
+        # t = 1
+        b1 = np.array([l1 - a3, l2 - b3])
+        x1 = np.linalg.solve(A, b1)
+        
+        # t = 0
+        b2 = np.array([l1, l2])
+        x2 = np.linalg.solve(A, b2)
+        
+        return Line3d.from_two_points(Point3D(x1[0],x1[1],1),Point3D(x2[0],x2[1],0))
+        
 
     def rotate_x(self, angle: float) -> 'Constraints3D':
         R = np.array([[1, 0, 0], 
@@ -121,6 +145,27 @@ class Constraints3D:
         z = (self.d -self.a*x - self.b*y)/self.c
         
         return Point3D(x,y,z)
+    
+    def contain_line(self, line: Line3d) -> bool:
+        """
+        returns true if the line is contained in the constraint
+        """
+        if not self.contains(line.point):
+            return False
+
+        vec_space = self.get_vector_space();
+        A = np.array([
+            [vec_space[0][0], vec_space[1][0]],
+            [vec_space[0][1], vec_space[1][1]],
+            [vec_space[0][2], vec_space[1][2]]
+          ])
+
+        b = np.array(line.vector.arr)
+        
+        
+        
+
+        
     
     def __str__(self) -> str:
         return f'{self.a}x + {self.b}y + {self.c}z <= {self.d}'

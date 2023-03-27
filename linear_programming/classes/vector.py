@@ -45,6 +45,9 @@ class Vector:
     def normalize(self) -> 'Vector':
         return self * (1 / self.length())
 
+    def dimension(self) -> int:
+        return len(self.arr)
+
     def is_parallel_to(self, other: 'Vector') -> bool:
         return self.find_orthogonal_vector() * other == 0
 
