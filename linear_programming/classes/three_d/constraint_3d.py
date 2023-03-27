@@ -79,16 +79,6 @@ class Constraints3D:
         self.c = c
         self.d = d
         
-    def rotate_z(self, angle: float) -> None:
-        R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
-        [a, b, c] = R @ np.array([self.a, self.b, self.c])
-        d = self.d * np.linalg.det(R)
-        
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
-        
         
     def get_vector_space(self) -> Tuple[Vector,Vector]:
         """ 
@@ -128,7 +118,7 @@ class Constraints3D:
     def find_random_point_on_plane(self) -> Point3D:
         x = np.random.uniform(1,2)
         y = np.random.uniform(1,2)
-        z = self.d -(self.a*x + self.b*y)/self.c
+        z = (self.d -self.a*x - self.b*y)/self.c
         
         return Point3D(x,y,z)
     
