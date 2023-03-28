@@ -13,12 +13,9 @@ class TestInfeasibleProblems(unittest.TestCase):
         try:
             solve_with_convex(program)
         except NoSolutionException:
-            self.assertTrue(google_os_sol is None)
+            self.assertTrue(google_os_sol is "INFEASIBLE")
             return
         
-        if google_os_sol is not None:
-            self.fail('Google os tool should not find solution')
-         
         self.fail('Convex solver should not find solution')
 
     def test_problem_1(self):

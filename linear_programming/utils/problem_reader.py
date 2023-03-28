@@ -4,6 +4,7 @@ from typing import List, Tuple
 from io import TextIOWrapper
 from linear_programming.classes import ObjectiveFunction, Constraints
 from linear_programming.utils.types import Program
+import pathlib
 
 BOUNDED_PREFIX = "bounded_problem"
 INFEASIBLE_PREFIX = "infeasible_problem"
@@ -29,6 +30,15 @@ def read_problem(p_type:ProblemType ,problem_number):
 def read_unexpected_problem(filename: str) -> Program:
     file_path = os.path.join(
         PROJECT_ROOT, PROGRAM_DATA_DIR_NAME, 'problems_unexpected', filename)
+    if not os.path.isfile(file_path):
+        file_path = os.path.join(
+        PROJECT_ROOT, PROGRAM_DATA_DIR_NAME, 'problems_unexpected', filename+".txt")
+    if not os.path.isfile(file_path):
+        file_path = os.path.join(
+        PROJECT_ROOT, PROGRAM_DATA_DIR_NAME, 'problems_unexpected', filename.removesuffix(".txt"))
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"File {filename} not found")
+            
     file = open(file_path, 'r', encoding='utf-8')
     program = parse_file(file)
     return program

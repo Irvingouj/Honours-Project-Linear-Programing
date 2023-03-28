@@ -3,7 +3,7 @@ import csv
 from typing import Tuple
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.osToolSolver import OsToolSolver
-from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException
+from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded
 from linear_programming.utils.problem_reader import PROJECT_ROOT, ProblemType
 from linear_programming.utils.problem_writer import write_bad_program
@@ -40,25 +40,27 @@ def solve_calculate_time(program) -> Tuple[float, float]:
 
     try:
         con_res = convex_solver.solve(program[0], program[1])
+        if os_res != con_res:
+            write_bad_program(program, con_res, os_res,"result not equal")
+            raise ResultNotEqualException("result not equal")
     except NoSolutionException as exc:
-        if os_res is not None:
-            write_bad_program(program, None, os_res,"convex solver has no solution but os tool has")
-            raise ResultNotEqualException("convex solver has no solution but os tool has solution") from exc
+        if os_res != "INFEASIBLE":
+            write_bad_program(program, "INFEASIBLE", os_res,f"convex solver has no solution but os tool has {os_res} \n")
+            raise ResultNotEqualException(f"convex solver has no solution but os tool has solution {os_res}") from exc
     except UnboundedException as exc:
-        if os_res is not None:
-            write_bad_program(program, None, os_res,"convex solver has no solution but os tool has")
-            raise ResultNotEqualException("convex solver is unbounded  but os tool has solution") from exc
-        
-    if os_res != con_res:
-        write_bad_program(program, con_res, os_res,"result not equal")
-        raise ResultNotEqualException("result not equal")
+        if os_res != "UNBOUNDED":
+            write_bad_program(program, "UNBOUNDED", os_res,f"convex solver is unbounded  but os tool has solution {os_res} \n")
+            raise ResultNotEqualException(f"convex solver is unbounded  but os tool has solution {os_res}") from exc
     
     cons_time_end = time.time()
-    
-    
     return cons_time_end - cons_time_start, os_time_end - os_time_start
 
-    
+
+def retry(size,gen_func):
+    try:
+        return solve_calculate_time(gen_func(num_constrains=size))
+    except PerceptionException:
+        retry(size,gen_func)
 
 def test_with_time(problem_type:ProblemType,range:range,result_name:str = "result.txt")->str:
 
@@ -80,7 +82,10 @@ def test_with_time(problem_type:ProblemType,range:range,result_name:str = "resul
     for n in range:
         print(f"testing for n = {n} \n")
         program = gen_func(num_constrains=n)
-        cons_time, os_time = solve_calculate_time(program)
+        try:
+            cons_time, os_time = solve_calculate_time(program)
+        except PerceptionException:
+            cons_time, os_time = retry(n,gen_func)
         csv.writer(f).writerow([n,cons_time,os_time])
     f.close()
     

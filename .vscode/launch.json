@@ -8,8 +8,13 @@
             "name": "Python: Module",
             "type": "python",
             "request": "launch",
-            "module": "LinearPrograming",
+            "module": "linear_programming",
             "justMyCode": true,
+            "args": [
+                "test",
+                "-t",
+                "infeasible"
+            ]
         },
         {
             "name": "Python: Debug Tests",
@@ -20,6 +25,18 @@
             "console": "integratedTerminal",
             "justMyCode": true
           
+        },
+        {
+            "name": "Python: runner.py",
+            "type": "python",
+            "request": "launch",
+            "justMyCode": true,
+            "program": "${workspaceFolder}/runner.py",
+            "args": [
+                "test",
+                "-t",
+                "infeasible"
+            ]
         }
     ]
 }

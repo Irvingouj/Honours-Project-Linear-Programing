@@ -1,5 +1,6 @@
 from ortools.linear_solver import pywraplp
 from typing import List, Union
+from linear_programming.utils.exceptions import PerceptionException
 from .point import Point
 from .objectiveFunction import ObjectiveFunction
 from .constraints import Constraints
@@ -10,11 +11,15 @@ from .three_d import Constraints3D, ObjectiveFunction3D, Point3D
 
 
 class OsToolSolver(Solver):
-    def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
+    param = pywraplp.MPSolverParameters()
+    param.SetIntegerParam(pywraplp.MPSolverParameters.PRESOLVE, pywraplp.MPSolverParameters.PRESOLVE_OFF)
+    def get_solver(self):
         solver = pywraplp.Solver.CreateSolver('GLOP')
         
-        if not solver:
-            raise Exception('Could not create solver')
+        return solver
+    
+    def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
+        solver = self.get_solver()
 
         x = solver.NumVar(-solver.infinity(), solver.infinity(), 'x')
         y = solver.NumVar(-solver.infinity(), solver.infinity(), 'y')
@@ -24,7 +29,7 @@ class OsToolSolver(Solver):
 
         solver.Maximize(eval(obj.to_or_string()))
 
-        status = solver.Solve()
+        status = solver.Solve(OsToolSolver.param)
 
         if status == pywraplp.Solver.OPTIMAL:
             return Point(x.solution_value(), y.solution_value())
@@ -33,10 +38,12 @@ class OsToolSolver(Solver):
         if status == pywraplp.Solver.UNBOUNDED:
             return "UNBOUNDED"
 
+        if status == pywraplp.Solver.ABNORMAL:
+            #https://github.com/google/or-tools/issues/1986
+            raise PerceptionException("Abnormal status returned from solver")
+
     def solve_one_dimension(self, one_d_constraints: List[OneDConstraint], objective: bool) -> float:
-        solver = pywraplp.Solver.CreateSolver('GLOP')
-        if not solver:
-            raise Exception('Could not create solver')
+        solver = self.get_solver()
         
         x = solver.NumVar(-solver.infinity(), solver.infinity(), 'x')
         for con in one_d_constraints:
@@ -51,9 +58,7 @@ class OsToolSolver(Solver):
 
     result_type = Union[Point3D,"UNBOUNDED","INFEASIBLE"]
     def solve_three_d(self,obj:ObjectiveFunction3D,three_d_cons:List[Constraints3D]):
-        solver = pywraplp.Solver.CreateSolver('GLOP')
-        if not solver:
-            raise Exception('Could not create solver')
+        solver = self.get_solver()
         
         x = solver.NumVar(-solver.infinity(), solver.infinity(), 'x')
         y = solver.NumVar(-solver.infinity(), solver.infinity(), 'y')
@@ -64,7 +69,7 @@ class OsToolSolver(Solver):
             
         solver.Maximize(eval(obj.to_or_string()))
         
-        status = solver.Solve()
+        status = solver.Solve(OsToolSolver.param)
         if status == pywraplp.Solver.OPTIMAL:
             return Point3D(x.solution_value(),y.solution_value(),z.solution_value())
         if status == pywraplp.Solver.UNBOUNDED:

@@ -8,9 +8,9 @@ def con_solve(obj,cons):
     try:
         p_cons = ConvexSolver().solve(obj, cons)
     except NoSolutionException:
-        return None
+        return "INFEASIBLE"
     except UnboundedException:
-        return None
+        return "UNBOUNDED"
     return p_cons
 
 def os_solve(obj,cons):
@@ -20,10 +20,10 @@ def os_solve(obj,cons):
 
 def find_first_line_diff(obj,cons):
     for i in range(len(cons)+1):
-        p_os = os_solve(obj, cons[:i])
-        p_cons = con_solve(obj, cons[:i])
-        if(p_cons != p_os):
-            return i,p_os,p_cons
+        os_res = os_solve(obj, cons[:i])
+        con_res = con_solve(obj, cons[:i])
+        if(os_res != con_res):
+            return i,os_res,con_res
     return None,None,None
 
 def trim_off_and_try_again(num,obj,cons):
