@@ -8,6 +8,7 @@ from linear_programming.classes.one_d.one_d_constraint import OneDConstraint
 from linear_programming.classes.vector import Vector
 from linear_programming.utils.types import Program
 from linear_programming.utils.problem_reader import PROJECT_ROOT
+from linear_programming.classes.three_d import Constraints3D, ObjectiveFunction3D, Point3D
 
 LINEAR_PROGRAMS_DIR = PROJECT_ROOT.joinpath("linear_program_data")
 
@@ -115,6 +116,49 @@ def gen_random_2d_unbounded(num_constrains:int, max_value:int = 10) -> Program:
 
 
     obj = random_obj()
+    while obj.to_vector()*direction_vector < 0:
+        obj = random_obj()
+        
+
+    return (obj, res)
+
+def random_constraint_3d(max_value: int = 100) -> Constraints3D:
+    a = rand_float_in_range(-max_value, max_value)
+    while(a == 0):
+        a = rand_float_in_range(-max_value, max_value)
+    b = rand_float_in_range(-max_value, max_value)
+    while(b == 0):
+        b = rand_float_in_range(-max_value, max_value)
+    c = rand_float_in_range(-max_value, max_value)
+    while(c == 0):
+        c = rand_float_in_range(-max_value, max_value)
+    d = rand_float_in_range(10*max_value, 10*max_value*max_value)
+    
+    return Constraints3D(a=a, b=b, c=c, lessOrGreater=GreaterOrLess.LESS, d=d)
+    
+def random_obj_3d() -> ObjectiveFunction3D:
+    a = rand_float_in_range(-10, 10)
+    b = rand_float_in_range(-10, 10)
+    c = rand_float_in_range(-10, 10)
+    while a == 0 and b == 0 and c == 0:
+        a = rand_float_in_range(-10, 10)
+        b = rand_float_in_range(-10, 10)
+        c = rand_float_in_range(-10, 10)
+    return ObjectiveFunction3D(a=a, b=b, c=c)
+
+    
+def gen_random_3d_unbounded(num_constrains:int, max_value:int = 10) -> Program:
+    direction_vector = Vector([random.uniform(-max_value, max_value), random.uniform(-max_value, max_value), random.uniform(-max_value, max_value)])
+    res = []
+    while len(res) < num_constrains:
+        c = random_constraint_3d(max_value)
+        if c.facing_direction_vector()*direction_vector > 0:
+            res.append(c)
+        elif c.facing_direction_vector()*direction_vector < 0:
+            res.append(c.get_flip_sign())
+
+
+    obj = random_obj_3d()
     while obj.to_vector()*direction_vector < 0:
         obj = random_obj()
         

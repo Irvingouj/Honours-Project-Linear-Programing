@@ -68,3 +68,4 @@ class ObjectiveFunction3D:
 
     def __str__(self) -> str:
         return ('max' if self.maxOrMin == MaxOrMin.MAX else 'min') + ' ' + str(self.a) + 'x + ' + str(self.b) + 'y + ' + str(self.c) + 'z'
+

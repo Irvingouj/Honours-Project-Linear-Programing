@@ -91,6 +91,11 @@ class Constraints3D:
         self.c = c
         self.d = d
         
+    def get_rotate_x(self,angle:float) -> 'Constraints3D':
+        res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS,self.d)
+        res.rotate_x(angle)
+        return res
+        
     def rotate_y(self, angle: float) -> None:
         R = np.array([[np.cos(angle), 0, np.sin(angle)], 
                       [0, 1, 0], 
@@ -102,6 +107,11 @@ class Constraints3D:
         self.b = b
         self.c = c
         self.d = d
+    
+    def get_rotate_y(self,angle:float) -> 'Constraints3D':
+        res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS,self.d)
+        res.rotate_y(angle)
+        return res
         
         
     def get_vector_space(self) -> Tuple[Vector,Vector]:
@@ -161,9 +171,16 @@ class Constraints3D:
         return np.isclose(np.dot(cross_product, b), 0)
         
         
+    def get_flip_sign(self) -> 'Constraints3D':
+        res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.GREATER,self.d)
+        return res
     
     def __str__(self) -> str:
         return f'{self.a}x + {self.b}y + {self.c}z <= {self.d}'
+
+    def to_or_string(self) -> str:
+        return f'{self.a}*x + {self.b}*y + {self.c}*z <= {self.d}'
+
     @classmethod
     def from_plane(cls, plane: Plane) -> 'Constraints3D':
         return cls(plane.a, plane.b, plane.c, d=plane.d)
