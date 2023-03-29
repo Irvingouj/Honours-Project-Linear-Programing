@@ -2,6 +2,7 @@ from linear_programming.classes import constraints
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
+from linear_programming.utils.types import Program
 
 
 def con_solve(obj,cons):
@@ -43,17 +44,28 @@ def result_is_not_same(obj,cons):
         return False
     return True
 
-def re_arrange_cons(obj,cons) -> constraints.Constraints:
+def re_arrange_cons(obj,cons) -> Program:
     """
     this method grabs the first bad constraint and moves it to the top of the list
     """
-    bad_index = find_first_line_diff(obj,cons)
+    bad_index,_,_ = find_first_line_diff(obj,cons)
     if(bad_index == None):
         return cons
     else:
         bad_cons = cons[bad_index-1]
         cons.remove(bad_cons)
         cons.insert(0,bad_cons)
+        return obj,cons
+    
+    
+def trim_cons(obj,cons):
+    """
+    this method will trim off the first constraint that is causing the problem
+    """
+    bad_index,_,_ = find_first_line_diff(obj,cons)
+    if(bad_index == None):
         return cons
-    
-    
+    else:
+        bad_cons = cons[bad_index-1]
+        cons.remove(bad_cons)
+        return obj,cons
