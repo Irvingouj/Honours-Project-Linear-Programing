@@ -155,8 +155,8 @@ class Constraints3D:
         z = (self.d -self.a*x - self.b*y)/self.c
         
         return Point3D(x,y,z)
-    
     def contain_line(self, line: Line3d) -> bool:
+    
         """
         returns true if the line is contained in the constraint
         cross product of the two vectors that span the vector space is perpendicular to the line if the line is contained in the plane
@@ -180,6 +180,9 @@ class Constraints3D:
 
     def to_or_string(self) -> str:
         return f'{self.a}*x + {self.b}*y + {self.c}*z <= {self.d}'
+    
+    def copy(self) -> 'Constraints3D':
+        return Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS ,self.d)
 
     @classmethod
     def from_plane(cls, plane: Plane) -> 'Constraints3D':

@@ -36,8 +36,8 @@ class TestConstraints(unittest.TestCase):
         self.assertAlmostEqual(rotated.c, 1)
         
     def test_iteratively(self):
-        for i in range(5,10):
-            prev_obj,prev_cons = gen_random_3d_unbounded(i)
+        for i in range(100):
+            prev_obj,prev_cons = gen_random_3d_unbounded(5)
             prev = OsToolSolver().solve_three_d(prev_obj,prev_cons)
             obj,cons = Convex3DSolver().rotate_program(prev_obj,prev_cons)
             after = OsToolSolver().solve_three_d(obj,cons)
