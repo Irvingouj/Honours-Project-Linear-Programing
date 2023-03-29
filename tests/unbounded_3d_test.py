@@ -1,6 +1,5 @@
 import unittest
 from linear_programming.classes.osToolSolver import OsToolSolver
-from linear_programming.utils.exceptions import UnboundedException
 from linear_programming.classes.three_d import Convex3DSolver
 from linear_programming.utils.linear_program_generator import gen_random_3d_unbounded
 from linear_programming.utils.compare_time import write_bad_program
@@ -18,7 +17,6 @@ class UnboundedTest(unittest.TestCase):
         
         bounded = con_solver.check_bounded(obj, cons)
         if bounded and os_res == "UNBOUNDED":
-        
             return
          
         write_bad_program(program, None, os_res, "suppose to be unbounded")
