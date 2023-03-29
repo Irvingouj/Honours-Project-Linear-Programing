@@ -5,16 +5,21 @@ from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.classes.solver import Solver
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.three_d.point3d import Point3D
-from linear_programming.utils.exceptions import NoSolutionException
+from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
 from .objective_function_3d import ObjectiveFunction3D
 from .constraint_3d import Constraints3D
 
 
 class Convex3DSolver(Solver):
     def solve(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> List[Point3D]:
-        pass
+        raise NotImplementedError("Not implemented yet")
+        # if not self.check_bounded(obj, cons):V
+        #     raise UnboundedException("Unbounded problem",ray=)
     
-    def check_unbounded(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> bool:
+    def check_bounded(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> bool:
+        """
+        returns true if the problem is bounded, false otherwise
+        """
 
         # rotate everything so that the objective function is facing up the z-axis
         theta, phi = obj.get_angle_needed_for_rotation()
@@ -26,11 +31,11 @@ class Convex3DSolver(Solver):
         try:
             ConvexSolver().solve(ObjectiveFunction(0, 0), two_d_cons)
         except NoSolutionException:
-            # bounded
-            return True
+            # unbounded
+            return False
         
-        # unbounded
-        return False
+        # bounded
+        return True
         
 
         

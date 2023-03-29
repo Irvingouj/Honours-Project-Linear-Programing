@@ -28,6 +28,7 @@ def save_to_file(file_type:str,obj:ObjectiveFunction,constraints:List[Constraint
     return file_path   
 
 def write_bad_program(program:Program, con_res:Point, os_res:Point, err,name = None):
+    print("writing bad program")
     bad_program_dir = PROJECT_ROOT.joinpath("linear_program_data", "problems_unexpected")
     filename = f"{con_res}!={os_res}__{random.random()}.txt"
     if name is not None:
@@ -41,6 +42,7 @@ def write_bad_program(program:Program, con_res:Point, os_res:Point, err,name = N
             f.write(str(line)+"\n")
         f.write("#-----------------program end-----------------")
     
+    print("writing analysis")
     trimmed_program = full_analysis(obj=program[0], cons=program[1])
     trimmed_program_path = bad_program_dir.joinpath("analysis"+filename)
     with open(trimmed_program_path, 'a+',encoding='utf-8') as f:
