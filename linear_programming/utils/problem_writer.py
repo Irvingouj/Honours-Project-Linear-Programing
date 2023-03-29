@@ -7,7 +7,7 @@ from linear_programming.classes.point import Point
 from linear_programming.utils.linear_program_generator import LINEAR_PROGRAMS_DIR
 from linear_programming.utils.problem_reader import PROJECT_ROOT
 from linear_programming.utils.types import Program
-
+from linear_programming.utils.analysis import full_analysis
 
 def save_to_file(file_type:str,obj:ObjectiveFunction,constraints:List[Constraints])->str:
     assert file_type in ["bounded", "unbounded", "infeasible"]
@@ -29,7 +29,7 @@ def save_to_file(file_type:str,obj:ObjectiveFunction,constraints:List[Constraint
 
 def write_bad_program(program:Program, con_res:Point, os_res:Point, err,name = None):
     bad_program_dir = PROJECT_ROOT.joinpath("linear_program_data", "problems_unexpected")
-    filename = bad_program_dir.joinpath(f"{con_res}!={os_res}__{random.random()}.txt")
+    filename = f"{con_res}!={os_res}__{random.random()}.txt"
     if name is not None:
         filename = bad_program_dir.joinpath(f"{name}.txt")
     program_path = bad_program_dir.joinpath(filename)
@@ -40,3 +40,15 @@ def write_bad_program(program:Program, con_res:Point, os_res:Point, err,name = N
         for line in program[1]:
             f.write(str(line)+"\n")
         f.write("#-----------------program end-----------------")
+    
+    trimmed_program = full_analysis(obj=program[0], cons=program[1])
+    trimmed_program_path = bad_program_dir.joinpath("analysis"+filename)
+    with open(trimmed_program_path, 'a+',encoding='utf-8') as f:
+        f.write("#" +str(err)+"\n")
+        f.write(f"# convex result: {con_res} os tool result: {os_res}\n")
+        f.write(str(trimmed_program[0])+"\n")
+        for line in trimmed_program[1]:
+            f.write(str(line)+"\n")
+        f.write("#-----------------program end-----------------")
+
+    

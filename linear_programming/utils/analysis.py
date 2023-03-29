@@ -1,3 +1,4 @@
+import random
 from linear_programming.classes import constraints
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.osToolSolver import OsToolSolver
@@ -69,3 +70,29 @@ def trim_cons(obj,cons):
         bad_cons = cons[bad_index-1]
         cons.remove(bad_cons)
         return obj,cons
+
+def full_analysis(obj,cons):
+    """
+    this method will try to find the first constraint that is causing the problem
+    """
+    bad_index,_,_ = find_first_line_diff(obj,cons)
+    cons = cons[:bad_index]
+    prev = None
+    while bad_index!=prev:
+        re_arrange_cons(obj,cons)
+        bad_index,_,_ = find_first_line_diff(obj,cons)
+        cons = cons[:bad_index]
+        prev = bad_index
+    
+    try_counter = 0
+    while try_counter < 50:
+        random_int = random.randint(0,len(cons)-1)
+        con_copy = [c for i,c in enumerate(cons) if i != random_int]
+        bad_index,_,_ = find_first_line_diff(obj,cons)
+        if bad_index != None:
+            cons = con_copy
+        else:
+            try_counter += 1
+    
+    return obj,cons
+    

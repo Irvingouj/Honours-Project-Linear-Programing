@@ -1,0 +1,8 @@
+#convex solver is unbounded  but os tool has solution INFEASIBLE 
+
+# convex result: UNBOUNDED os tool result: INFEASIBLE
+max -0.3x + -5.03y
+-0.45x + 4.78y <= -217.07
+-0.42x + 5.13y <= -958.4
+-9.35x + 5.06y <= 844.55
+#-----------------program end-----------------
