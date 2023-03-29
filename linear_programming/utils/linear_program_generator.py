@@ -146,7 +146,6 @@ def random_obj_3d() -> ObjectiveFunction3D:
         c = rand_float_in_range(-10, 10)
     return ObjectiveFunction3D(a=a, b=b, c=c)
 
-    
 def gen_random_3d_unbounded(num_constrains:int, max_value:int = 10) -> Program3d:
     direction_vector = Vector([random.uniform(-max_value, max_value), random.uniform(-max_value, max_value), random.uniform(-max_value, max_value)])
     res = []
@@ -159,7 +158,7 @@ def gen_random_3d_unbounded(num_constrains:int, max_value:int = 10) -> Program3d
 
     obj = random_obj_3d()
     while obj.to_vector()*direction_vector < 0:
-        obj = random_obj()
+        obj = random_obj_3d()
         
 
     return (obj, res)

@@ -28,6 +28,9 @@ def find_first_line_diff(obj,cons):
             return i,os_res,con_res
     return None,None,None
 
+def find_first_line_diff_3d(obj,cons):
+    pass
+
 def trim_off_and_try_again(num,obj,cons):
     """
     return true means that the results are the same 

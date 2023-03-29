@@ -33,6 +33,9 @@ class Convex3DSolver(Solver):
         except NoSolutionException:
             # unbounded
             return False
+        except UnboundedException:
+            # unbounded for 2d problem means that there exist infinitely many solutions for the 3d problem
+            return True
         
         # bounded
         return True
