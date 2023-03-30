@@ -4,7 +4,7 @@ from typing import List
 import numpy as np
 from linear_programming.classes.vector import Vector
 
-from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
+from linear_programming.utils.exceptions import NoSolutionException, PerceptionException, UnboundedException
 from linear_programming.classes.one_d.one_d_LinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
 from linear_programming.classes.one_d.one_d_constraint import OneDConstraint
 from .point import Point
@@ -32,6 +32,12 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
             # there's gotta be a better way, this suffers heavily from floating point error
             # TODO: find a better way
             p1 = curr.find_point_with_x(p.x+100000)
+            p2 = curr.find_point_with_x(p.x-100000)
+            
+            if (h.contains(p1) and h.contains(p2)) or (not h.contains(p1) and not h.contains(p2)):
+                raise PerceptionException("Abnormal situation, float precision error")
+            
+            
             if (h.contains(p1)):
                 # if h contains p1, then h must facing right
                 # x >= p.x
@@ -119,7 +125,6 @@ class ConvexSolver(Solver):
             eta_y = vector.get(1)
             # d_x*eta_x + d_y*eta_y = 0 but d_y = 1
             # d_x = -eta_x/eta_y
-            #need to do some thing if eta_y is 0 :TODO
             if eta_y != 0 and np.allclose(dx,-eta_x/eta_y):
                 H_prime.append(rotated_cons[idx])
 

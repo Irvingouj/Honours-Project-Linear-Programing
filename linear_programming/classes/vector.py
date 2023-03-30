@@ -68,6 +68,7 @@ class Vector:
         y2= other.arr[1]
         dot = x1*x2 + y1*y2      # dot product between [x1, y1] and [x2, y2]
         det = x1*y2 - y1*x2      # determinant
+        print(f"dot: {dot}, det: {det}")
         return math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
 
     def __getitem__(self, index):
