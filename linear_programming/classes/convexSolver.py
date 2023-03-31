@@ -129,7 +129,6 @@ class ConvexSolver(Solver):
                 H_prime.append(rotated_cons[idx])
 
         # pg 81, convert to 1d again and check for feasibility
-        # we ignore paralell constraints for now                
         if len(H_prime) > 1:
             one_d_again = []
             for h_i in H_prime:

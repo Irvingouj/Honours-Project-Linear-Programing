@@ -1,14 +1,16 @@
 import time
 import csv
+import threading
 from typing import Tuple
 from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded
 from linear_programming.utils.problem_reader import PROJECT_ROOT, ProblemType
-from linear_programming.utils.problem_writer import write_bad_program
+from linear_programming.utils.problem_writer import write_bad_program, write_bad_program_no_analysis
 
 TIME_DATA_DIR = PROJECT_ROOT.joinpath("time_data")
+
 
 def solve_calculate_time(program) -> Tuple[float, float]:
     """
@@ -30,43 +32,45 @@ def solve_calculate_time(program) -> Tuple[float, float]:
     """
     convex_solver = ConvexSolver()
     os_tool_solver = OsToolSolver()
-    
+
     os_time_start = time.time()
     os_res = os_tool_solver.solve(program[0], program[1])
     os_time_end = time.time()
-    
+
     cons_time_start = time.time()
     con_res = None
 
     try:
         con_res = convex_solver.solve(program[0], program[1])
         if os_res != con_res:
-            write_bad_program(program, con_res, os_res,"result not equal")
+            write_bad_program(program, con_res, os_res, "result not equal")
             raise ResultNotEqualException("result not equal")
-    except NoSolutionException as exc:
-        # testing for time, will roll back after
-        pass
-        # if os_res != "INFEASIBLE":
-        #     write_bad_program(program, "INFEASIBLE", os_res,f"convex solver has no solution but os tool has {os_res} \n")
-        #     raise ResultNotEqualException(f"convex solver has no solution but os tool has solution {os_res}") from exc
-    except UnboundedException as exc:
+    except NoSolutionException:
+        if os_res != "INFEASIBLE":
+            thread = threading.Thread(target=write_bad_program_no_analysis, args=(
+                program, "INFEASIBLE", os_res, f"convex solver has no solution but os tool has {os_res} \n"))
+            thread.start()
+    except UnboundedException:
         if os_res != "UNBOUNDED":
-            write_bad_program(program, "UNBOUNDED", os_res,f"convex solver is unbounded  but os tool has solution {os_res} \n")
-            raise ResultNotEqualException(f"convex solver is unbounded  but os tool has solution {os_res}") from exc
-    
+            thread = threading.Thread(target=write_bad_program_no_analysis, args=(
+                program, "UNBOUNDED", os_res,
+                              f"convex solver is unbounded  but os tool has solution {os_res} \n"))
+            thread.start()
+
     cons_time_end = time.time()
     return cons_time_end - cons_time_start, os_time_end - os_time_start
 
 
-def retry(size,gen_func):
+def retry(size, gen_func):
     try:
         return solve_calculate_time(gen_func(num_constrains=size))
     except PerceptionException:
-        retry(size,gen_func)
+        retry(size, gen_func)
 
-def test_with_time(problem_type:ProblemType,range:range,result_name:str = "result.txt")->str:
 
-    gen_func = None;
+def test_with_time(problem_type: ProblemType, range: range, result_name: str = "result.txt") -> str:
+
+    gen_func = None
     if problem_type == ProblemType.UNBOUNDED:
         gen_func = gen_random_2d_unbounded
         result_name = "unbounded_"+result_name
@@ -78,8 +82,7 @@ def test_with_time(problem_type:ProblemType,range:range,result_name:str = "resul
         result_name = "bounded_"+result_name
     else:
         raise ValueError("problem type not supported")
-    
-    
+
     f = open(TIME_DATA_DIR.joinpath(result_name), 'w', encoding='utf-8')
     f.write("n,convex_time,os_time\n")
     for n in range:
@@ -89,8 +92,8 @@ def test_with_time(problem_type:ProblemType,range:range,result_name:str = "resul
             cons_time, os_time = solve_calculate_time(program)
         except PerceptionException:
             print("retrying, something went wrong,perception error")
-            cons_time, os_time = retry(n,gen_func)
-        csv.writer(f).writerow([n,cons_time,os_time])
+            cons_time, os_time = retry(n, gen_func)
+        csv.writer(f).writerow([n, cons_time, os_time])
     f.close()
-    
+
     return TIME_DATA_DIR.joinpath(result_name)
