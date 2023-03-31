@@ -12,3 +12,4 @@ share
 linear_program_data/problems_unexpected/*
 linear_program_data/problems_unexpected/INFEASIBLE!=(-10.45747,-0.20782)__0.729865573883846.txt
 linear_program_data/problems_unexpected/INFEASIBLE!=(3.60794,8.50485)__0.23208546972016186.txt
+test_generator.py
