@@ -4,6 +4,7 @@ from linear_programming.classes.convexSolver import ConvexSolver
 from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
 from linear_programming.utils.types import Program
+import linear_programming.utils.problem_reader as reader
 
 
 def con_solve(obj,cons):
@@ -61,6 +62,15 @@ def re_arrange_cons(obj,cons) -> Program:
         cons.insert(0,bad_cons)
         return obj,cons
     
+def test_all_file_unexpected():
+    programs_with_name = reader.read_all_problem_in_dir("problems_unexpected")
+    for (name,program) in programs_with_name:
+        obj,cons = program
+        print(name)
+        con_res = con_solve(obj,cons)
+        os_res = os_solve(obj,cons)
+        print(f"con_res: {con_res}, os_res: {os_res}, same: {con_res == os_res}\n")
+        print("---------------------------------")
     
 def trim_cons(obj,cons):
     """

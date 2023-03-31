@@ -96,3 +96,14 @@ def parse_file(file: TextIOWrapper) -> Tuple[ObjectiveFunction, List[Constraints
     for line in lines[1:]:
         constraints_list.append(Constraints.from_string(line))
     return objective_function, constraints_list
+
+def read_all_problem_in_dir(dir_name: str) -> List[Program]:
+    dir_path = os.path.join(PROJECT_ROOT, PROGRAM_DATA_DIR_NAME, dir_name)
+    files = os.listdir(dir_path)
+    programs = []
+    for file in files:
+        file_path = os.path.join(dir_path, file)
+        file = open(file_path, 'r', encoding='utf-8')
+        program = parse_file(file)
+        programs.append((file.name,program))
+    return programs

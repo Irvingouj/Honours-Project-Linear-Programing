@@ -1,9 +1,0 @@
-#suppose to be unbounded
-# convex result: None os tool result: UNBOUNDED
-max 6.73x + 1.18y + -9.33z
--9.87x + -6.44y + 3.18z <= 758.02
-9.76x + 2.28y + 8.73z <= -348.25
--9.58x + 9.74y + 6.46z <= 693.91
-0.95x + -0.33y + 2.52z <= -826.66
-4.24x + -2.38y + 6.28z <= -397.12
-#-----------------program end-----------------
