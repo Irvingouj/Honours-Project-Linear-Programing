@@ -24,7 +24,7 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
     one_d = []
     for h in cons:
         if h.is_parallel_but_share_no_common_area(curr):
-            raise NoSolutionException("No solution as the constraints are parallel and share no common area")
+            raise NoSolutionException("No solution as the constraints are parallel and share no common area",stage="parallel_checking",constraints=[curr,h])
 
         p = curr.find_intersection(h)
         if p is not None:
@@ -136,7 +136,7 @@ class ConvexSolver(Solver):
                 one_d_again.append(one_d)
             dx_prime,__,_ = solve_1d_linear_program_with_left_and_right_index(one_d_again, True)
             if dx_prime == None:
-                raise NoSolutionException("No solution as the constraints are parallel and share no common area")
+                raise NoSolutionException("No solution as the constraints are parallel and share no common area",stage="check_unbounded")
         
         result = self.CheckBoundResult(bounded=False,unbound_certificate=Vector([dx, 1]).get_rotate(-degree_needed))
         return result

@@ -54,7 +54,7 @@ def write_bad_program(program:Program, con_res:Point, os_res:Point, err,name = N
         f.write("#-----------------program end-----------------")
 
     
-def write_bad_program_no_analysis(program:Program, con_res:Point, os_res:Point, err,name = None):
+def write_bad_program_no_analysis(program:Program, con_res:Point = None, os_res:Point = None, err = None,name = None):
     print("writing bad program")
     bad_program_dir = PROJECT_ROOT.joinpath("linear_program_data", "problems_unexpected")
     filename = f"{con_res}!={os_res}__{random.random()}.txt"

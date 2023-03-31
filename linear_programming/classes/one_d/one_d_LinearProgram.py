@@ -25,7 +25,7 @@ def solve_1d_linear_program(one_d_constraints: List[OneDConstraint], objective: 
         # debugging purpose, I only need add 1 breakpoint here
         if flag:
             raise NoSolutionException(
-                "No solution as one dimension linear program is infeasible")
+                "No solution as one dimension linear program is infeasible",stage="1d_linear_program",constraints=one_d_constraints)
 
     used_constraints = []
     for constraint in one_d_constraints:

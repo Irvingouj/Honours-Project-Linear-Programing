@@ -1,6 +1,8 @@
 
 class NoSolutionException(Exception):
-    def __init__(self, *args: object) -> None:
+    def __init__(self, *args: object,stage ,constraints = None) -> None:
+        self.stage = stage
+        self.constraints = constraints
         super().__init__(*args)
 
 class UnboundedException(Exception):

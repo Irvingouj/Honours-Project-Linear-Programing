@@ -59,6 +59,8 @@ class Constraints:
         return self.a * point.x + self.b * point.y < self.c or np.isclose(self.a * point.x + self.b * point.y, self.c)
 
     def find_intersection(self, edge: 'Constraints') -> Point:
+        if self.is_parallel(edge):
+            return None
         return self.to_edge().find_intersection(edge.to_edge())
 
     @classmethod
@@ -100,7 +102,8 @@ class Constraints:
             return True
         if self.b == 0 and other.b == 0:
             return True
-        return self.a * other.b == self.b * other.a
+        return np.isclose(self.a * other.b, self.b * other.a)
+        # return self.a * other.b == self.b * other.a
 
     def facing_direction_vector(self) -> 'Vector':
         return Vector([-self.a, -self.b])
