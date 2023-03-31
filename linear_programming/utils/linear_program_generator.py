@@ -52,7 +52,7 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program
     cons = []
 
     def if_feasible_constraint(c: Constraints) -> bool:
-        return c.contains(p_1) or c.contains(p_2) or c.contains(p_3)
+        return c.contains(p_1) and c.contains(p_2) and c.contains(p_3)
 
     while len(cons) < num_constrains:
         c = random_constraint(max_value)
@@ -61,6 +61,7 @@ def gen_random_2d_feasible(num_constrains: int,  max_value: int = 10) -> Program
             cons.append(c)
         elif if_feasible_constraint(c.flip_sign()):
             cons.append(c.flip_sign())
+        
     
     
     return (random_obj(), cons)
