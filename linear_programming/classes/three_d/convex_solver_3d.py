@@ -22,8 +22,8 @@ class Convex3DSolver(Solver):
         returns the rotated program so that the objective function is facing up the z-axis
         """
         theta, phi = obj.get_angle_needed_for_rotation()
-        x_rotated_cons = [c.get_rotate_x(theta) for c in cons]
-        y_rotated_cons = [c.get_rotate_y(phi) for c in x_rotated_cons]
+        x_rotated_cons = [c.get_rotate_z(theta) for c in cons]
+        y_rotated_cons = [c.get_rotate_x(phi) for c in x_rotated_cons]
         return ObjectiveFunction3D(a=0,b=0,c=1), y_rotated_cons
     
     def check_bounded(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> bool:
@@ -39,7 +39,7 @@ class Convex3DSolver(Solver):
         two_d_cons = [Constraints(v[0], v[1], lessOrGreater=GreaterOrLess.GREATER, c=v[2]) for v in facing_direction_vecs]
 
         try:
-            ConvexSolver().solve(ObjectiveFunction(0, 0), two_d_cons)
+            res = ConvexSolver().solve(ObjectiveFunction(0, 0), two_d_cons)
         except NoSolutionException:
             # unbounded
             return 'BOUNDED'

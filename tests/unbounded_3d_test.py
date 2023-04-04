@@ -24,7 +24,7 @@ class UnboundedTest(unittest.TestCase):
         
     def test_unbounded_1(self):
         for i in range(100):
-            program = gen_random_3d_unbounded(5)
+            program = gen_random_3d_unbounded(i+3)
             self.__test_problem(program)
         
     # def test_unbounded_2(self):

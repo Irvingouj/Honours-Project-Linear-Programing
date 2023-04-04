@@ -58,8 +58,12 @@ class ObjectiveFunction3D:
         x = self.a
         y = self.b
         z = self.c
-        theta = np.arccos(z/np.sqrt(y**2 + z**2))
-        phi = np.arccos(np.sqrt(y**2 + z**2)/np.sqrt(x**2 + y**2 + z**2))
+        theta = np.arctan2(x,y)
+        
+        y_prime = x * np.sin(theta) + y * np.cos(theta)
+        z_prime = z
+        
+        phi = np.arctan2(y_prime,z_prime)
 
         return theta, phi
 

@@ -57,6 +57,7 @@ def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> b
 
 
 class ConvexSolver(Solver):
+    
     def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
         bound_res = self.check_unbounded(obj, cons)
         if not bound_res.bounded:

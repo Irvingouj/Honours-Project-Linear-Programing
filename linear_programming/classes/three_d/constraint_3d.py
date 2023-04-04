@@ -112,6 +112,23 @@ class Constraints3D:
         res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS,self.d)
         res.rotate_y(angle)
         return res
+
+    def rotate_z(self, angle: float) -> None:
+        R = np.array([[np.cos(angle), -np.sin(angle), 0], 
+                      [np.sin(angle), np.cos(angle), 0], 
+                      [0, 0, 1]])
+        [a, b, c] = R @ np.array([self.a, self.b, self.c])
+        d = self.d * np.linalg.det(R)
+        
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        
+    def get_rotate_z(self,angle:float) -> 'Constraints3D':
+        res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS,self.d)
+        res.rotate_z(angle)
+        return res
         
         
     def get_vector_space(self) -> Tuple[Vector,Vector]:
