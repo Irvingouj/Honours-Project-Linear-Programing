@@ -201,6 +201,12 @@ class Constraints3D:
     def copy(self) -> 'Constraints3D':
         return Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS ,self.d)
 
+    def angle_between(self, other: 'Constraints3D') -> float:
+        """
+        returns the angle between the two planes in radians
+        """
+        return np.arccos(np.dot(self.facing_direction_vector().normalize().arr, other.facing_direction_vector().normalize().arr))
+
     @classmethod
     def from_plane(cls, plane: Plane) -> 'Constraints3D':
         return cls(plane.a, plane.b, plane.c, d=plane.d)

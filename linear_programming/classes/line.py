@@ -1,3 +1,4 @@
+import numpy as np
 from .point import Point
 from .vector import Vector
 
@@ -18,6 +19,13 @@ class Line:
     def is_on_line(self, point: Point) -> bool:
         return self.a * point.x + self.b * point.y == self.c
 
+    @staticmethod
+    def from_point(p1:Point,p2:Point):
+        a = p2.y - p1.y
+        b = p1.x - p2.x
+        c = p2.x*p1.y - p1.x*p2.y
+        return Line(a,b,c)
+
     def find_intersection(self, line: 'Line') -> Point:
         a_1 = self.a
         b_1 = self.b
@@ -37,7 +45,7 @@ class Line:
         return Vector([self.a, self.b])
 
     def is_parallel(self, other: 'Line') -> bool:
-        return self.a * other.b == self.b * other.a
+        return np.isclose(self.a * other.b, self.b * other.a)
 
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, Line):

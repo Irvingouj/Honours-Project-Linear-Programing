@@ -75,3 +75,6 @@ class Vector:
     
     def is_perpendicular_to(self, other: 'Vector') -> bool:
         return self * other == 0
+
+    def angle_between(self, other: 'Vector') -> float:
+        return math.acos(self * other / (self.length() * other.length()))

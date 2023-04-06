@@ -107,3 +107,17 @@ def read_all_problem_in_dir(dir_name: str) -> List[Program]:
         program = parse_file(file)
         programs.append((file.name,program))
     return programs
+
+    
+def read(path,dimension):
+    file_path = os.path.join(PROJECT_ROOT,path)
+    file = open(file_path, 'r', encoding='utf-8')
+    
+    if dimension == 2:
+        program = parse_file(file)
+        return program
+    if dimension == 3:
+        program = parse_file_3d(file)
+        return program
+    
+    raise ValueError("Dimension must be 2 or 3")

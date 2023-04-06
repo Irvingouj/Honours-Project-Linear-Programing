@@ -73,7 +73,7 @@ def solve_1d_linear_program_with_left_and_right_index(one_d_constraints: List[On
             left_idx = idx
             return None,right_idx,left_idx
         
-        
+       
         
         if (constraint.direction() == Facing.LEFT):
             if constraint.value() < right:

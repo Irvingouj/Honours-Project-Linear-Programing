@@ -6,8 +6,9 @@ class NoSolutionException(Exception):
         super().__init__(*args)
 
 class UnboundedException(Exception):
-    def __init__(self, *args: object,ray) -> None:
-        self.ray = ray
+    def __init__(self, *args: object,unbounded_certificate, unbounded_index) -> None:
+        self.unbounded_certificate = unbounded_certificate
+        self.unbounded_index = unbounded_index
         super().__init__(*args)
 
 class ResultNotEqualException(Exception):

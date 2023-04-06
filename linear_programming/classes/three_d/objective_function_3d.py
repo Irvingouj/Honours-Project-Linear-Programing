@@ -47,8 +47,40 @@ class ObjectiveFunction3D:
 
     def to_vector(self) -> Vector:
         return Vector([self.a, self.b, self.c])
-    
 
+    def get_rotate_x(self,theta:float) -> 'ObjectiveFunction3D':
+        
+        rotation_matrix = np.array([
+            [1, 0, 0],
+            [0, np.cos(theta), -np.sin(theta)],
+            [0, np.sin(theta), np.cos(theta)]
+            ]
+        )
+
+        vec = np.array([self.a, self.b, self.c])
+        
+        res_vec = rotation_matrix @ vec
+        res = ObjectiveFunction3D(res_vec[0], res_vec[1], res_vec[2], self.maxOrMin)
+    
+        return res
+    def get_rotate_y(self,angle:float) -> 'ObjectiveFunction3D':
+            
+        R = np.array([[np.cos(angle), 0, np.sin(angle)], 
+                      [0, 1, 0], 
+                      [-np.sin(angle), 0, np.cos(angle)]])
+
+        vec = np.array([self.a, self.b, self.c])
+        res_vec = R @ vec
+        return ObjectiveFunction3D(res_vec[0], res_vec[1], res_vec[2], self.maxOrMin)
+    
+    def get_rotate_z(self,angle:float) -> 'ObjectiveFunction3D':
+        R = np.array([[np.cos(angle), -np.sin(angle), 0],
+                      [np.sin(angle), np.cos(angle), 0],
+                      [0, 0, 1]])
+        vec = np.array([self.a, self.b, self.c])
+        vec = R @ vec
+        return ObjectiveFunction3D(vec[0], vec[1], vec[2], self.maxOrMin)
+    
     def get_angle_needed_for_rotation(self) -> Tuple[float,float]:
         """
         theta is the angle needed to rotate the vector around the x-axis
@@ -68,7 +100,8 @@ class ObjectiveFunction3D:
         return theta, phi
 
         
-        
+    def to_vector(self) -> Vector:
+        return Vector([self.a, self.b, self.c])
 
     def __str__(self) -> str:
         return ('max' if self.maxOrMin == MaxOrMin.MAX else 'min') + ' ' + str(self.a) + 'x + ' + str(self.b) + 'y + ' + str(self.c) + 'z'
