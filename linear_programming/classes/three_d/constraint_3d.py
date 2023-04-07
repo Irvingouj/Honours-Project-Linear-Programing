@@ -162,9 +162,9 @@ class Constraints3D:
         p1 = Point3D(point.x + vector[0], point.y + vector[1], point.z + vector[2])
         
         if self.contains(p1):
-            return vector
+            return vector.normalize()
         else:
-            return Vector([-vector[0], -vector[1], -vector[2]])
+            return Vector([-vector[0], -vector[1], -vector[2]]).normalize()
         
     def find_random_point_on_plane(self) -> Point3D:
         x = np.random.uniform(1,2)
@@ -194,6 +194,9 @@ class Constraints3D:
     
     def __str__(self) -> str:
         return f'{self.a}x + {self.b}y + {self.c}z <= {self.d}'
+
+    def str_float(self) -> str:
+        return f'{self.a:.2f}x + {self.b:.2f}y + {self.c:.2f}z <= {self.d:.2f}'
 
     def to_or_string(self) -> str:
         return f'{self.a}*x + {self.b}*y + {self.c}*z <= {self.d}'

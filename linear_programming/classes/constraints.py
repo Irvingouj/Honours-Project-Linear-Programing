@@ -74,7 +74,7 @@ class Constraints:
         return Point((self.c - self.b * y) / self.a, y)
 
     def is_vertical(self) -> bool:
-        return self.b == 0
+        return np.isclose(self.a, 0)
 
     def rotate(self) -> 'Constraints':
         return Constraints(self.b, -self.a, c=self.c)
@@ -173,3 +173,6 @@ class Constraints:
         new_facing_vector = self.facing_direction_vector().get_rotate(angle)
         self.a = -new_facing_vector.get(0)
         self.b = -new_facing_vector.get(1)
+
+    def str_float(self) -> str:
+        return f'{self.a:.2f}x + {self.b:.2f}y   <= {self.c:.2f}'

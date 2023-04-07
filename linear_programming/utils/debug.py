@@ -1,20 +1,36 @@
+debug_mode_global = False
 debug_mode = False
-
 def if_debug(func):
     def wrapper(*args, **kwargs):
-        if debug_mode:
+        if debug_mode_global:
             return func(*args, **kwargs)
         else:
             return None
     return wrapper
 
+@if_debug
 def start():
     global debug_mode
     debug_mode = True
+
+@if_debug
 def end():
     global debug_mode
     debug_mode = False
     
+@if_debug
+def print_vecs(vecs,title=""):
+    if title != "":
+        print(title)
+    for v in vecs:
+        print(v)
+    
+@if_debug
+def print_cons_float(cons,title=""):
+    if title != "":
+        print(title)
+    for c in cons:
+        print(c.str_float())
 
 @if_debug
 def print_cons(cons,title=""):

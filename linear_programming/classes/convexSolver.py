@@ -154,7 +154,7 @@ class ConvexSolver(Solver):
             bounded=False, unbound_certificate=cons[left], unbounded_index=left)
         return result
 
-
+   
     
 
 def solve_with_convex(program) -> Point:

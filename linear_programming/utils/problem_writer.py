@@ -68,3 +68,12 @@ def write_bad_program_no_analysis(program:Program, con_res:Point = None, os_res:
         for line in program[1]:
             f.write(str(line)+"\n")
         f.write("#-----------------program end-----------------")
+
+        
+def write(relative_path,program:Program):
+    program_path = PROJECT_ROOT.joinpath(relative_path)
+    with open(program_path, 'a+',encoding='utf-8') as f:
+        f.write(str(program[0])+"\n")
+        for line in program[1]:
+            f.write(str(line)+"\n")
+        f.write("#-----------------program end-----------------")
