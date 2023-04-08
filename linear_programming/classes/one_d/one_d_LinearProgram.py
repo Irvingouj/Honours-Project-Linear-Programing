@@ -87,5 +87,5 @@ def solve_1d_linear_program_with_left_and_right_index(one_d_constraints: List[On
         used_constraints.append(constraint)
         
       
-    return right if objective == POSITIVE else left  , right_idx, left_idx
+    return right if objective == POSITIVE else left  , left_idx, right_idx
 

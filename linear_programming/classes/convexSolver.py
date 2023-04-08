@@ -125,7 +125,7 @@ class ConvexSolver(Solver):
             one_d_cons, True)
 
         # no solution, the problem is bounded
-        if dx == None:
+        if dx is None:
             return CheckBoundResult(bounded=True, bound_certificate=(left, right))
 
         # dx exist, which means the direction of unboundedness is (dx,1)

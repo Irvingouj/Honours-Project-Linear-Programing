@@ -163,3 +163,26 @@ def gen_random_3d_unbounded(num_constrains:int, max_value:int = 10) -> Program3d
         
 
     return (obj, res)
+
+def gen_random_3d_bounded(num_constrains:int, max_value:int = 10) -> Program3d:
+    """
+    generate a 3d program with bounded solution
+    """
+    p_1 = Point3D(rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value))
+    p_2 = Point3D(rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value))
+    p_3 = Point3D(rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value))
+    p_4 = Point3D(rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value), rand_float_in_range(-max_value, max_value))
+    cons = []
+
+    def if_feasible_constraint(c: Constraints3D) -> bool:
+        return c.contains(p_1) and c.contains(p_2) and c.contains(p_3) and c.contains(p_4)
+
+    while len(cons) < num_constrains:
+        c = random_constraint_3d(max_value)
+
+        if if_feasible_constraint(c):
+            cons.append(c)
+        elif if_feasible_constraint(c.flip_sign()):
+            cons.append(c.flip_sign())
+
+    return (random_obj_3d(), cons)

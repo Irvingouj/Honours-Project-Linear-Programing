@@ -213,3 +213,6 @@ class Constraints3D:
     @classmethod
     def from_plane(cls, plane: Plane) -> 'Constraints3D':
         return cls(plane.a, plane.b, plane.c, d=plane.d)
+
+    def flip_sign(self) -> 'Constraints3D':
+        return Constraints3D(self.a,self.b,self.c,GreaterOrLess.GREATER,self.d)

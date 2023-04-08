@@ -2,7 +2,10 @@ import time
 import csv
 import threading
 from typing import Tuple
+
+import numpy as np
 from linear_programming.classes.convexSolver import ConvexSolver
+from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.classes.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded
@@ -42,7 +45,8 @@ def solve_calculate_time(program) -> Tuple[float, float]:
 
     try:
         con_res = convex_solver.solve(program[0], program[1])
-        if os_res != con_res:
+        obj:ObjectiveFunction = program[0]
+        if np.isclose(obj.value(os_res) ,obj.value(con_res)):
             write_bad_program(program, con_res, os_res, "result not equal")
             raise ResultNotEqualException("result not equal")
     except NoSolutionException:
