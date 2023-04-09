@@ -1,6 +1,6 @@
 import unittest
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible
-from linear_programming.classes.convexSolver import ConvexSolver
+from linear_programming.solvers.convexSolver import ConvexSolver
 from linear_programming.utils.problem_reader import Program
 
 

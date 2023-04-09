@@ -1,4 +1,4 @@
-from linear_programming.classes.osToolSolver import OsToolSolver
+from linear_programming.solvers.osToolSolver import OsToolSolver
 import unittest
 
 

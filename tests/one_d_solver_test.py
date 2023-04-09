@@ -2,7 +2,7 @@ import unittest
 
 from linear_programming.utils.linear_program_generator import OneDProgram, gen_random_1d_feasible
 from linear_programming.classes.one_d.one_d_LinearProgram import solve_1d_linear_program
-from linear_programming.classes.osToolSolver import OsToolSolver
+from linear_programming.solvers.osToolSolver import OsToolSolver
 
 class TestOneDSolver(unittest.TestCase):
     

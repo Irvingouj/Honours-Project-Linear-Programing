@@ -1,6 +1,6 @@
 import unittest
 from linear_programming.classes.constraints import Constraints
-from linear_programming.classes.convexSolver import ConvexSolver
+from linear_programming.solvers.convexSolver import ConvexSolver
 from linear_programming.classes.objectiveFunction import ObjectiveFunction
 from linear_programming.utils.problem_reader import read_problem,ProblemType
 

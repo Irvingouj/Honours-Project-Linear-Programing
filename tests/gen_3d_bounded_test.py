@@ -1,5 +1,5 @@
 import unittest
-from linear_programming.classes.osToolSolver import OsToolSolver, Point3D
+from linear_programming.solvers.osToolSolver import OsToolSolver, Point3D
 from linear_programming.utils.linear_program_generator import gen_random_3d_bounded
 
 class TestRandom3DBounded(unittest.TestCase):

@@ -1,12 +1,10 @@
 from ortools.linear_solver import pywraplp
 from typing import List, Union
 from linear_programming.utils.exceptions import PerceptionException
-from .point import Point
-from .objectiveFunction import ObjectiveFunction
-from .constraints import Constraints
-from .one_d.one_d_constraint import OneDConstraint
-from .solver import Solver
-from .three_d import Constraints3D, ObjectiveFunction3D, Point3D
+from linear_programming.classes.two_d import Point, ObjectiveFunction, Constraints
+from linear_programming.solvers.solver import Solver
+from linear_programming.classes.three_d import Point3D, ObjectiveFunction3D, Constraints3D
+from linear_programming.classes.one_d import OneDConstraint
 
 
 

@@ -1,14 +1,11 @@
 
 from typing import List
-from linear_programming.classes.constraints import Constraints, GreaterOrLess
-from linear_programming.classes.objectiveFunction import ObjectiveFunction
-from linear_programming.classes.solver import Solver
-from linear_programming.classes.convexSolver import ConvexSolver
-from linear_programming.classes.three_d.point3d import Point3D
+from linear_programming.classes.two_d import Constraints, GreaterOrLess,ObjectiveFunction
+from linear_programming.solvers import Solver, ConvexSolver
+from linear_programming.classes.three_d import Point3D, ObjectiveFunction3D, Constraints3D
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
 from linear_programming.utils.types import Program3d
-from .objective_function_3d import ObjectiveFunction3D
-from .constraint_3d import Constraints3D
+
 
 
 class CheckBoundResult:

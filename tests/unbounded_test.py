@@ -1,7 +1,7 @@
 import unittest
-from linear_programming.classes.convexSolver import ConvexSolver
+from linear_programming.solvers.convexSolver import ConvexSolver
 
-from linear_programming.classes.osToolSolver import OsToolSolver
+from linear_programming.solvers.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import UnboundedException
 from linear_programming.utils.problem_reader import read_problem,ProblemType
 from linear_programming.utils.types import Program

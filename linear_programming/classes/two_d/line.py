@@ -1,6 +1,6 @@
 import numpy as np
 from .point import Point
-from .vector import Vector
+from ..vector import Vector
 
 
 class Line:

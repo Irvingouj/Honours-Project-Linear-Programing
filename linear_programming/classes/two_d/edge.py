@@ -1,8 +1,9 @@
+from enum import Enum
+from typing import Tuple
 from .point import Point
 from .line import Line
 
-from enum import Enum
-from typing import Tuple
+
 
 
 class EdgeDirection(Enum):

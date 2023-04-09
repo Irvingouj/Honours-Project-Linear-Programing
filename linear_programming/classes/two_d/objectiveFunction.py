@@ -1,8 +1,7 @@
 from enum import Enum
 import re
 from .point import Point
-from .vector import Vector
-
+from ..vector import Vector
 
 class MaxOrMin(Enum):
     MAX = 0

@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
-from .point import Point
-from .objectiveFunction import ObjectiveFunction
-from .constraints import Constraints
+from linear_programming.classes.two_d import Point, ObjectiveFunction, Constraints
 
 
 class Solver(ABC):

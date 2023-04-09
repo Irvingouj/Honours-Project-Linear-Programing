@@ -5,7 +5,7 @@ import numpy as np
 from .edge import Edge
 from .line import Line
 from .point import Point
-from .vector import Vector
+from ..vector import Vector
 
 
 class GreaterOrLess(Enum):

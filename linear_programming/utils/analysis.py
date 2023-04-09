@@ -1,7 +1,7 @@
 import random
 from linear_programming.classes import constraints
-from linear_programming.classes.convexSolver import ConvexSolver
-from linear_programming.classes.osToolSolver import OsToolSolver
+from linear_programming.solvers.convexSolver import ConvexSolver
+from linear_programming.solvers.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
 from linear_programming.utils.types import Program
 import linear_programming.utils.problem_reader as reader

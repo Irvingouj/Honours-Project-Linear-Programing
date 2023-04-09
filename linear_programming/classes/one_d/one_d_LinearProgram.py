@@ -8,7 +8,7 @@ NEGATIVE = False
 
 # debugging purpose, will be removed
 def sol_1d_linear_program_with_os(one_d_constraints: List[OneDConstraint], objective: bool) -> float:
-    from linear_programming.classes.osToolSolver import OsToolSolver
+    from linear_programming.solvers import OsToolSolver
     return OsToolSolver().solve_one_dimension(one_d_constraints=one_d_constraints, objective=objective)
     
 
