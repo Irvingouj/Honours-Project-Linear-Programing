@@ -3,9 +3,9 @@ from typing import List
 from linear_programming.classes.two_d import Constraints, GreaterOrLess,ObjectiveFunction
 from .solver import Solver
 from .convexSolver import ConvexSolver
-from linear_programming.classes.three_d import Point3D, ObjectiveFunction3D, Constraints3D
-from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
-from linear_programming.utils.types import Program3d
+from ..classes.three_d import Constraints3D, ObjectiveFunction3D, Point3D
+from ..utils.exceptions import NoSolutionException, UnboundedException
+from ..utils.types import Program3d
 
 
 
