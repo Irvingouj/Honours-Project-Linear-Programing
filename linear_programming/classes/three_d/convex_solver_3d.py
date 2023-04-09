@@ -31,7 +31,7 @@ class Convex3DSolver(Solver):
         returns true if the problem is bounded, false otherwise
         """
         import linear_programming.utils.debug as debug
-        debug.start()
+        # debug.start()
         debug.message("before rotation")
         debug.os_solve_3d(obj, cons)
         debug.message("-" * 20)
@@ -55,14 +55,11 @@ class Convex3DSolver(Solver):
         
         facing_direction_vecs = [c.facing_direction_vector() for c in x_rotated_cons]
         two_d_cons = [Constraints(v[0], v[1], lessOrGreater=GreaterOrLess.GREATER, c=-v[2]) for v in facing_direction_vecs]
-        
-        
-        
 
         try:
-            res = ConvexSolver().solve(ObjectiveFunction(1, 1), two_d_cons)
-        except NoSolutionException:
-            return 'BOUNDED'
+            res = ConvexSolver().solve_with_3d_certificate(ObjectiveFunction(1, 1), two_d_cons)
+        except NoSolutionException as err:
+            return f"BOUNDED, bound certificate indices are {' '.join([str(i) for i in err.three_d_bound_certificate])}"
         except UnboundedException as err:
             unbounded_certificate = err.unbounded_certificate
             unbounded_index = err.unbounded_index

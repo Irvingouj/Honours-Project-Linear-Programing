@@ -153,8 +153,48 @@ class ConvexSolver(Solver):
         result = CheckBoundResult(
             bounded=False, unbound_certificate=cons[left], unbounded_index=left)
         return result
+    
+    
+    
 
-   
+    def solve_with_3d_certificate(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
+        bound_res = self.check_unbounded(obj, cons)
+        if not bound_res.bounded:
+            raise UnboundedException(
+                "The problem is unbounded", unbounded_certificate=bound_res.unbound_certificate, unbounded_index=bound_res.unbounded_index)
+
+        
+        h1_idx = bound_res.bound_certificate[0]
+        h2_idx = bound_res.bound_certificate[1]
+        h1 = cons[h1_idx]
+        h2 = cons[h2_idx]
+        altered_index = [i for i in range(len(cons))]
+        cons[0], cons[h1_idx] = cons[h1_idx], cons[0]
+        altered_index[0], altered_index[h1_idx] = altered_index[h1_idx], altered_index[0]
+
+        # h2 might be changed after h1 is changed
+        h2_read_idx = cons.index(h2)
+        cons[1], cons[h2_read_idx] = cons[h2_read_idx], cons[1]
+        altered_index[1], altered_index[h2_read_idx] = altered_index[h2_read_idx], altered_index[1]
+        
+        
+        point_find_func = None
+        v = h1.find_intersection(h2)
+        for idx, c in enumerate(cons):
+            assert not np.isinf(v.x) and not np.isnan(v.y), "v never should be inf or nan"
+            if v.is_inside(c):
+                continue
+            
+            one_d_constraints = to_1d_constraint(c, cons=cons[:idx])
+            point_find_func = c.find_point_with_x if not c.is_vertical() else c.find_point_with_y
+            x,left,right = solve_1d_linear_program_with_left_and_right_index(
+                one_d_constraints, get_one_d_optimize_direction(obj, c))
+            if x is None:
+                
+                raise NoSolutionException("3D", stage="solve_for_three_dimension", three_d_bound_certificate=(altered_index[idx],altered_index[left],altered_index[right]))
+            v = point_find_func(x)
+
+        return v
     
 
 def solve_with_convex(program) -> Point:

@@ -54,9 +54,23 @@ class Constraints:
     def to_edge(self) -> Edge:
         return Edge(line=Line(self.a, self.b, self.c))
 
+    def is_a_num(self, num) -> bool:
+        if num is None or np.isnan(num) or np.isinf(num):
+            return False
+        return isinstance(num, int) or isinstance(num, float)
+    
     def contains(self, point) -> bool:
-        # computer arithmetic is not precise enough
-        return self.a * point.x + self.b * point.y < self.c or np.isclose(self.a * point.x + self.b * point.y, self.c)
+        assert self.is_a_num(self.a), "a is not a number"
+        assert self.is_a_num(self.b), "b is not a number"
+        assert self.is_a_num(point.x), "x is not a number"
+        assert self.is_a_num(point.y), "y is not a number"
+        
+        result = self.a * point.x + self.b * point.y
+        # Check for NaN or infinity values
+        if np.isnan(result) or np.isinf(result):
+            return False
+
+        return result < self.c or np.isclose(result, self.c)
 
     def find_intersection(self, edge: 'Constraints') -> Point:
         if self.is_parallel(edge):

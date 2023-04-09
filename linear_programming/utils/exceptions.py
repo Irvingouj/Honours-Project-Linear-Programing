@@ -1,7 +1,8 @@
 
 class NoSolutionException(Exception):
-    def __init__(self, *args: object,stage ,constraints = None) -> None:
+    def __init__(self, *args: object,stage ,constraints = None,three_d_bound_certificate = None) -> None:
         self.stage = stage
+        self.three_d_bound_certificate = three_d_bound_certificate
         self.constraints = constraints
         super().__init__(*args)
 
