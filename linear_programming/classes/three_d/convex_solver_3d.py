@@ -11,6 +11,12 @@ from .objective_function_3d import ObjectiveFunction3D
 from .constraint_3d import Constraints3D
 
 
+class CheckBoundResult:
+    def __init__(self, is_bounded,ray ,certificates):
+        self.is_bounded = is_bounded
+        self.ray = ray
+        self.certificates = certificates
+
 class Convex3DSolver(Solver):
     def solve(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> List[Point3D]:
        raise NotImplementedError("Not implemented yet")
@@ -59,13 +65,12 @@ class Convex3DSolver(Solver):
         try:
             res = ConvexSolver().solve_with_3d_certificate(ObjectiveFunction(1, 1), two_d_cons)
         except NoSolutionException as err:
-            return f"BOUNDED, bound certificate indices are {' '.join([str(i) for i in err.three_d_bound_certificate])}"
+            return CheckBoundResult(False, None, err.three_d_bound_certificate)
         except UnboundedException as err:
-            unbounded_certificate = err.unbounded_certificate
-            unbounded_index = err.unbounded_index
-            return 'UNBOUNDED, by unbounded'
+            return CheckBoundResult(True, f"TODO:find ray {err}", None)
         
-        return 'UNBOUNDED, by solution'
+        
+        return CheckBoundResult(True, f"TODO:find ray {res}", None)
         
 
         
