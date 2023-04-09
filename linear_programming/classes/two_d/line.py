@@ -42,7 +42,7 @@ class Line:
         return Point(x, y)
 
     def to_vector(self) -> Vector:
-        return Vector([self.a, self.b])
+        return Vector([-self.b, self.a])
 
     def is_parallel(self, other: 'Line') -> bool:
         return np.isclose(self.a * other.b, self.b * other.a)

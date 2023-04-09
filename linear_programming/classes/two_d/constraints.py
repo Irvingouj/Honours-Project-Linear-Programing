@@ -182,3 +182,17 @@ class Constraints:
 
     def str_float(self) -> str:
         return f'{self.a:.2f}x + {self.b:.2f}y   <= {self.c:.2f}'
+
+    @staticmethod
+    def from_line_and_vector(line: Line, vector: Vector) -> 'Constraints':
+        """
+        return the constraint that has line as boundary and facing the direction of vector
+        
+        """        
+        # assert np.isclose(line.to_vector()*vector, 0), "line and vector are not perpendicular"
+        res = Constraints(line.a, line.b,lessOrGreater=GreaterOrLess.LESS, c=line.c)
+        random_point = res.find_point_with_x(0)
+        point_off_set_vec = random_point + Point(vector.get(0), vector.get(1))
+        if not res.contains(point_off_set_vec):
+            return res.flip_sign()
+        return res

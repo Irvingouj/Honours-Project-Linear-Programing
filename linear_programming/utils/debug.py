@@ -1,5 +1,5 @@
-debug_mode_global = False
-debug_mode = False
+debug_mode_global = True
+debug_mode = True   
 def if_debug(func):
     def wrapper(*args, **kwargs):
         if debug_mode_global:

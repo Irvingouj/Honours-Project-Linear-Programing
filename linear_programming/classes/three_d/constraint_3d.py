@@ -215,3 +215,9 @@ class Constraints3D:
 
     def flip_sign(self) -> 'Constraints3D':
         return Constraints3D(self.a,self.b,self.c,GreaterOrLess.GREATER,self.d)
+
+    def find_point_with_x_y(self, x: float, y: float) -> Point3D:
+        if self.c == 0:
+            raise ValueError("c can be zero, but I'll fix it later")
+        z = (self.d - self.a*x - self.b*y)/self.c
+        return Point3D(x,y,z)

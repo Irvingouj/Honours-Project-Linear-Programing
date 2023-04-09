@@ -1,3 +1,5 @@
+from linear_programming.classes.two_d.line import Line
+from linear_programming.classes.two_d.point import Point
 from .point3d import Point3D
 from linear_programming.classes.vector import Vector
 
@@ -15,3 +17,13 @@ class Line3d:
 
     def __str__(self) -> str:
         return f'{self.point} + t *{self.vector}'
+
+    def get_projection_on_x_y_plane(self) -> 'Line':
+        x_1,y_1 = self.point.x,self.point.y
+        x_2,y_2 = self.point.x + self.vector[0],self.point.y + self.vector[1]
+        if x_1 == x_2:
+            raise ValueError('line is vertical')
+        a = (y_2-y_1)/(x_1-x_2)
+        b = 1
+        c = a*x_1 + y_1
+        return Line(a=a,b=b,c=c)

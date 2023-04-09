@@ -13,6 +13,12 @@ class CheckBoundResult:
         self.is_bounded = is_bounded
         self.ray = ray
         self.certificates = certificates
+        
+    def __str__(self):
+        if self.is_bounded:
+            return f"bounded by {str(self.certificates)}"
+        else:
+            return f"unbounded by {str(self.certificates)}"
 
 
 class Convex3DSolver(Solver):
@@ -28,7 +34,7 @@ class Convex3DSolver(Solver):
         y_rotated_cons = [c.get_rotate_x(phi) for c in x_rotated_cons]
         return ObjectiveFunction3D(a=0, b=0, c=1), y_rotated_cons
 
-    def check_bounded(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> bool:
+    def check_bounded(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> CheckBoundResult:
         """
         returns true if the problem is bounded, false otherwise
         """
@@ -58,8 +64,8 @@ class Convex3DSolver(Solver):
             res = ConvexSolver().solve_with_3d_certificate(
                 ObjectiveFunction(1, 1), two_d_cons)
         except NoSolutionException as err:
-            return CheckBoundResult(False, None, err.three_d_bound_certificate)
+            return CheckBoundResult(is_bounded=True, ray=None, certificates=err.three_d_bound_certificate)
         except UnboundedException as err:
-            return CheckBoundResult(True, f"TODO:find ray {err}", None)
+            return CheckBoundResult(is_bounded=False, ray = f"TODO:find ray {err}", certificates=None)
 
-        return CheckBoundResult(True, f"TODO:find ray {res}", None)
+        return CheckBoundResult(is_bounded=False, ray = f"TODO:find ray {res}", certificates=None)

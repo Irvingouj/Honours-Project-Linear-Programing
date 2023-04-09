@@ -17,6 +17,9 @@ class Point:
             return np.allclose([self.x, self.y], [o.x, o.y], atol=error)
         return False
 
+    def __add__(self, o: 'Point') -> 'Point':
+        return Point(self.x + o.x, self.y + o.y)
+
     def __ne__(self, __o: object) -> bool:
         return not self.__eq__(__o)
 
