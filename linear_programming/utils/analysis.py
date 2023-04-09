@@ -36,7 +36,7 @@ def trim_off_and_try_again(num,obj,cons):
     return true means that the results are the same 
     """
     cons = cons[num:]
-    diff,os_res,cons_res = find_first_line_diff(obj,cons)
+    diff,_,_ = find_first_line_diff(obj,cons)
     # it is the same
     if(diff == None):
         return True

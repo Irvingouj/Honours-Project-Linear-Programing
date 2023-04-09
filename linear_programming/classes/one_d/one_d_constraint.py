@@ -1,5 +1,4 @@
 from linear_programming.classes.two_d import Point, Constraints
-from enum import Enum
 
 from linear_programming.utils.types import Facing
 
