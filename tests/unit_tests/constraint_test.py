@@ -1,6 +1,6 @@
 import math
 import unittest
-from linear_programming.classes.constraints import Constraints
+from linear_programming.classes.two_d import Constraints
 from linear_programming.solvers.osToolSolver import OsToolSolver
 from linear_programming.solvers.convex_solver_3d import Convex3DSolver
 from linear_programming.utils.linear_program_generator import gen_random_3d_unbounded

@@ -2,11 +2,9 @@ import os
 from pathlib import Path
 from typing import List, Tuple
 from io import TextIOWrapper
-from linear_programming.classes import ObjectiveFunction, Constraints
-from linear_programming.classes.three_d.constraint_3d import Constraints3D
-from linear_programming.classes.three_d.objective_function_3d import ObjectiveFunction3D
+from linear_programming.classes.two_d import ObjectiveFunction, Constraints
+from linear_programming.classes.three_d import Constraints3D, ObjectiveFunction3D
 from linear_programming.utils.types import Program, Program3d
-import pathlib
 
 BOUNDED_PREFIX = "bounded_problem"
 INFEASIBLE_PREFIX = "infeasible_problem"

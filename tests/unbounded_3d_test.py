@@ -1,6 +1,5 @@
 import unittest
-from linear_programming.solvers.osToolSolver import OsToolSolver
-from linear_programming.classes.three_d import Convex3DSolver
+from linear_programming.solvers import OsToolSolver, Convex3DSolver
 from linear_programming.utils.linear_program_generator import gen_random_3d_unbounded
 from linear_programming.utils.problem_writer import write_bad_program_no_analysis
 

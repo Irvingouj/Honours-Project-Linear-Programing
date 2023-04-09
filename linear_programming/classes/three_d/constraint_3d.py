@@ -1,9 +1,11 @@
 import re
 from typing import Tuple
 import numpy as np
-from linear_programming.classes.three_d import Plane, Point3D, Line3d
 from linear_programming.classes.vector import Vector
 from linear_programming.classes.two_d import GreaterOrLess
+from .point3d import Point3D
+from .plane import Plane
+from .line_3d import Line3d
 
 
 class Constraints3D:

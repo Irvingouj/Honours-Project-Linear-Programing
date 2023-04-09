@@ -5,7 +5,7 @@ from typing import Tuple
 
 import numpy as np
 from linear_programming.solvers.convexSolver import ConvexSolver
-from linear_programming.classes.objectiveFunction import ObjectiveFunction
+from linear_programming.classes.two_d import ObjectiveFunction
 from linear_programming.solvers.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded

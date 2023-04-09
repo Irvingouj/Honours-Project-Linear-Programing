@@ -1,9 +1,8 @@
 import os
 import random
 from typing import List
-from linear_programming.classes.constraints import Constraints
-from linear_programming.classes.objectiveFunction import ObjectiveFunction
-from linear_programming.classes.point import Point
+from linear_programming.classes.two_d import *
+from linear_programming.classes.three_d import *
 from linear_programming.utils.analysis import full_analysis
 from linear_programming.utils.linear_program_generator import LINEAR_PROGRAMS_DIR
 from linear_programming.utils.problem_reader import PROJECT_ROOT

@@ -2,21 +2,13 @@ from enum import Enum
 import re
 import numpy as np
 
+from linear_programming.utils.types import Direction, GreaterOrLess
+
 from .edge import Edge
 from .line import Line
 from .point import Point
 from ..vector import Vector
 
-
-class GreaterOrLess(Enum):
-    GREATER = 0
-    LESS = 1
-    
-class Direction(Enum):
-    LEFT = 0
-    RIGHT = 1
-    UP = 2
-    DOWN = 3
 
 
 class Constraints:

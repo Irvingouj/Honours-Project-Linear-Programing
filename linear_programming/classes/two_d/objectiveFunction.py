@@ -1,11 +1,10 @@
-from enum import Enum
 import re
+
+from linear_programming.utils.types import MaxOrMin
 from .point import Point
 from ..vector import Vector
 
-class MaxOrMin(Enum):
-    MAX = 0
-    MIN = 1
+
 
 
 class ObjectiveFunction:

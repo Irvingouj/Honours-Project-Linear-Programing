@@ -1,9 +1,7 @@
 import random
 from typing import List, Tuple
 
-from linear_programming.classes.objectiveFunction import ObjectiveFunction
-from linear_programming.classes.constraints import Constraints, GreaterOrLess
-from linear_programming.classes.point import Point
+from linear_programming.classes.two_d import Constraints, GreaterOrLess, ObjectiveFunction, Point
 from linear_programming.classes.one_d.one_d_constraint import OneDConstraint
 from linear_programming.classes.vector import Vector
 from linear_programming.utils.types import Program, Program3d

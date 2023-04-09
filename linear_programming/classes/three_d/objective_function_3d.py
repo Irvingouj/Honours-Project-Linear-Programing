@@ -2,7 +2,7 @@ import re
 from typing import Tuple
 import numpy as np
 
-from linear_programming.classes.objectiveFunction import MaxOrMin
+from linear_programming.classes.two_d import MaxOrMin
 from linear_programming.classes.vector import Vector
 from .point3d import Point3D
 

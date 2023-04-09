@@ -1,5 +1,4 @@
 import random
-from linear_programming.classes import constraints
 from linear_programming.solvers.convexSolver import ConvexSolver
 from linear_programming.solvers.osToolSolver import OsToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException

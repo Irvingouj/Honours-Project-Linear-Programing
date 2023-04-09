@@ -1,4 +1,4 @@
-from linear_programming.classes.three_d import Point3D
+from .point3d import Point3D
 from linear_programming.classes.vector import Vector
 
 
