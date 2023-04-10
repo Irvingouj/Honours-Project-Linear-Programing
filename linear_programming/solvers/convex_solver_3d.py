@@ -88,10 +88,6 @@ class Convex3DSolver(Solver):
 
         v = self.find_intersection_point(c1, c2, c3)
 
-        dbg.debug_mode_global = False
-        dbg.assertTrue(isinstance(v, Point3D),
-                       f"v is not a point3d, it is {type(v)}")
-        dbg.assertEqualORTool(obj, [c1, c2, c3], v, "bounded check failed")
 
         for idx, c in enumerate(cons):
             if c.contains(v):
@@ -111,8 +107,6 @@ class Convex3DSolver(Solver):
                 raise err
 
             v = c.find_point_with_x_y(res.x, res.y)
-            dbg.assertEqualORTool(
-                obj, cons[:idx+1], v, f"solving check failed idx={idx}")
         return v
 
     def rotate_program(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> Program3d:
