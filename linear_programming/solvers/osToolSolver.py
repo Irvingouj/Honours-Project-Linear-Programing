@@ -75,6 +75,13 @@ class OsToolSolver(Solver):
         if status == pywraplp.Solver.INFEASIBLE:
             return "INFEASIBLE"
             
+    @staticmethod
+    def solve2d(obj,cons):
+        return OsToolSolver().solve(obj,cons)
+    
+    @staticmethod
+    def solve3d(obj,cons):
+        return OsToolSolver().solve_three_d(obj,cons)
 
 
 def solve_with_os_tool(program) -> Point:
