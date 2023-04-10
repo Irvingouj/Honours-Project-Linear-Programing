@@ -52,10 +52,10 @@ class Constraints:
         return isinstance(num, int) or isinstance(num, float)
     
     def contains(self, point) -> bool:
-        assert self.is_a_num(self.a), "a is not a number"
-        assert self.is_a_num(self.b), "b is not a number"
-        assert self.is_a_num(point.x), "x is not a number"
-        assert self.is_a_num(point.y), "y is not a number"
+        # assert self.is_a_num(self.a), "a is not a number"
+        # assert self.is_a_num(self.b), "b is not a number"
+        # assert self.is_a_num(point.x), "x is not a number"
+        # assert self.is_a_num(point.y), "y is not a number"
         
         result = self.a * point.x + self.b * point.y
         # Check for NaN or infinity values

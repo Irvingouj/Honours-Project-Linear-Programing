@@ -54,21 +54,6 @@ def find_two_d_obj(obj: ObjectiveFunction3D, curr: Constraints3D) -> ObjectiveFu
     d2_b = l2-(l3*b)/c
     return ObjectiveFunction(d2_a, d2_b, obj.maxOrMin)
 
-# def find_intersection_point(c1:Constraints3D,c2:Constraints3D,c3:Constraints3D)->Point3D:
-#     A = np.array([
-#         [c1.a,c1.b,c1.c],
-#         [c2.a,c2.b,c2.c],
-#         [c3.a,c3.b,c3.c]
-#     ])
-#     try:
-#         A_inv = np.linalg.inv(A)
-#     except np.linalg.LinAlgError as err:
-#         # we should have some solution here
-#         raise NoSolutionException(stage="3d find intersection point") from err
-
-#     x = A_inv @ np.array([c1.d,c2.d,c3.d])
-#     return Point3D(x[0],x[1],x[2])
-
 
 class Convex3DSolver(Solver):
 
@@ -87,7 +72,6 @@ class Convex3DSolver(Solver):
         cons[2], cons[c3_idx] = cons[c3_idx], cons[2]
 
         v = self.find_intersection_point(c1, c2, c3)
-
 
         for idx, c in enumerate(cons):
             if c.contains(v):
@@ -122,27 +106,14 @@ class Convex3DSolver(Solver):
         """
         returns true if the problem is bounded, false otherwise
         """
-        dbg.debug_mode_global = False
-        dbg.message("before rotation")
-        dbg.os_solve_3d(obj, cons)
-        dbg.message("-" * 20)
 
         theta, phi = obj.get_angle_needed_for_rotation()
         z_rotated_cons = [c.get_rotate_z(theta) for c in cons]
-        z_rotated_obj = obj.get_rotate_z(theta)
-        dbg.os_solve_3d(z_rotated_obj, z_rotated_cons)
-
-        dbg.message("-" * 20)
         x_rotated_cons = [c.get_rotate_x(phi) for c in z_rotated_cons]
-        x_rotated_obj = z_rotated_obj.get_rotate_x(phi)
-
-        dbg.os_solve_3d(x_rotated_obj, x_rotated_cons)
-
         facing_direction_vecs = [c.facing_direction_vector()
                                  for c in x_rotated_cons]
         two_d_cons = [Constraints(
             v[0], v[1], lessOrGreater=GreaterOrLess.GREATER, c=-v[2]) for v in facing_direction_vecs]
-
         try:
             res = ConvexSolver().solve_with_3d_certificate(
                 ObjectiveFunction(1, 1), two_d_cons)
@@ -151,7 +122,6 @@ class Convex3DSolver(Solver):
         except UnboundedException as err:
             return CheckBoundResult(is_bounded=False, ray=f"TODO:find ray {err}", certificates=None)
 
-        dbg.debug_mode_global = True
         return CheckBoundResult(is_bounded=False, ray=f"TODO:find ray {res}", certificates=None)
 
     @staticmethod
