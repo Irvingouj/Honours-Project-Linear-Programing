@@ -196,3 +196,14 @@ class Constraints:
         if not res.contains(point_off_set_vec):
             return res.flip_sign()
         return res
+
+    @staticmethod
+    def from_line_and_point(line: Line, point: Point) -> 'Constraints':
+        """
+        return the constraint that has line as boundary and containing the point a
+        dd
+        """        
+        res = Constraints(line.a, line.b,lessOrGreater=GreaterOrLess.LESS, c=line.c)
+        if not res.contains(point):
+            return res.flip_sign()
+        return res

@@ -1,11 +1,18 @@
 
 from typing import List
+
+import numpy as np
+from linear_programming.classes.three_d.line_3d import Line3d
 from linear_programming.classes.two_d import Constraints, GreaterOrLess, ObjectiveFunction
+from linear_programming.classes.two_d.point import Point
+from linear_programming.classes.vector import Vector
 from .solver import Solver
 from .convexSolver import ConvexSolver
 from ..classes.three_d import Constraints3D, ObjectiveFunction3D, Point3D
 from ..utils.exceptions import NoSolutionException, UnboundedException
 from ..utils.types import Program3d
+from ..utils.exceptions import NoSolutionException, UnboundedException
+from ..utils import dbg
 
 
 class CheckBoundResult:
@@ -13,7 +20,7 @@ class CheckBoundResult:
         self.is_bounded = is_bounded
         self.ray = ray
         self.certificates = certificates
-        
+
     def __str__(self):
         if self.is_bounded:
             return f"bounded by {str(self.certificates)}"
@@ -21,9 +28,92 @@ class CheckBoundResult:
             return f"unbounded by {str(self.certificates)}"
 
 
+def convert_to_2d(curr: Constraints3D, cons: List[Constraints3D]) -> List[Constraints]:
+    res = []
+    for c_i in cons:
+        intersection: Line3d = curr.find_intersection(c_i)
+        p_3d = intersection.point
+        p_x, p_y = p_3d.x, p_3d.y
+        u = [-p_x, -p_y]
+        p_positive, p_negative = [p_x+u[0], p_y+u[1]], [p_x-u[0], p_y-u[1]]
+        p_positive_3d, p_negative_3d = curr.find_point_with_x_y(
+            p_positive[0], p_positive[1]), curr.find_point_with_x_y(p_negative[0], p_negative[1])
+        p_posi_3d_proj, p_neg_3d_proj = Point(
+            p_positive_3d.x, p_positive_3d.y), Point(p_negative_3d.x, p_negative_3d.y)
+        c_i_2d = Constraints.from_line_and_point(intersection.get_projection_on_x_y_plane(
+        ), p_posi_3d_proj if c_i.contains(p_positive_3d) else p_neg_3d_proj)
+        res.append(c_i_2d)
+    return res
+
+
+def find_two_d_obj(obj: ObjectiveFunction3D, curr: Constraints3D) -> ObjectiveFunction:
+    l1, l2, l3 = obj.a, obj.b, obj.c
+    a, b, c = curr.a, curr.b, curr.c
+
+    d2_a = l1-(l3*a)/c
+    d2_b = l2-(l3*b)/c
+    return ObjectiveFunction(d2_a, d2_b, obj.maxOrMin)
+
+# def find_intersection_point(c1:Constraints3D,c2:Constraints3D,c3:Constraints3D)->Point3D:
+#     A = np.array([
+#         [c1.a,c1.b,c1.c],
+#         [c2.a,c2.b,c2.c],
+#         [c3.a,c3.b,c3.c]
+#     ])
+#     try:
+#         A_inv = np.linalg.inv(A)
+#     except np.linalg.LinAlgError as err:
+#         # we should have some solution here
+#         raise NoSolutionException(stage="3d find intersection point") from err
+
+#     x = A_inv @ np.array([c1.d,c2.d,c3.d])
+#     return Point3D(x[0],x[1],x[2])
+
+
 class Convex3DSolver(Solver):
+
     def solve(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> List[Point3D]:
-        raise NotImplementedError("Not implemented yet")
+        res = self.check_bounded(obj, cons)
+        if not res.is_bounded:
+            raise UnboundedException(
+                unbounded_certificate=res.ray, unbounded_index=None)
+
+        c1_idx, c2_idx, c3_idx = res.certificates[0], res.certificates[1], res.certificates[2]
+        c1, c2, c3 = cons[c1_idx], cons[c2_idx], cons[c3_idx]
+        cons[0], cons[c1_idx] = cons[c1_idx], cons[0]
+        c2_idx = cons.index(c2)
+        cons[1], cons[c2_idx] = cons[c2_idx], cons[1]
+        c3_idx = cons.index(c3)
+        cons[2], cons[c3_idx] = cons[c3_idx], cons[2]
+
+        v = self.find_intersection_point(c1, c2, c3)
+
+        dbg.debug_mode_global = False
+        dbg.assertTrue(isinstance(v, Point3D),
+                       f"v is not a point3d, it is {type(v)}")
+        dbg.assertEqualORTool(obj, [c1, c2, c3], v, "bounded check failed")
+
+        for idx, c in enumerate(cons):
+            if c.contains(v):
+                continue
+
+            two_d_cons = convert_to_2d(c, cons[:idx])
+            two_d_obj = find_two_d_obj(obj, c)
+
+            try:
+                res = ConvexSolver().solve(two_d_obj, two_d_cons)
+            except NoSolutionException:
+                if dbg.assertEqualORTool(obj, cons[:idx+1], "INFEASIBLE", f"both should be infeasible idx={idx}"):
+                    raise NoSolutionException(
+                        stage="3d solver, result is the same, problem infeasible")
+            except UnboundedException as err:
+                print("will we every get here? I don't know how to handle this")
+                raise err
+
+            v = c.find_point_with_x_y(res.x, res.y)
+            dbg.assertEqualORTool(
+                obj, cons[:idx+1], v, f"solving check failed idx={idx}")
+        return v
 
     def rotate_program(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> Program3d:
         """
@@ -38,22 +128,21 @@ class Convex3DSolver(Solver):
         """
         returns true if the problem is bounded, false otherwise
         """
-        import linear_programming.utils.debug as debug
-        # debug.start()
-        debug.message("before rotation")
-        debug.os_solve_3d(obj, cons)
-        debug.message("-" * 20)
+        dbg.debug_mode_global = False
+        dbg.message("before rotation")
+        dbg.os_solve_3d(obj, cons)
+        dbg.message("-" * 20)
 
         theta, phi = obj.get_angle_needed_for_rotation()
         z_rotated_cons = [c.get_rotate_z(theta) for c in cons]
         z_rotated_obj = obj.get_rotate_z(theta)
-        debug.os_solve_3d(z_rotated_obj, z_rotated_cons)
+        dbg.os_solve_3d(z_rotated_obj, z_rotated_cons)
 
-        debug.message("-" * 20)
+        dbg.message("-" * 20)
         x_rotated_cons = [c.get_rotate_x(phi) for c in z_rotated_cons]
         x_rotated_obj = z_rotated_obj.get_rotate_x(phi)
 
-        debug.os_solve_3d(x_rotated_obj, x_rotated_cons)
+        dbg.os_solve_3d(x_rotated_obj, x_rotated_cons)
 
         facing_direction_vecs = [c.facing_direction_vector()
                                  for c in x_rotated_cons]
@@ -66,6 +155,33 @@ class Convex3DSolver(Solver):
         except NoSolutionException as err:
             return CheckBoundResult(is_bounded=True, ray=None, certificates=err.three_d_bound_certificate)
         except UnboundedException as err:
-            return CheckBoundResult(is_bounded=False, ray = f"TODO:find ray {err}", certificates=None)
+            return CheckBoundResult(is_bounded=False, ray=f"TODO:find ray {err}", certificates=None)
 
-        return CheckBoundResult(is_bounded=False, ray = f"TODO:find ray {res}", certificates=None)
+        dbg.debug_mode_global = True
+        return CheckBoundResult(is_bounded=False, ray=f"TODO:find ray {res}", certificates=None)
+
+    @staticmethod
+    def find_intersection_point(c1: Constraints3D, c2: Constraints3D, c3: Constraints3D) -> Point3D:
+        A = np.array([
+            [c1.a, c1.b, c1.c],
+            [c2.a, c2.b, c2.c],
+            [c3.a, c3.b, c3.c]
+        ])
+        try:
+            A_inv = np.linalg.inv(A)
+        except np.linalg.LinAlgError as err:
+            # we should have some solution here
+            raise NoSolutionException(
+                stage="3d find intersection point") from err
+
+        x = A_inv @ np.array([c1.d, c2.d, c3.d])
+        return Point3D(x[0], x[1], x[2])
+
+    @staticmethod
+    def con_solver(obj, cons):
+        try:
+            return Convex3DSolver().solve(obj, cons)
+        except NoSolutionException as err:
+            return "INFEASIBLE"
+        except UnboundedException as err:
+            return "UNBOUNDED"

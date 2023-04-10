@@ -2,7 +2,6 @@ import math
 from typing import List
 
 import numpy as np
-from .constraint_3d import Constraints3D
 from ..vector import Vector
 
 class Point3D:
@@ -15,6 +14,8 @@ class Point3D:
         return f"({self.x}, {self.y}, {self.z})"
 
     def __eq__(self, other: 'Point3D') -> bool:
+        if not isinstance(other, Point3D):
+            return False
         return np.allclose([self.x, self.y, self.z], [other.x, other.y, other.z])
 
     def __add__(self, other: 'Point3D') -> 'Point3D':

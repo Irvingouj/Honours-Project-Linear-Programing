@@ -46,10 +46,12 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
 
 
 def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> bool:
-    # projection of objective function on to the constraint
-    proj = obj.to_vector().projection_on_to(
-        curr.to_edge().to_line().to_vector().find_orthogonal_vector())
-    return proj.arr[0] > 0
+    c_x = obj.a
+    c_y = obj.b
+    a_k = curr.a
+    b_k = curr.b
+    
+    return c_x - (c_y*a_k)/b_k >= 0
 
 
 class CheckBoundResult:

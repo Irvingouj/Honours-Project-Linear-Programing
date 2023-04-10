@@ -57,3 +57,7 @@ class Line:
 
     def __str__(self) -> str:
         return str(self.a) + 'x + ' + str(self.b) + 'y = ' + str(self.c)
+
+    def perpendicular_vector(self) -> Vector:
+        
+        return Vector([-self.a, -self.b])
