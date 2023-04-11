@@ -39,6 +39,17 @@ def write_bad_program(program:Program, con_res:Point, os_res:Point, err,name = N
         for line in program[1]:
             f.write(str(line)+"\n")
         f.write("#-----------------program end-----------------")
+
+def write_bad_3d_program(program:Program):
+    print("writing bad program")
+    bad_program_dir = PROJECT_ROOT.joinpath("linear_program_data", "gogogo")
+    filename = f"{random.random()}.txt"
+    program_path = bad_program_dir.joinpath(filename)
+    with open(program_path, 'a+',encoding='utf-8') as f:
+        f.write(str(program[0])+"\n")
+        for line in program[1]:
+            f.write(str(line)+"\n")
+        f.write("#-----------------program end-----------------")
       
 def write_bad_program_no_analysis(program:Program, con_res:Point = None, os_res:Point = None, err = None,name = None):
     print("writing bad program")

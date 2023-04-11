@@ -82,12 +82,10 @@ class Convex3DSolver(Solver):
 
             try:
                 res = ConvexSolver().solve(two_d_obj, two_d_cons)
-            except NoSolutionException:
-                if dbg.assertEqualORTool(obj, cons[:idx+1], "INFEASIBLE", f"both should be infeasible idx={idx}"):
-                    raise NoSolutionException(
-                        stage="3d solver, result is the same, problem infeasible")
+            except NoSolutionException as err:
+                raise NoSolutionException(stage="3d solver, result is the same, problem infeasible") from err
             except UnboundedException as err:
-                print("will we every get here? I don't know how to handle this")
+                # we should never get here
                 raise err
 
             v = c.find_point_with_x_y(res.x, res.y)
@@ -146,6 +144,6 @@ class Convex3DSolver(Solver):
         try:
             return Convex3DSolver().solve(obj, cons)
         except NoSolutionException as err:
-            return "INFEASIBLE"
+            return "INFEASIBLE" 
         except UnboundedException as err:
             return "UNBOUNDED"

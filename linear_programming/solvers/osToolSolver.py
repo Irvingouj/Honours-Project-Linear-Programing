@@ -74,6 +74,8 @@ class OsToolSolver(Solver):
             return "UNBOUNDED"
         if status == pywraplp.Solver.INFEASIBLE:
             return "INFEASIBLE"
+        
+        raise PerceptionException("Abnormal status returned from solver")
             
     @staticmethod
     def solve2d(obj,cons):
