@@ -4,7 +4,7 @@ from linear_programming.solvers.osToolSolver import OsToolSolver
 import linear_programming.utils.compare_time as compare
 
 
-class TestRandomGenUnbound(unittest.TestCase):
+class TestRandomGen(unittest.TestCase):
 
     def test_random_gen_unbound(self):
         for i in range(100):
@@ -23,3 +23,12 @@ class TestRandomGenUnbound(unittest.TestCase):
             if res is not 'UNBOUNDED':
                 compare.write_bad_program((obj, cons), None, res, "suppose to be unbounded")
             self.assertTrue(res == 'UNBOUNDED')
+            
+    def test_random_gen_infeasible(self):
+        for i in range(100):
+            obj, cons = gen.gen_random_2d_infeasible(i+10)
+            solver = OsToolSolver()
+            res = solver.solve(obj, cons)
+            if res is not 'INFEASIBLE':
+                compare.write_bad_program((obj, cons), None, res, "suppose to be infeasible")
+            self.assertTrue(res == 'INFEASIBLE')
