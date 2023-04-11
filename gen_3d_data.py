@@ -4,12 +4,12 @@ from linear_programming.utils.problem_reader import ProblemType
 
 
 
-rang = range(100, 10001,300)
-def gen_bounds():
+rang = range(100, 201,100)
+def gen_bounds(_):
     test_with_time_3d(problem_type=ProblemType.BOUNDED, rang=rang)
-def gen_unbounded():
+def gen_unbounded(_):
     test_with_time_3d(problem_type=ProblemType.UNBOUNDED, rang=rang)
-def gen_infeasible():
+def gen_infeasible(_):
     test_with_time_3d(problem_type=ProblemType.INFEASIBLE, rang=rang)
 
     
