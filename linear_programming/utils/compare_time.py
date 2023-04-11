@@ -137,13 +137,17 @@ def test_with_time_3d(problem_type: ProblemType, rang:range):
     while True:
         n = rang[counter]
         try:
-            c_time,o_time = solve_with_time_3d(*gen_func(num_constrains=n))
+            program = gen_func(num_constrains=n)
+            c_time,o_time = solve_with_time_3d(*program)
+            if c_time is None or o_time is None:
+                continue
             print(f"n = {n}")
+            counter += 1
+            data_file.write(f"{n},{c_time},{o_time}\n")
         except Exception as e:
             print("retrying, something went wrong,error: ",type(e).__name__,e)
+            write_bad_3d_program(program)
             continue
-        counter += 1
-        data_file.write(f"{n},{c_time},{o_time}\n")
         if counter >= len(rang):
             break
     data_file.close()
