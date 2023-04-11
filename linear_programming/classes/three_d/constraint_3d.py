@@ -13,15 +13,9 @@ class Constraints3D:
         if a == 0 and b == 0 and c == 0:
             raise ValueError('Cannot create constraint with a=0, b=0 and c=0')
         if lessOrGreater == GreaterOrLess.LESS:
-            self.a = a
-            self.b = b
-            self.c = c
-            self.d = d
+            self.a,self.b,self.c,self.d = a,b,c,d
         else:
-            self.a = -a
-            self.b = -b
-            self.c = -c
-            self.d = -d
+            self.a,self.b,self.c,self.d = -a,-b,-c,-d
 
     @classmethod
     def from_string(cls, string: str) -> 'Constraints3D':
@@ -55,15 +49,8 @@ class Constraints3D:
         if self.facing_direction_vector().normalize()* other.facing_direction_vector().normalize() == 1:
             raise ValueError('The two constraints are parallel')
         
-        a1 = self.a
-        a2 = self.b
-        a3 = self.c
-        l1 = self.d
-        
-        b1 = other.a
-        b2 = other.b
-        b3 = other.c
-        l2 = other.d
+        a1,a2,a3,l1 = self.a,self.b,self.c,self.d
+        b1,b2,b3,l2 = other.a,other.b,other.c,other.d
         
         A = np.array([[a1,a2],[b1,b2]])
 
@@ -85,10 +72,8 @@ class Constraints3D:
         [a, b, c] = R@np.array([self.a, self.b, self.c])
         d = self.d * np.linalg.det(R)
         
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
+        self.a,self.b,self.c,self.d = a,b,c,d
+        
         
     def get_rotate_x(self,angle:float) -> 'Constraints3D':
         res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS,self.d)
@@ -102,10 +87,7 @@ class Constraints3D:
         [a, b, c] = R @ np.array([self.a, self.b, self.c])
         d = self.d * np.linalg.det(R)
         
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
+        self.a,self.b,self.c,self.d = a,b,c,d
     
     def get_rotate_y(self,angle:float) -> 'Constraints3D':
         res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS,self.d)
@@ -119,10 +101,7 @@ class Constraints3D:
         [a, b, c] = R @ np.array([self.a, self.b, self.c])
         d = self.d * np.linalg.det(R)
         
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
+        self.a,self.b,self.c,self.d = a,b,c,d
         
     def get_rotate_z(self,angle:float) -> 'Constraints3D':
         res = Constraints3D(self.a,self.b,self.c,GreaterOrLess.LESS,self.d)

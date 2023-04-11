@@ -85,27 +85,17 @@ class ConvexSolver(Solver):
         if not bound_res.bounded:
             raise UnboundedException(
                 "The problem is unbounded", unbounded_certificate=bound_res.unbound_certificate, unbounded_index=bound_res.unbounded_index)
-        h1_idx = bound_res.bound_certificate[0]
-        h2_idx = bound_res.bound_certificate[1]
-        h1 = cons[h1_idx]
-        h2 = cons[h2_idx]
-        cons.remove(h1)
-        cons.remove(h2)
-        cons.insert(0, h1)
-        cons.insert(1, h2)
+        h1,h2 = self.switch_index(bound_res.bound_certificate[0], bound_res.bound_certificate[1], cons)
 
         v = h1.find_intersection(h2)
         for idx, c in enumerate(cons):
-            if not v.is_inside(c):
-                one_d_constraints = to_1d_constraint(c, cons[:idx])
-                if not c.is_vertical():
-                    x = solve_1d_linear_program(
-                        one_d_constraints, get_one_d_optimize_direction(obj, c))
-                    v = c.find_point_with_x(x)
-                else:
-                    y = solve_1d_linear_program(
-                        one_d_constraints, get_one_d_optimize_direction(obj, c))
-                    v = c.find_point_with_y(y)
+            if v.is_inside(c):
+                continue
+            one_d_constraints = to_1d_constraint(c, cons[:idx])
+            one_d_obj =  get_one_d_optimize_direction(obj, c)
+            find_func = c.find_point_with_x if not c.is_vertical() else c.find_point_with_y
+            x = solve_1d_linear_program(one_d_constraints, one_d_obj)
+            v = find_func(x)
 
         return v
 
@@ -190,7 +180,13 @@ class ConvexSolver(Solver):
 
         return v
 
-
+    def switch_index(self, h1_idx: int, h2_idx: int, cons: List[Constraints]) -> Tuple(Constraints, Constraints):
+        h1,h2 = cons[h1_idx],cons[h2_idx]
+        cons[0], cons[h1_idx] = cons[h1_idx], cons[0]
+        h2_read_idx = cons.index(h2)
+        cons[1], cons[h2_read_idx] = cons[h2_read_idx], cons[1]
+        return h1,h2
+        
 def solve_with_convex(program) -> Point:
     solver = ConvexSolver()
     return solver.solve(program[0], program[1])
