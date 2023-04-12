@@ -40,8 +40,8 @@ def convert_to_2d(curr: Constraints3D, cons: List[Constraints3D]) -> List[Constr
             p_positive[0], p_positive[1]), curr.find_point_with_x_y(p_negative[0], p_negative[1])
         p_posi_3d_proj, p_neg_3d_proj = Point(
             p_positive_3d.x, p_positive_3d.y), Point(p_negative_3d.x, p_negative_3d.y)
-        c_i_2d = Constraints.from_line_and_point(intersection.get_projection_on_x_y_plane(
-        ), p_posi_3d_proj if c_i.contains(p_positive_3d) else p_neg_3d_proj)
+        two_d_line = intersection.get_projection_on_x_y_plane()
+        c_i_2d = Constraints.from_line_and_point(two_d_line, p_posi_3d_proj if c_i.contains(p_positive_3d) else p_neg_3d_proj)
         res.append(c_i_2d)
     return res
 

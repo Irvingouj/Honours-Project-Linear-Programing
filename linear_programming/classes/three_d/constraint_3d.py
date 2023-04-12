@@ -53,16 +53,40 @@ class Constraints3D:
         b1,b2,b3,l2 = other.a,other.b,other.c,other.d
         
         A = np.array([[a1,a2],[b1,b2]])
+        if np.linalg.det(A) != 0:
+            # z = 1
+            b1 = np.array([l1 - a3, l2 - b3])
+            x1 = np.linalg.solve(A, b1)
+            
+            # z = 0
+            b2 = np.array([l1, l2])
+            x2 = np.linalg.solve(A, b2)
+            
+            return Line3d.from_two_points(Point3D(x1[0],x1[1],1),Point3D(x2[0],x2[1],0))
 
-        # t = 1
-        b1 = np.array([l1 - a3, l2 - b3])
-        x1 = np.linalg.solve(A, b1)
-        
-        # t = 0
-        b2 = np.array([l1, l2])
-        x2 = np.linalg.solve(A, b2)
-        
-        return Line3d.from_two_points(Point3D(x1[0],x1[1],1),Point3D(x2[0],x2[1],0))
+        A = np.array([[a2,a3],[b2,b3]])
+        if np.linalg.det(A) != 0:
+            # x = 1
+            b1 = np.array([l1 - a1, l2 - b1])
+            x1 = np.linalg.solve(A, b1)
+            
+            # x = 0
+            b2 = np.array([l1, l2])
+            x2 = np.linalg.solve(A, b2)
+            
+            return Line3d.from_two_points(Point3D(1,x1[0],x1[1]),Point3D(0,x2[0],x2[1]))
+
+        A = np.array([[a1,a3],[b1,b3]])
+        if np.linalg.det(A) != 0:
+            # y = 1
+            b1 = np.array([l1 - a2, l2 - b2])
+            x1 = np.linalg.solve(A, b1)
+            
+            # y = 0
+            b2 = np.array([l1, l2])
+            x2 = np.linalg.solve(A, b2)
+            
+            return Line3d.from_two_points(Point3D(x1[0],1,x1[1]),Point3D(x2[0],0,x2[1]))
         
 
     def rotate_x(self, angle: float) -> 'Constraints3D':
