@@ -1,0 +1,61 @@
+error occurs + 0 + ValueError + line is vertical
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 2 + ValueError + line is vertical
+error occurs + 0 + LinAlgError + Singular matrix
+error occurs + 1 + ValueError + line is vertical
+error occurs + 2 + ValueError + line is vertical
+error occurs + 3 + LinAlgError + Singular matrix
+error occurs + 4 + LinAlgError + Singular matrix
+error occurs + 0 + ValueError + line is vertical
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 2 + ValueError + line is vertical
+error occurs + 3 + ValueError + line is vertical
+do not match + 0
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 2 + LinAlgError + Singular matrix
+error occurs + 3 + LinAlgError + Singular matrix
+error occurs + 0 + LinAlgError + Singular matrix
+error occurs + 0 + ValueError + line is vertical
+do not match + 1
+error occurs + 2 + ValueError + line is vertical
+error occurs + 3 + LinAlgError + Singular matrix
+error occurs + 4 + LinAlgError + Singular matrix
+error occurs + 5 + LinAlgError + Singular matrix
+error occurs + 0 + ValueError + line is vertical
+error occurs + 0 + LinAlgError + Singular matrix
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 0 + PerceptionException + Abnormal situation, float precision error
+do not match + 1
+error occurs + 2 + LinAlgError + Singular matrix
+do not match + 3
+error occurs + 0 + LinAlgError + Singular matrix
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 2 + LinAlgError + Singular matrix
+error occurs + 3 + LinAlgError + Singular matrix
+error occurs + 0 + ValueError + line is vertical
+error occurs + 1 + ValueError + line is vertical
+do not match + 2
+error occurs + 0 + ValueError + line is vertical
+error occurs + 1 + ValueError + line is vertical
+error occurs + 0 + ValueError + line is vertical
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 2 + LinAlgError + Singular matrix
+do not match + 0
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 2 + LinAlgError + Singular matrix
+error occurs + 3 + LinAlgError + Singular matrix
+error occurs + 0 + LinAlgError + Singular matrix
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 0 + LinAlgError + Singular matrix
+error occurs + 1 + LinAlgError + Singular matrix
+do not match + 2
+error occurs + 3 + ValueError + line is vertical
+error occurs + 4 + ValueError + line is vertical
+error occurs + 0 + ValueError + line is vertical
+error occurs + 0 + LinAlgError + Singular matrix
+do not match + 1
+error occurs + 2 + ValueError + line is vertical
+error occurs + 3 + LinAlgError + Singular matrix
+do not match + 0
+error occurs + 1 + LinAlgError + Singular matrix
+error occurs + 2 + ValueError + line is vertical
