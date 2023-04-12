@@ -29,6 +29,7 @@ class CheckBoundResult:
 
 
 def convert_to_2d(curr: Constraints3D, cons: List[Constraints3D]) -> List[Constraints]:
+    
     res = []
     for c_i in cons:
         intersection: Line3d = curr.find_intersection(c_i)
@@ -45,6 +46,23 @@ def convert_to_2d(curr: Constraints3D, cons: List[Constraints3D]) -> List[Constr
         res.append(c_i_2d)
     return res
 
+def convert_to_2d_x_z(curr: Constraints3D, cons: List[Constraints3D]) -> List[Constraints]:
+    res = []
+    for c_i in cons:
+        intersection: Line3d = curr.find_intersection(c_i)
+        p_3d = intersection.point
+        p_x, p_z = p_3d.x, p_3d.z
+        u = [-p_x, -p_z]
+        p_positive, p_negative = [p_x+u[0], p_z+u[1]], [p_x-u[0], p_z-u[1]]
+        p_positive_3d, p_negative_3d = curr.find_point_with_x_z(
+            p_positive[0], p_positive[1]), curr.find_point_with_x_z(p_negative[0], p_negative[1])
+        
+        p_positive_3d_proj, p_negative_3d_proj = Point(
+            p_positive_3d.x, p_positive_3d.z), Point(p_negative_3d.x, p_negative_3d.z)
+        two_d_line = intersection.get_projection_on_x_z_plane()
+        c_i_2d = Constraints.from_line_and_point(two_d_line, p_positive_3d_proj if c_i.contains(p_positive_3d) else p_negative_3d_proj)
+        res.append(c_i_2d)
+    return res
 
 def find_two_d_obj(obj: ObjectiveFunction3D, curr: Constraints3D) -> ObjectiveFunction:
     l1, l2, l3 = obj.a, obj.b, obj.c
@@ -54,6 +72,14 @@ def find_two_d_obj(obj: ObjectiveFunction3D, curr: Constraints3D) -> ObjectiveFu
     d2_b = l2-(l3*b)/c
     return ObjectiveFunction(d2_a, d2_b, obj.maxOrMin)
 
+def find_two_d_obj_x_z(obj: ObjectiveFunction3D, curr: Constraints3D) -> ObjectiveFunction:
+    l1, l2, l3 = obj.a, obj.b, obj.c
+    a, b, c = curr.a, curr.b, curr.c
+    
+    d_2a = l1-(l2*a)/b
+    d_2c = l3-(l2*c)/b
+    
+    return ObjectiveFunction(d_2a, d_2c, obj.maxOrMin)
 
 class Convex3DSolver(Solver):
 
@@ -76,9 +102,14 @@ class Convex3DSolver(Solver):
         for idx, c in enumerate(cons):
             if c.contains(v):
                 continue
-
-            two_d_cons = convert_to_2d(c, cons[:idx])
-            two_d_obj = find_two_d_obj(obj, c)
+            
+            if c.is_vertical():
+                convert_func,obj_func,evaluate_func = convert_to_2d_x_z,find_two_d_obj_x_z,c.find_point_with_x_z
+            else :
+                convert_func,obj_func,evaluate_func = convert_to_2d,find_two_d_obj,c.find_point_with_x_y
+                
+            two_d_cons = convert_func(c, cons[:idx])
+            two_d_obj = obj_func(obj, c)
 
             try:
                 res = ConvexSolver().solve(two_d_obj, two_d_cons)
@@ -88,7 +119,7 @@ class Convex3DSolver(Solver):
                 # we should never get here
                 raise err
 
-            v = c.find_point_with_x_y(res.x, res.y)
+            v = evaluate_func(res.x, res.y)
         return v
 
     def rotate_program(self, obj: ObjectiveFunction3D, cons: List[Constraints3D]) -> Program3d:

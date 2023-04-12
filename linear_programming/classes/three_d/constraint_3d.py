@@ -231,5 +231,12 @@ class Constraints3D:
         z = (self.d - self.a*x - self.b*y)/self.c
         return Point3D(x,y,z)
 
+    def find_point_with_x_z(self, x: float, z: float) -> Point3D:
+        y = (self.d - self.a*x - self.c*z)/self.b
+        return Point3D(x,y,z)
+
     def is_on_boundary(self, point: Point3D) -> bool:
         return np.isclose(self.a*point.x + self.b*point.y + self.c*point.z, self.d)
+    
+    def is_vertical(self) -> bool:
+        return self.c == 0

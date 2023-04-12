@@ -136,7 +136,7 @@ def random_obj_3d() -> ObjectiveFunction3D:
     a = rand_float_in_range(-10, 10)
     b = rand_float_in_range(-10, 10)
     c = rand_float_in_range(-10, 10)
-    while a == 0 and b == 0 and c == 0:
+    while a == 0 or b == 0 or c == 0:
         a = rand_float_in_range(-10, 10)
         b = rand_float_in_range(-10, 10)
         c = rand_float_in_range(-10, 10)

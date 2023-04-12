@@ -28,3 +28,12 @@ class Line3d:
             return Line(a=a,b=b,c=c)
         return Line(a=1,b=0,c=x_1)
         
+    def get_projection_on_x_z_plane(self) -> 'Line':
+        x_1,z_1 = self.point.x,self.point.z
+        x_2,z_2 = self.point.x + self.vector[0],self.point.z + self.vector[2]
+        if x_1 != x_2:
+            a = (z_2-z_1)/(x_1-x_2)
+            b = 1
+            c = a*x_1 + z_1
+            return Line(a=a,b=b,c=c)
+        return Line(a=1,b=0,c=x_1)
