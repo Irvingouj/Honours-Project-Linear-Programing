@@ -2478,3 +2478,6 @@ n = 14100
 n = 14500
 n = 14900
 done
+/home/irving/code/Honours-Project-Linear-Programing/linear_programming/classes/two_d/constraints.py:77: RuntimeWarning: divide by zero encountered in scalar divide
+  return Point(x, (self.c - self.a * x) / self.b)
+done
