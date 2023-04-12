@@ -9,7 +9,7 @@ from linear_programming.classes.two_d import ObjectiveFunction
 from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded, gen_random_3d_bounded, gen_random_3d_infeasible, gen_random_3d_unbounded
 from linear_programming.utils.problem_reader import PROJECT_ROOT, ProblemType
-from linear_programming.utils.problem_writer import write_bad_3d_program, write_bad_program, write_bad_program_no_analysis
+from linear_programming.utils.problem_writer import write_bad_3d_program, write_bad_program, write_bad_program_no_analysis, write_report
 from linear_programming.solvers import Convex3DSolver, OsToolSolver,ConvexSolver
 
 TIME_DATA_DIR_2d = PROJECT_ROOT.joinpath("time_data").joinpath("2d")
@@ -134,20 +134,24 @@ def test_with_time_3d(problem_type: ProblemType, rang:range):
     data_file = open(TIME_DATA_DIR_3d.joinpath(f"{problem_type}_{str(uuid.uuid4())}"), 'w', encoding='utf-8')
     n = 0
     counter = 0
+    report = []
     while True:
         n = rang[counter]
         try:
             program = gen_func(num_constrains=n)
             c_time,o_time = solve_with_time_3d(*program)
             if c_time is None or o_time is None:
+                print("retrying, something went wrong,result do not match")
+                report.append(f"do not match + {len(report)}")
                 continue
             print(f"n = {n}")
             counter += 1
             data_file.write(f"{n},{c_time},{o_time}\n")
         except Exception as e:
             print("retrying, something went wrong,error: ",type(e).__name__,e)
-            write_bad_3d_program(program)
+            report.append(f"error occurs + {len(report)} + {type(e).__name__} + {e}")
             continue
         if counter >= len(rang):
             break
+    write_report(f"{uuid.uuid4}",report)
     data_file.close()
