@@ -123,14 +123,11 @@ def gen_random_2d_unbounded(num_constrains:int, max_value:int = 10) -> Program:
 
 def random_constraint_3d(max_value: int = 100) -> Constraints3D:
     a = rand_float_in_range(-max_value, max_value)
-    while(a == 0):
-        a = rand_float_in_range(-max_value, max_value)
+    
     b = rand_float_in_range(-max_value, max_value)
-    while(b == 0):
-        b = rand_float_in_range(-max_value, max_value)
+    
     c = rand_float_in_range(-max_value, max_value)
-    while(c == 0):
-        c = rand_float_in_range(-max_value, max_value)
+    
     d = rand_float_in_range(10*max_value, 10*max_value*max_value)
     
     return Constraints3D(a=a, b=b, c=c, lessOrGreater=GreaterOrLess.LESS, d=d)

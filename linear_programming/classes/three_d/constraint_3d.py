@@ -126,6 +126,8 @@ class Constraints3D:
         Returns:
             Vector: _description_
         """
+        if self.b == 0:
+            return Vector([-self.a,0,-self.c])
         return Vector([self.a/self.b,1,self.c/self.b])
 
     
@@ -145,6 +147,10 @@ class Constraints3D:
             return Vector([-vector[0], -vector[1], -vector[2]]).normalize()
         
     def find_random_point_on_plane(self) -> Point3D:
+        if self.c == 0:
+            y = np.random.uniform(1,2)
+            x = (self.d - self.b*y)/self.a
+            return Point3D(x,y,0)
         x = np.random.uniform(1,2)
         y = np.random.uniform(1,2)
         z = (self.d -self.a*x - self.b*y)/self.c
