@@ -6,11 +6,11 @@ import uuid
 
 import numpy as np
 from linear_programming.classes.two_d import ObjectiveFunction
-from linear_programming.utils.exceptions import NoSolutionException, NoSolutionException2D, ResultNotEqualException, UnboundedException, PerceptionException, UnboundedException2D
+from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException, UnboundedException2D
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded, gen_random_3d_feasible, gen_random_3d_infeasible, gen_random_3d_unbounded
 from linear_programming.utils.problem_reader import PROJECT_ROOT, ProblemType
 from linear_programming.utils.problem_writer import write_bad_3d_program, write_bad_program, write_bad_program_no_analysis, write_report
-from linear_programming.solvers import Convex3DSolver, OrToolSolver,ConvexSolver
+from linear_programming.solvers import Convex3DSolver, OrToolSolver, ConvexSolver
 
 TIME_DATA_DIR_2d = PROJECT_ROOT.joinpath("time_data").joinpath("2d")
 TIME_DATA_DIR_3d = PROJECT_ROOT.joinpath("time_data").joinpath("3d")
@@ -46,22 +46,21 @@ def solve_calculate_time(program) -> Tuple[float, float]:
 
     try:
         con_res = convex_solver.solve(program[0], program[1])
-        obj:ObjectiveFunction = program[0]
-        print(f"convex solver result: {con_res} \n")
-        print(f"os tool solver result: {os_res} \n")
-        if not np.isclose(obj.value(os_res) ,obj.value(con_res)):
+        obj: ObjectiveFunction = program[0]
+
+        if not np.isclose(obj.value(os_res), obj.value(con_res)):
             write_bad_program(program, con_res, os_res, "result not equal")
             raise ResultNotEqualException("result not equal")
-    except NoSolutionException2D:
+    except NoSolutionException:
         if os_res != "INFEASIBLE":
             thread = threading.Thread(target=write_bad_program_no_analysis, args=(
                 program, "INFEASIBLE", os_res, f"convex solver has no solution but os tool has {os_res} \n"))
             thread.start()
-    except UnboundedException2D:
+    except UnboundedException:
         if os_res != "UNBOUNDED":
             thread = threading.Thread(target=write_bad_program_no_analysis, args=(
                 program, "UNBOUNDED", os_res,
-                              f"convex solver is unbounded  but os tool has solution {os_res} \n"))
+                f"convex solver is unbounded  but os tool has solution {os_res} \n"))
             thread.start()
 
     cons_time_end = time.time()
@@ -90,7 +89,7 @@ def test_with_time(problem_type: ProblemType, rang: range, result_name: str = "r
     f = open(PROJECT_ROOT.joinpath(result_name), 'w', encoding='utf-8')
     f.write("n,convex_time,os_time\n")
     for n in rang:
-        print(f"testing for n = {n} \n")
+        print(f"testing for n = {n}")
         program = gen_func(num_constrains=n)
         try:
             cons_time, os_time = solve_calculate_time(program)
@@ -103,23 +102,22 @@ def test_with_time(problem_type: ProblemType, rang: range, result_name: str = "r
     return f.name
 
 
-
-def solve_with_time_3d(obj,cons) -> Tuple[float,float]:
+def solve_with_time_3d(obj, cons) -> Tuple[float, float]:
     c_start_time = time.time()
-    c_res = Convex3DSolver.solve_with_convex(obj,cons)
+    c_res = Convex3DSolver.solve_with_convex(obj, cons)
     c_total_time = time.time() - c_start_time
-    
+
     o_start_time = time.time()
-    o_res = o_res = OrToolSolver.solve_with_or_3d(obj,cons)
+    o_res = o_res = OrToolSolver.solve_with_or_3d(obj, cons)
     o_total_time = time.time() - o_start_time
-    
+
     if o_res != c_res:
-        write_bad_3d_program((obj,cons))
-        return None,None
-    return c_total_time,o_total_time
+        write_bad_3d_program((obj, cons))
+        return None, None
+    return c_total_time, o_total_time
 
 
-def test_with_time_3d(problem_type: ProblemType, rang:range, result_name:str = "result.txt"):
+def test_with_time_3d(problem_type: ProblemType, rang: range, result_name: str = "result.txt"):
     match problem_type:
         case ProblemType.UNBOUNDED:
             gen_func = gen_random_3d_unbounded
@@ -129,8 +127,7 @@ def test_with_time_3d(problem_type: ProblemType, rang:range, result_name:str = "
             gen_func = gen_random_3d_feasible
         case _:
             raise ValueError("problem type not supported")
-    
- 
+
     f = open(PROJECT_ROOT.joinpath(result_name), 'w', encoding='utf-8')
     f.write("n,convex_time,os_time\n")
     for n in rang:
