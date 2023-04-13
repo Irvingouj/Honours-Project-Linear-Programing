@@ -1,9 +1,8 @@
-import time
 import unittest
 from linear_programming.utils.exceptions import NoSolutionException
 from linear_programming.solvers.convex_solver import solve_with_convex
 from linear_programming.solvers.or_tool_solver import solve_with_os_tool
-from linear_programming.utils.problem_reader import read_problem,ProblemType,read_unexpected_problem
+from linear_programming.utils.problem_reader import read_problem,ProblemType
 from linear_programming.utils.types import Program
 
 

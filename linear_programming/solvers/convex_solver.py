@@ -7,6 +7,7 @@ from linear_programming.utils.exceptions import NoSolutionException, PerceptionE
 from linear_programming.solvers.solver import Solver
 from linear_programming.classes.one_d.one_d_LinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
 from linear_programming.classes.vector import Vector
+from linear_programming.utils.types import CheckBoundResult2D
 
 
 def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDConstraint]:
@@ -54,29 +55,6 @@ def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> b
     return c_x - (c_y*a_k)/b_k >= 0
 
 
-class CheckBoundResult:
-    def __init__(self, bounded: bool, unbound_certificate: Constraints = None, unbounded_index=-1, bound_certificate: Tuple(int, int) = None):
-        assert isinstance(bounded, bool)
-        assert isinstance(unbound_certificate,
-                          Constraints) or unbound_certificate == None
-        assert isinstance(bound_certificate,
-                          tuple) or bound_certificate == None
-
-        # if bounded, the bound
-        self.bounded = bounded
-        self.unbound_certificate = unbound_certificate
-        self.unbounded_index = unbounded_index
-        self.bound_certificate = bound_certificate
-
-        # only one of them can be None, and at least one of them must be None, XOR
-        assert (bound_certificate == None) != (unbound_certificate == None)
-
-    def __str__(self):
-        if self.bounded:
-            return f"bounded, bound certificate: {self.bound_certificate}"
-        else:
-            return f"unbounded, unbound certificate: {self.unbound_certificate}"
-
 
 class ConvexSolver(Solver):
 
@@ -99,7 +77,7 @@ class ConvexSolver(Solver):
 
         return v
 
-    def check_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> CheckBoundResult:
+    def check_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> CheckBoundResult2D:
         obj_vector = obj.to_vector()
         degree_needed = obj_vector.degree_needed_to_rotate_to(Vector([0, 1]))
         rotated_cons = [c.get_rotate_around_origin(
@@ -113,7 +91,7 @@ class ConvexSolver(Solver):
 
         # no solution, the problem is bounded
         if dx is None:
-            return CheckBoundResult(bounded=True, bound_certificate=(left, right))
+            return CheckBoundResult2D(bounded=True, bound_certificate=(left, right))
 
         # dx exist, which means the direction of unboundedness is (dx,1)
         H_prime: List[Constraints] = []
@@ -137,7 +115,7 @@ class ConvexSolver(Solver):
                 raise NoSolutionException(
                     "No solution as the constraints are parallel and share no common area", stage="check_unbounded")
 
-        result = CheckBoundResult(
+        result = CheckBoundResult2D(
             bounded=False, unbound_certificate=cons[left], unbounded_index=left)
         return result
 
