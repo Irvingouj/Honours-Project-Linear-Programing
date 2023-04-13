@@ -1,6 +1,4 @@
 from argparse import ArgumentParser
-import argparse
-import re
 import linear_programming.utils.linear_program_generator as gen
 import linear_programming.utils.problem_writer as writer
 import linear_programming.utils.problem_reader as reader
