@@ -119,3 +119,17 @@ def read(path,dimension):
         return program
     
     raise ValueError("Dimension must be 2 or 3")
+
+def determine_dimension(path):
+    file_path = os.path.join(PROJECT_ROOT,path)
+    file = open(file_path, 'r', encoding='utf-8')
+    # if first line contains 3 variables, then it is a 3d problem
+    lines = file.readlines()
+    lines = [l for l in lines if len(l) > 0 and l[0] != '#' and l[0] != '\n']
+    l1 = lines[0].strip()
+    if 'x' in l1 and 'y' in l1 and 'z' in l1:
+        return 3
+    elif 'x' in l1 and 'y' in l1:
+        return 2
+    
+    raise ValueError("Dimension Unknown for file "+path)

@@ -159,7 +159,7 @@ def gen_random_3d_unbounded(num_constrains:int, max_value:int = 10) -> Program3d
 
     return (obj, res)
 
-def gen_random_3d_bounded(num_constrains:int, max_value:int = 10) -> Program3d:
+def gen_random_3d_feasible(num_constrains:int, max_value:int = 10) -> Program3d:
     """
     generate a 3d program with bounded solution with high probability
     """

@@ -162,10 +162,10 @@ class ConvexSolver(Solver):
         return h1,h2
     
     @staticmethod    
-    def solve_with_convex(program) -> Point:
+    def solve_with_convex(obj,cons) -> Point:
         solver = ConvexSolver()
         try:
-            return solver.solve(program[0], program[1])
+            return solver.solve(obj, cons)
         except NoSolutionException2D:
             return "INFEASIBLE"
         except UnboundedException2D:

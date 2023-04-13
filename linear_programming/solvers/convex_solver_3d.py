@@ -159,7 +159,7 @@ class Convex3DSolver(Solver):
         return Point3D(x[0], x[1], x[2])
 
     @staticmethod
-    def con_solve(obj, cons):
+    def solve_with_convex(obj, cons):
         try:
             return Convex3DSolver().solve(obj, cons)
         except NoSolutionException3D:

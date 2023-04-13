@@ -15,37 +15,31 @@ def main():
                             description='Honours Project for Irving Ou')
 
     subparsers = parser.add_subparsers(
-        help='generate linear program ', dest='command')
+        help=r'user {positional argument} -h for further help ', dest='command')
 
-    gen_parser = subparsers.add_parser('generate')
+    gen_parser = subparsers.add_parser('generate', help='Generate a linear program')
 
     gen_parser.add_argument('-n', '--num_constrains', type=int)
     gen_parser.add_argument('-t', '--type', type=str,choices=['bounded','infeasible','unbounded'])
     gen_parser.add_argument('-d', '--dimension', type=int,default=2)
+    gen_parser.add_argument('-f', '--file_path', type=str, default="program.txt")
 
-    solve_parser = subparsers.add_parser('solve')
-    solve_parser.add_argument('-f', '--file_name', type=str)
-    solve_parser.add_argument('-d', '--dimension', type=int,default=2)
-    solve_parser.add_argument('-t', '--type', type=str,choices=['Convex','OrTool'])
+    solve_parser = subparsers.add_parser('solve', help='Solve a linear program')
+    solve_parser.add_argument('-f', '--file_path', type=str)
+    solve_parser.add_argument('-s', '--solver', type=str,choices=['Convex','OrTool'],default='Convex')
     
-    test_parser = subparsers.add_parser('test')
+    test_parser = subparsers.add_parser('test', help='Test randomly generated linear programs for n in range, default range is 10 to 3000 with step 100')
     test_parser.add_argument('-s', '--start', type=int,default=10)
     test_parser.add_argument('-e', '--end', type=int,default=3000)
     test_parser.add_argument('-p', '--step', type=int,default=100)
     test_parser.add_argument('-t', '--type', type=str,choices=['bounded','infeasible','unbounded'])
-    test_parser.add_argument('-n', '--name', type=str,default="result.txt")
+    test_parser.add_argument('-o', '--output_path', type=str,default="result.txt")
     test_parser.add_argument('-d', '--dimension', type=int,default=2)
     
 
-    def range_type(arg_value, pat=re.compile(r"^\d+,\d+,\d+$")):
-        if not pat.match(arg_value):
-            raise argparse.ArgumentTypeError("invalid value")
-        return arg_value
-    solve_parser.add_argument('-r', '--range', type=range_type)
-
     args = parser.parse_args()
 
-    if args.command == 'generate':
+    if args.command == 'generate' and args.dimension == 2:
         program = None
         if args.type == 'unbounded':
             program = gen.gen_random_2d_unbounded(args.num_constrains)
@@ -57,17 +51,37 @@ def main():
         else:
             raise ValueError('invalid type')
         
-        path = writer.save_to_file(args.type,program[0],program[1])
+        path = writer.write(args.file_path,(program[0],program[1]))
 
+        print(f"Generated file: {path}")
+    elif args.command == 'generate' and args.dimension == 3:
+        program = None
+        if args.type == 'unbounded':
+            program = gen.gen_random_3d_unbounded(args.num_constrains)
+        elif args.type == 'infeasible':
+            program = gen.gen_random_3d_infeasible(args.num_constrains)
+        elif args.type == 'bounded':
+            program = gen.gen_random_3d_feasible(args.num_constrains)
+        else:
+            raise ValueError('invalid type')
+        path = writer.write(args.file_path,(program[0],program[1]))
         print(f"Generated file: {path}")
 
     elif args.command == 'solve':
-        obj,cons = reader.read(args.file_name,args.dimension)
-        if args.type == 'Convex' and args.dimension == 2:
+        dimension = reader.determine_dimension(args.file_path)
+        obj,cons = reader.read(args.file_path,dimension)
+        if args.solver == 'Convex' and dimension == 2:
             res = solvers.ConvexSolver.solve_with_convex(obj,cons)
-        if args.type == 'OrTool' and args.dimension == 2:
-            res = solvers.or_tool_solver
-            
+        elif args.solver == 'OrTool' and dimension == 2:
+            res = solvers.OrToolSolver.solve_with_or_2d(obj,cons)
+        elif args.solver == 'OrTool' and dimension == 3:
+            res = solvers.OrToolSolver.solve_with_or_3d(obj,cons)
+        elif args.solver == 'Convex' and dimension == 3:
+            res = solvers.Convex3DSolver.solve_with_convex(obj,cons)
+        else:
+            raise ValueError('invalid type or dimension')
+
+        print(f"Result: {res}, dimension: {dimension},solver: {args.solver}")
         
         
     
@@ -84,7 +98,11 @@ def main():
             type_para = ProblemType.UNBOUNDED
             
         if args.dimension == 2:
-            compare_time.test_with_time(type_para,range(start,end,step),args.name)
+            res = compare_time.test_with_time(type_para,range(start,end,step),args.output_path)
         elif args.dimension == 3:
-            compare_time.test_with_time_3d(type_para,range(start,end,step),args.name)
+            res = compare_time.test_with_time_3d(type_para,range(start,end,step),args.output_path)
+        else:
+            raise ValueError('invalid dimension')
+        
+        print(f"Result: {res}")
         

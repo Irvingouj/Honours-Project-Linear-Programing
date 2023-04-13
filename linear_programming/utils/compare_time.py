@@ -7,7 +7,7 @@ import uuid
 import numpy as np
 from linear_programming.classes.two_d import ObjectiveFunction
 from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException
-from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded, gen_random_3d_bounded, gen_random_3d_infeasible, gen_random_3d_unbounded
+from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded, gen_random_3d_feasible, gen_random_3d_infeasible, gen_random_3d_unbounded
 from linear_programming.utils.problem_reader import PROJECT_ROOT, ProblemType
 from linear_programming.utils.problem_writer import write_bad_3d_program, write_bad_program, write_bad_program_no_analysis, write_report
 from linear_programming.solvers import Convex3DSolver, OrToolSolver,ConvexSolver
@@ -78,17 +78,14 @@ def test_with_time(problem_type: ProblemType, rang: range, result_name: str = "r
     gen_func = None
     if problem_type == ProblemType.UNBOUNDED:
         gen_func = gen_random_2d_unbounded
-        result_name = "unbounded_"+result_name
     elif problem_type == ProblemType.INFEASIBLE:
         gen_func = gen_random_2d_infeasible
-        result_name = "infeasible_"+result_name
     elif problem_type == ProblemType.BOUNDED:
         gen_func = gen_random_2d_feasible
-        result_name = "bounded_"+result_name
     else:
         raise ValueError("problem type not supported")
 
-    f = open(TIME_DATA_DIR_2d.joinpath(result_name), 'w', encoding='utf-8')
+    f = open(PROJECT_ROOT.joinpath(result_name), 'w', encoding='utf-8')
     f.write("n,convex_time,os_time\n")
     for n in rang:
         print(f"testing for n = {n} \n")
@@ -101,17 +98,17 @@ def test_with_time(problem_type: ProblemType, rang: range, result_name: str = "r
         csv.writer(f).writerow([n, cons_time, os_time])
     f.close()
 
-    return TIME_DATA_DIR_2d.joinpath(result_name)
+    return f.name
 
 
 
 def solve_with_time_3d(obj,cons) -> Tuple[float,float]:
     c_start_time = time.time()
-    c_res = Convex3DSolver.con_solve(obj,cons)
+    c_res = Convex3DSolver.solve_with_convex(obj,cons)
     c_total_time = time.time() - c_start_time
     
     o_start_time = time.time()
-    o_res = o_res = OrToolSolver.solve3d(obj,cons)
+    o_res = o_res = OrToolSolver.solve_with_or_3d(obj,cons)
     o_total_time = time.time() - o_start_time
     
     if o_res != c_res:
@@ -127,21 +124,21 @@ def test_with_time_3d(problem_type: ProblemType, rang:range, result_name:str = "
         case ProblemType.INFEASIBLE:
             gen_func = gen_random_3d_infeasible
         case ProblemType.BOUNDED:
-            gen_func = gen_random_3d_bounded
+            gen_func = gen_random_3d_feasible
         case _:
             raise ValueError("problem type not supported")
     
  
-    f = open(TIME_DATA_DIR_3d.joinpath(result_name), 'w', encoding='utf-8')
+    f = open(PROJECT_ROOT.joinpath(result_name), 'w', encoding='utf-8')
     f.write("n,convex_time,os_time\n")
     for n in rang:
-        print(f"testing for n = {n} \n")
+        print(f"testing for n = {n}")
         program = gen_func(num_constrains=n)
         try:
-            cons_time, os_time = solve_calculate_time(program)
+            cons_time, os_time = solve_with_time_3d(*program)
         except PerceptionException:
             print("perception error")
         csv.writer(f).writerow([n, cons_time, os_time])
     f.close()
 
-    return TIME_DATA_DIR_3d.joinpath(result_name)
+    return f.name

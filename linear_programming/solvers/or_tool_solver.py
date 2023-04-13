@@ -78,11 +78,11 @@ class OrToolSolver(Solver):
         raise PerceptionException("Abnormal status returned from solver")
             
     @staticmethod
-    def solve2d(obj,cons):
+    def solve_with_or_2d(obj,cons):
         return OrToolSolver().solve(obj,cons)
     
     @staticmethod
-    def solve3d(obj,cons):
+    def solve_with_or_3d(obj,cons):
         return OrToolSolver().solve_three_d(obj,cons)
 
 

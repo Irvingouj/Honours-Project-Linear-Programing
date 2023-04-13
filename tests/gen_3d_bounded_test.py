@@ -1,12 +1,12 @@
 import unittest
 from linear_programming.solvers.or_tool_solver import OrToolSolver, Point3D
-from linear_programming.utils.linear_program_generator import gen_random_3d_bounded
+from linear_programming.utils.linear_program_generator import gen_random_3d_feasible
 
 class TestRandom3DBounded(unittest.TestCase):
     def test_gen_random_3d_bounded(self):
         solver = OrToolSolver()
         for num_constraints in range(100, 10001, 100):
-            program = gen_random_3d_bounded(num_constraints)
+            program = gen_random_3d_feasible(num_constraints)
             obj = program[0]
             constraints = program[1]
 
