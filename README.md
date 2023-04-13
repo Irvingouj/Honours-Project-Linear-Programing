@@ -22,4 +22,6 @@ This will run a 3D program generator and solver and compare the results with Goo
 ## Limitations
 Please note that there is currently an edge case and a similar class of problems that remain unsolvable by the three-dimensional solver. This is located in the "linear_program_data/gogogo" directory. However, I am actively investigating how we can solve this limitation.
 
+There is also a small chance of getting perception exception, which is normal.
+
 If you encounter any issues or have any suggestions for improvement, please feel free to contact me.
