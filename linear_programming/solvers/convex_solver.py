@@ -149,7 +149,7 @@ class ConvexSolver(Solver):
                 one_d_constraints, get_one_d_optimize_direction(obj, c))
             if x is None:
                 d3_certificate = (altered_index[idx], altered_index[left], altered_index[right])
-                raise NoSolutionException2D(stage="solve_for_three_dimension", three_d_bounded_certificate=d3_certificate)
+                raise NoSolutionException2D(stage="Solve For Three D Certificate", three_d_bounded_certificate=d3_certificate)
             v = point_find_func(x)
 
         return v

@@ -1,5 +1,5 @@
 
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 from linear_programming.classes.three_d.line_3d import Line3d
@@ -8,7 +8,7 @@ from linear_programming.classes.two_d.point import Point
 from .solver import Solver
 from .convex_solver import ConvexSolver
 from ..classes.three_d import Constraints3D, ObjectiveFunction3D, Point3D
-from ..utils.exceptions import NoSolutionException2D, NoSolutionException3D, UnboundedException2D, UnboundedException3D
+from ..utils.exceptions import AbnormalException, NoSolutionException2D, NoSolutionException3D, UnboundedException2D, UnboundedException3D
 from ..utils.types import CheckBoundResult3D, Program3d
 
 
@@ -24,10 +24,8 @@ def convert_to_2d(curr: Constraints3D, cons: List[Constraints3D]) -> List[Constr
         p_x, p_y = p_3d.x, p_3d.y
         u = [-p_x, -p_y]
         p_positive, p_negative = [p_x+u[0], p_y+u[1]], [p_x-u[0], p_y-u[1]]
-        p_positive_3d, p_negative_3d = curr.find_point_with_x_y(
-            p_positive[0], p_positive[1]), curr.find_point_with_x_y(p_negative[0], p_negative[1])
-        p_posi_3d_proj, p_neg_3d_proj = Point(
-            p_positive_3d.x, p_positive_3d.y), Point(p_negative_3d.x, p_negative_3d.y)
+        p_positive_3d, p_negative_3d = curr.find_point_with_x_y(p_positive[0], p_positive[1]), curr.find_point_with_x_y(p_negative[0], p_negative[1])
+        p_posi_3d_proj, p_neg_3d_proj = Point(p_positive_3d.x, p_positive_3d.y), Point(p_negative_3d.x, p_negative_3d.y)
         two_d_line = intersection.get_projection_on_x_y_plane()
         c_i_2d = Constraints.from_line_and_point(two_d_line, p_posi_3d_proj if c_i.contains(p_positive_3d) else p_neg_3d_proj)
         res.append(c_i_2d)
@@ -76,16 +74,9 @@ class Convex3DSolver(Solver):
             #Unbounded Index To Be Determined
             raise UnboundedException3D(stage="Solve", unbounded_index=None)
 
-        c1_idx, c2_idx, c3_idx = res.certificates[0], res.certificates[1], res.certificates[2]
-        c1, c2, c3 = cons[c1_idx], cons[c2_idx], cons[c3_idx]
-        cons[0], cons[c1_idx] = cons[c1_idx], cons[0]
-        c2_idx = cons.index(c2)
-        cons[1], cons[c2_idx] = cons[c2_idx], cons[1]
-        c3_idx = cons.index(c3)
-        cons[2], cons[c3_idx] = cons[c3_idx], cons[2]
-
-        v = self.find_intersection_point(c1, c2, c3)
-
+        h1_idx, h2_idx, h3_idx = res.certificates[0], res.certificates[1], res.certificates[2]
+        h1,h2,h3 = self.switch_index(h1_idx, h2_idx, h3_idx, cons)
+        v = self.find_intersection_point(h1, h2, h3)
         for idx, c in enumerate(cons):
             if c.contains(v):
                 continue
@@ -127,18 +118,29 @@ class Convex3DSolver(Solver):
         theta, phi = obj.get_angle_needed_for_rotation()
         z_rotated_cons = [c.get_rotate_z(theta) for c in cons]
         x_rotated_cons = [c.get_rotate_x(phi) for c in z_rotated_cons]
-        facing_direction_vecs = [c.facing_direction_vector()
-                                 for c in x_rotated_cons]
-        two_d_cons = [Constraints(
-            v[0], v[1], lessOrGreater=GreaterOrLess.GREATER, c=-v[2]) for v in facing_direction_vecs]
+        facing_direction_vecs = [c.facing_direction_vector() for c in x_rotated_cons]
+        two_d_cons = [Constraints(v[0], v[1], lessOrGreater=GreaterOrLess.GREATER, c=-v[2]) for v in facing_direction_vecs]
         try:
-            res = ConvexSolver().solve_with_3d_certificate(ObjectiveFunction(1, 1), two_d_cons)
+            obj = ObjectiveFunction(1,1)
+            res = ConvexSolver().solve_with_3d_certificate(obj, two_d_cons)
         except NoSolutionException2D as err:
-            return CheckBoundResult3D(is_bounded=True, ray=None, certificates=err.three_d_bound_certificate)
+            if err.three_d_bound_certificate is not None:
+                return CheckBoundResult3D(is_bounded=True, ray=None, certificates=err.three_d_bound_certificate)
+            raise AbnormalException("This may have a solution, but we can't find it") from err
         except UnboundedException2D as err:
             return CheckBoundResult3D(is_bounded=False, ray=f"TODO:find ray {err}", certificates=None)
-
         return CheckBoundResult3D(is_bounded=False, ray=f"TODO:find ray {res}", certificates=None)
+
+    @staticmethod
+    def switch_index(h1_idx, h2_idx,h3_idx, cons) -> Tuple[Constraints3D, Constraints3D, Constraints3D]:
+        c1, c2, c3 = cons[h1_idx], cons[h2_idx], cons[h3_idx]
+        cons[0], cons[h1_idx] = cons[h1_idx], cons[0]
+        h2_idx = cons.index(c2)
+        cons[1], cons[h2_idx] = cons[h2_idx], cons[1]
+        h3_idx = cons.index(c3)
+        cons[2], cons[h3_idx] = cons[h3_idx], cons[2]
+        
+        return c1, c2, c3
 
     @staticmethod
     def find_intersection_point(c1: Constraints3D, c2: Constraints3D, c3: Constraints3D) -> Point3D:
