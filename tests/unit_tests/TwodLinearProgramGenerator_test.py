@@ -1,6 +1,6 @@
 import unittest
 from  linear_programming.utils.linear_program_generator import gen_random_2d_feasible
-from linear_programming.solvers.osToolSolver import OsToolSolver
+from linear_programming.solvers.or_tool_solver import OrToolSolver
 import os
 
 
@@ -24,7 +24,7 @@ class TestGenerateRandomLP(unittest.TestCase):
         #
         obj, cons = gen_random_2d_feasible(
             num_of_constraints)
-        solver = OsToolSolver()
+        solver = OrToolSolver()
         res = solver.solve(cons=cons, obj=obj)
         self.assertIsNotNone(res)
 

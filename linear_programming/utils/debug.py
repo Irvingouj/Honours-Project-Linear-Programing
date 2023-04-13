@@ -75,8 +75,8 @@ def print_for_geo_gebra(cons):
 
 @if_debug
 def os_solve_3d(obj,cons):
-    from linear_programming.solvers.osToolSolver import OsToolSolver
-    return OsToolSolver().solve_three_d(obj, cons)
+    from linear_programming.solvers.or_tool_solver import OrToolSolver
+    return OrToolSolver().solve_three_d(obj, cons)
     
     
 import numpy as np

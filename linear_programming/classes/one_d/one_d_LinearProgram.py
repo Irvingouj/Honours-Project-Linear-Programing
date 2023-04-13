@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from linear_programming.utils.exceptions import NoSolutionException
+from linear_programming.utils.exceptions import NoSolutionException1D
 from .one_d_constraint import Facing, OneDConstraint
 
 POSITIVE = True
@@ -8,8 +8,8 @@ NEGATIVE = False
 
 # debugging purpose, will be removed
 def sol_1d_linear_program_with_os(one_d_constraints: List[OneDConstraint], objective: bool) -> float:
-    from linear_programming.solvers import OsToolSolver
-    return OsToolSolver().solve_one_dimension(one_d_constraints=one_d_constraints, objective=objective)
+    from linear_programming.solvers import OrToolSolver
+    return OrToolSolver().solve_one_dimension(one_d_constraints=one_d_constraints, objective=objective)
     
 
 
@@ -24,8 +24,7 @@ def solve_1d_linear_program(one_d_constraints: List[OneDConstraint], objective: 
         
         # debugging purpose, I only need add 1 breakpoint here
         if flag:
-            raise NoSolutionException(
-                "No solution as one dimension linear program is infeasible",stage="1d_linear_program",constraints=one_d_constraints)
+            raise NoSolutionException1D(stage="Solve")
 
     used_constraints = []
     for constraint in one_d_constraints:

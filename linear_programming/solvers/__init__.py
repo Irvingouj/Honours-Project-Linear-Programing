@@ -1,4 +1,4 @@
 from .convex_solver_3d import Convex3DSolver
-from .convexSolver import ConvexSolver
-from .osToolSolver import OsToolSolver
+from .convex_solver import ConvexSolver
+from .or_tool_solver import OrToolSolver
 from .solver import Solver

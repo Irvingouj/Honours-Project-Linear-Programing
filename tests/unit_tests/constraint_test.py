@@ -1,7 +1,7 @@
 import math
 import unittest
 from linear_programming.classes.two_d import Constraints
-from linear_programming.solvers.osToolSolver import OsToolSolver
+from linear_programming.solvers.or_tool_solver import OrToolSolver
 from linear_programming.solvers.convex_solver_3d import Convex3DSolver
 from linear_programming.utils.linear_program_generator import gen_random_3d_unbounded
 
@@ -38,9 +38,9 @@ class TestConstraints(unittest.TestCase):
     def test_iteratively(self):
         for i in range(100):
             prev_obj,prev_cons = gen_random_3d_unbounded(5)
-            prev = OsToolSolver().solve_three_d(prev_obj,prev_cons)
+            prev = OrToolSolver().solve_three_d(prev_obj,prev_cons)
             obj,cons = Convex3DSolver().rotate_program(prev_obj,prev_cons)
-            after = OsToolSolver().solve_three_d(obj,cons)
+            after = OrToolSolver().solve_three_d(obj,cons)
             
             
             if type(prev) != type(after):

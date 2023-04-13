@@ -2,12 +2,12 @@ import unittest
 
 from linear_programming.utils.linear_program_generator import OneDProgram, gen_random_1d_feasible
 from linear_programming.classes.one_d.one_d_LinearProgram import solve_1d_linear_program
-from linear_programming.solvers.osToolSolver import OsToolSolver
+from linear_programming.solvers.or_tool_solver import OrToolSolver
 
 class TestOneDSolver(unittest.TestCase):
     
     def compare_to_os_tool(self, program: OneDProgram,sol):
-        solver = OsToolSolver()
+        solver = OrToolSolver()
         res = solver.solve_one_dimension(objective=program[0], one_d_constraints=program[1])
         self.assertTrue(sol == res)
     

@@ -1,6 +1,6 @@
 import random
-from linear_programming.solvers.convexSolver import ConvexSolver
-from linear_programming.solvers.osToolSolver import OsToolSolver
+from linear_programming.solvers.convex_solver import ConvexSolver
+from linear_programming.solvers.or_tool_solver import OrToolSolver
 from linear_programming.utils.exceptions import NoSolutionException, UnboundedException
 from linear_programming.utils.types import Program
 import linear_programming.utils.problem_reader as reader
@@ -16,7 +16,7 @@ def con_solve(obj,cons):
     return p_cons
 
 def os_solve(obj,cons):
-    p_os = OsToolSolver().solve(obj, cons)
+    p_os = OrToolSolver().solve(obj, cons)
     return p_os
 
 

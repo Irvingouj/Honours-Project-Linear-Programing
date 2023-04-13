@@ -8,7 +8,7 @@ from linear_programming.classes.one_d import OneDConstraint
 
 
 
-class OsToolSolver(Solver):
+class OrToolSolver(Solver):
     param = pywraplp.MPSolverParameters()
     param.SetIntegerParam(pywraplp.MPSolverParameters.PRESOLVE, pywraplp.MPSolverParameters.PRESOLVE_OFF)
     def get_solver(self):
@@ -27,7 +27,7 @@ class OsToolSolver(Solver):
 
         solver.Maximize(eval(obj.to_or_string()))
 
-        status = solver.Solve(OsToolSolver.param)
+        status = solver.Solve(OrToolSolver.param)
 
         if status == pywraplp.Solver.OPTIMAL:
             return Point(x.solution_value(), y.solution_value())
@@ -67,7 +67,7 @@ class OsToolSolver(Solver):
             
         solver.Maximize(eval(obj.to_or_string()))
         
-        status = solver.Solve(OsToolSolver.param)
+        status = solver.Solve(OrToolSolver.param)
         if status == pywraplp.Solver.OPTIMAL:
             return Point3D(x.solution_value(),y.solution_value(),z.solution_value())
         if status == pywraplp.Solver.UNBOUNDED:
@@ -78,14 +78,14 @@ class OsToolSolver(Solver):
         raise PerceptionException("Abnormal status returned from solver")
             
     @staticmethod
-    def solve2d(obj,cons):
-        return OsToolSolver().solve(obj,cons)
+    def solve_with_or_2d(obj,cons):
+        return OrToolSolver().solve(obj,cons)
     
     @staticmethod
-    def solve3d(obj,cons):
-        return OsToolSolver().solve_three_d(obj,cons)
+    def solve_with_or_3d(obj,cons):
+        return OrToolSolver().solve_three_d(obj,cons)
 
 
 def solve_with_os_tool(program) -> Point:
-    solver = OsToolSolver()
+    solver = OrToolSolver()
     return solver.solve(program[0], program[1])

@@ -74,7 +74,7 @@ def write(relative_path,program:Program):
         for line in program[1]:
             f.write(str(line)+"\n")
         f.write("#-----------------program end-----------------")
-
+    return program_path
         
 def write_report(name,report):
     bad_program_dir = PROJECT_ROOT.joinpath("linear_program_data", "gogogo")

@@ -1,6 +1,6 @@
 import unittest
 from linear_programming.classes.two_d import Constraints, ObjectiveFunction
-from linear_programming.solvers.convexSolver import ConvexSolver
+from linear_programming.solvers.convex_solver import ConvexSolver
 from linear_programming.utils.problem_reader import read_problem,ProblemType
 
 class TestCheckBound(unittest.TestCase):

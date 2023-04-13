@@ -3,10 +3,11 @@ from typing import List
 import numpy as np
 from linear_programming.classes.two_d import Point, ObjectiveFunction, Constraints
 from linear_programming.classes.one_d import OneDConstraint
-from linear_programming.utils.exceptions import NoSolutionException, PerceptionException, UnboundedException
+from linear_programming.utils.exceptions import NoSolutionException2D, PerceptionException, UnboundedException2D
 from linear_programming.solvers.solver import Solver
 from linear_programming.classes.one_d.one_d_LinearProgram import solve_1d_linear_program, solve_1d_linear_program_with_left_and_right_index
 from linear_programming.classes.vector import Vector
+from linear_programming.utils.types import CheckBoundResult2D
 
 
 def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDConstraint]:
@@ -19,14 +20,13 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
     one_d = []
     for h in cons:
         if h.is_parallel_but_share_no_common_area(curr):
-            raise NoSolutionException("No solution as the constraints are parallel and share no common area",
-                                      stage="parallel_checking", constraints=[curr, h])
+            # What should the three d bound certificate be?
+            raise NoSolutionException2D(stage="Parallel Checking", three_d_bounded_certificate=None)
 
         p = curr.find_intersection(h)
         if p is not None:
             # plus 10000 to get the direction of the one dimension constraint,
             # there's gotta be a better way, this suffers heavily from floating point error
-            # TODO: find a better way
             p1 = curr.find_point_with_x(p.x+100000)
             p2 = curr.find_point_with_x(p.x-100000)
 
@@ -54,37 +54,13 @@ def get_one_d_optimize_direction(obj: ObjectiveFunction, curr: Constraints) -> b
     return c_x - (c_y*a_k)/b_k >= 0
 
 
-class CheckBoundResult:
-    def __init__(self, bounded: bool, unbound_certificate: Constraints = None, unbounded_index=-1, bound_certificate: Tuple(int, int) = None):
-        assert isinstance(bounded, bool)
-        assert isinstance(unbound_certificate,
-                          Constraints) or unbound_certificate == None
-        assert isinstance(bound_certificate,
-                          tuple) or bound_certificate == None
-
-        # if bounded, the bound
-        self.bounded = bounded
-        self.unbound_certificate = unbound_certificate
-        self.unbounded_index = unbounded_index
-        self.bound_certificate = bound_certificate
-
-        # only one of them can be None, and at least one of them must be None, XOR
-        assert (bound_certificate == None) != (unbound_certificate == None)
-
-    def __str__(self):
-        if self.bounded:
-            return f"bounded, bound certificate: {self.bound_certificate}"
-        else:
-            return f"unbounded, unbound certificate: {self.unbound_certificate}"
-
 
 class ConvexSolver(Solver):
 
     def solve(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
         bound_res = self.check_unbounded(obj, cons)
         if not bound_res.bounded:
-            raise UnboundedException(
-                "The problem is unbounded", unbounded_certificate=bound_res.unbound_certificate, unbounded_index=bound_res.unbounded_index)
+            raise UnboundedException2D(stage="Solve",unbounded_index=bound_res.unbounded_index)
         h1,h2 = self.switch_index(bound_res.bound_certificate[0], bound_res.bound_certificate[1], cons)
 
         v = h1.find_intersection(h2)
@@ -99,7 +75,7 @@ class ConvexSolver(Solver):
 
         return v
 
-    def check_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> CheckBoundResult:
+    def check_unbounded(self, obj: ObjectiveFunction, cons: List[Constraints]) -> CheckBoundResult2D:
         obj_vector = obj.to_vector()
         degree_needed = obj_vector.degree_needed_to_rotate_to(Vector([0, 1]))
         rotated_cons = [c.get_rotate_around_origin(
@@ -113,9 +89,9 @@ class ConvexSolver(Solver):
 
         # no solution, the problem is bounded
         if dx is None:
-            return CheckBoundResult(bounded=True, bound_certificate=(left, right))
+            return CheckBoundResult2D(bounded=True, bound_certificate=(left, right))
 
-        # dx exist, which means the direction of unboundedness is (dx,1)
+        # dx exist, which means the direction of unboundness is (dx,1)
         H_prime: List[Constraints] = []
         for idx, vector in enumerate(cons_facing_normal_vector):
             eta_x = vector.get(0)
@@ -134,18 +110,17 @@ class ConvexSolver(Solver):
             dx_prime, __, _ = solve_1d_linear_program_with_left_and_right_index(
                 one_d_again, True)
             if dx_prime == None:
-                raise NoSolutionException(
-                    "No solution as the constraints are parallel and share no common area", stage="check_unbounded")
+                # what should the three D certificate be?
+                raise NoSolutionException2D(stage="Check Unboundness", three_d_bounded_certificate=None)
 
-        result = CheckBoundResult(
+        result = CheckBoundResult2D(
             bounded=False, unbound_certificate=cons[left], unbounded_index=left)
         return result
 
     def solve_with_3d_certificate(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
         bound_res = self.check_unbounded(obj, cons)
         if not bound_res.bounded:
-            raise UnboundedException(
-                "The problem is unbounded", unbounded_certificate=bound_res.unbound_certificate, unbounded_index=bound_res.unbounded_index)
+            raise UnboundedException2D(stage="Solve For Certificate",unbounded_index=bound_res.unbounded_index)
 
         h1_idx = bound_res.bound_certificate[0]
         h2_idx = bound_res.bound_certificate[1]
@@ -173,9 +148,8 @@ class ConvexSolver(Solver):
             x, left, right = solve_1d_linear_program_with_left_and_right_index(
                 one_d_constraints, get_one_d_optimize_direction(obj, c))
             if x is None:
-
-                raise NoSolutionException("3D", stage="solve_for_three_dimension", three_d_bound_certificate=(
-                    altered_index[idx], altered_index[left], altered_index[right]))
+                d3_certificate = (altered_index[idx], altered_index[left], altered_index[right])
+                raise NoSolutionException2D(stage="Solve For Three D Certificate", three_d_bounded_certificate=d3_certificate)
             v = point_find_func(x)
 
         return v
@@ -186,7 +160,13 @@ class ConvexSolver(Solver):
         h2_read_idx = cons.index(h2)
         cons[1], cons[h2_read_idx] = cons[h2_read_idx], cons[1]
         return h1,h2
-        
-def solve_with_convex(program) -> Point:
-    solver = ConvexSolver()
-    return solver.solve(program[0], program[1])
+    
+    @staticmethod    
+    def solve_with_convex(obj,cons) -> Point:
+        solver = ConvexSolver()
+        try:
+            return solver.solve(obj, cons)
+        except NoSolutionException2D:
+            return "INFEASIBLE"
+        except UnboundedException2D:
+            return "UNBOUNDED"

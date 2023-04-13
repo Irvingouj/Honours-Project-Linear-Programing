@@ -1,5 +1,5 @@
 import unittest
-from linear_programming.solvers import OsToolSolver, Convex3DSolver
+from linear_programming.solvers import OrToolSolver, Convex3DSolver
 from linear_programming.utils.linear_program_generator import gen_random_3d_unbounded
 from linear_programming.utils.problem_writer import write_bad_program_no_analysis
 
@@ -9,7 +9,7 @@ from linear_programming.utils.types import Program3d
 class UnboundedTest(unittest.TestCase):
     def __test_problem(self, program: Program3d):
         obj, cons = program
-        os_solver = OsToolSolver()
+        os_solver = OrToolSolver()
         os_res = os_solver.solve_three_d(obj, cons)
 
         con_solver = Convex3DSolver()

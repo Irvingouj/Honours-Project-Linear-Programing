@@ -1,11 +1,11 @@
-from linear_programming.solvers.osToolSolver import OsToolSolver
+from linear_programming.solvers.or_tool_solver import OrToolSolver
 import unittest
 
 
 class TestOsToolSolver(unittest.TestCase):
     def test_import(self):
-        self.assertTrue(OsToolSolver)
-        solver = OsToolSolver()
+        self.assertTrue(OrToolSolver)
+        solver = OrToolSolver()
 
 
 if __name__ == '__main__':
