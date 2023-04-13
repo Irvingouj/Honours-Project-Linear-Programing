@@ -8,7 +8,7 @@ from linear_programming.classes.two_d.point import Point
 from .solver import Solver
 from .convex_solver import ConvexSolver
 from ..classes.three_d import Constraints3D, ObjectiveFunction3D, Point3D
-from ..utils.exceptions import AbnormalException, NoSolutionException2D, NoSolutionException3D, UnboundedException2D, UnboundedException3D
+from ..utils.exceptions import AbnormalException, NoSolutionException, NoSolutionException2D, NoSolutionException3D, UnboundedException, UnboundedException2D, UnboundedException3D
 from ..utils.types import CheckBoundResult3D, Program3d
 
 
@@ -92,9 +92,9 @@ class Convex3DSolver(Solver):
 
             try:
                 res = ConvexSolver().solve(two_d_obj, two_d_cons)
-            except NoSolutionException2D as err:
+            except NoSolutionException as err:
                 raise NoSolutionException3D(stage="2D Infeasible") from err
-            except UnboundedException2D as err:
+            except UnboundedException as err:
                 # we should never get here
                 raise err
 

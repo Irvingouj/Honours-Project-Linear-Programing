@@ -38,6 +38,9 @@ class UnboundedException3D(UnboundedException):
         super().__init__(*args, stage=stage)
         self.unbounded_index = unbounded_index
 
+class NoSolutionException1D(NoSolutionException):
+    def __init__(self, *args: object, stage: str) -> None:
+        super().__init__(*args, stage=stage)
 
 class NoSolutionException2D(NoSolutionException):
     def __init__(self, *args: object, stage: str, three_d_bounded_certificate=Tuple[int, int, int]) -> None:
