@@ -6,7 +6,7 @@ import uuid
 
 import numpy as np
 from linear_programming.classes.two_d import ObjectiveFunction
-from linear_programming.utils.exceptions import NoSolutionException, ResultNotEqualException, UnboundedException, PerceptionException
+from linear_programming.utils.exceptions import NoSolutionException, NoSolutionException2D, ResultNotEqualException, UnboundedException, PerceptionException, UnboundedException2D
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded, gen_random_3d_feasible, gen_random_3d_infeasible, gen_random_3d_unbounded
 from linear_programming.utils.problem_reader import PROJECT_ROOT, ProblemType
 from linear_programming.utils.problem_writer import write_bad_3d_program, write_bad_program, write_bad_program_no_analysis, write_report
@@ -47,15 +47,17 @@ def solve_calculate_time(program) -> Tuple[float, float]:
     try:
         con_res = convex_solver.solve(program[0], program[1])
         obj:ObjectiveFunction = program[0]
-        if np.isclose(obj.value(os_res) ,obj.value(con_res)):
+        print(f"convex solver result: {con_res} \n")
+        print(f"os tool solver result: {os_res} \n")
+        if not np.isclose(obj.value(os_res) ,obj.value(con_res)):
             write_bad_program(program, con_res, os_res, "result not equal")
             raise ResultNotEqualException("result not equal")
-    except NoSolutionException:
+    except NoSolutionException2D:
         if os_res != "INFEASIBLE":
             thread = threading.Thread(target=write_bad_program_no_analysis, args=(
                 program, "INFEASIBLE", os_res, f"convex solver has no solution but os tool has {os_res} \n"))
             thread.start()
-    except UnboundedException:
+    except UnboundedException2D:
         if os_res != "UNBOUNDED":
             thread = threading.Thread(target=write_bad_program_no_analysis, args=(
                 program, "UNBOUNDED", os_res,
