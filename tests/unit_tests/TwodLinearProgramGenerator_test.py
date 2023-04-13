@@ -1,6 +1,6 @@
 import unittest
 from  linear_programming.utils.linear_program_generator import gen_random_2d_feasible
-from linear_programming.solvers.osToolSolver import OsToolSolver
+from linear_programming.solvers.or_tool_solver import OsToolSolver
 import os
 
 

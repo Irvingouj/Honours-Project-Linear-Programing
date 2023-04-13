@@ -7,7 +7,7 @@ from linear_programming.classes.two_d import Constraints, GreaterOrLess, Objecti
 from linear_programming.classes.two_d.point import Point
 from linear_programming.classes.vector import Vector
 from .solver import Solver
-from .convexSolver import ConvexSolver
+from .convex_solver import ConvexSolver
 from ..classes.three_d import Constraints3D, ObjectiveFunction3D, Point3D
 from ..utils.exceptions import NoSolutionException, UnboundedException
 from ..utils.types import Program3d

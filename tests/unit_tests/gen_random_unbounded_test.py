@@ -1,6 +1,6 @@
 import unittest
 import linear_programming.utils.linear_program_generator as gen
-from linear_programming.solvers.osToolSolver import OsToolSolver
+from linear_programming.solvers.or_tool_solver import OsToolSolver
 import linear_programming.utils.compare_time as compare
 
 
