@@ -122,14 +122,14 @@ class Convex3DSolver(Solver):
         two_d_cons = [Constraints(v[0], v[1], lessOrGreater=GreaterOrLess.GREATER, c=-v[2]) for v in facing_direction_vecs]
         try:
             obj = ObjectiveFunction(1,1)
-            res = ConvexSolver().solve_with_3d_certificate(obj, two_d_cons)
+            res,active_idx = ConvexSolver().solve_with_3d_certificate(obj, two_d_cons)
         except NoSolutionException2D as err:
             if err.three_d_bound_certificate is not None:
-                return CheckBoundResult3D(is_bounded=True, ray=None, certificates=err.three_d_bound_certificate)
+                return CheckBoundResult3D(is_bounded=True,certificates=err.three_d_bound_certificate)
             raise AbnormalException("This may have a solution, but we can't find it") from err
         except UnboundedException2D as err:
-            return CheckBoundResult3D(is_bounded=False, ray=f"TODO:find ray {err}", certificates=None)
-        return CheckBoundResult3D(is_bounded=False, ray=f"TODO:find ray {res}", certificates=None)
+            return CheckBoundResult3D(is_bounded=False,certificates=cons[err.unbounded_index])
+        return CheckBoundResult3D(is_bounded=False, certificates=active_idx)
 
     @staticmethod
     def switch_index(h1_idx, h2_idx,h3_idx, cons) -> Tuple[Constraints3D, Constraints3D, Constraints3D]:

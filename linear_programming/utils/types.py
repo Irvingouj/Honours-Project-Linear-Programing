@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Tuple, List
+from typing import Tuple, List, Union
 
 Program = Tuple['ObjectiveFunction', List['Constraints']]
 Program3d = Tuple['ObjectiveFunction3D', List['Constraints3D']]
@@ -46,9 +46,8 @@ class CheckBoundResult2D:
 
 
 class CheckBoundResult3D:
-    def __init__(self, is_bounded, ray, certificates):
+    def __init__(self, is_bounded, certificates:Union[Tuple[int,int,int],Tuple[int,int]]):
         self.is_bounded = is_bounded
-        self.ray = ray
         self.certificates = certificates
 
     def __str__(self):

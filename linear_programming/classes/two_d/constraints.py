@@ -79,7 +79,7 @@ class Constraints:
         return Point((self.c - self.b * y) / self.a, y)
 
     def is_vertical(self) -> bool:
-        return np.isclose(self.a, 0)
+        return np.isclose(self.b, 0)
 
     def rotate(self) -> 'Constraints':
         return Constraints(self.b, -self.a, c=self.c)

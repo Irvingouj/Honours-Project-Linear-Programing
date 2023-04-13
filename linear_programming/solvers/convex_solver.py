@@ -84,8 +84,7 @@ class ConvexSolver(Solver):
             c.facing_normal_vector() for c in rotated_cons]
         one_d_cons = [OneDConstraint(-c.arr[0], c.arr[1])
                       for c in cons_facing_normal_vector]
-        dx, left, right = solve_1d_linear_program_with_left_and_right_index(
-            one_d_cons, True)
+        dx, left, right = solve_1d_linear_program_with_left_and_right_index(one_d_cons, True)
 
         # no solution, the problem is bounded
         if dx is None:
@@ -113,14 +112,13 @@ class ConvexSolver(Solver):
                 # what should the three D certificate be?
                 raise NoSolutionException2D(stage="Check Unboundness", three_d_bounded_certificate=None)
 
-        result = CheckBoundResult2D(
-            bounded=False, unbound_certificate=cons[left], unbounded_index=left)
+        result = CheckBoundResult2D(bounded=False, unbound_certificate=cons[left], unbounded_index=[left, right])
         return result
 
     def solve_with_3d_certificate(self, obj: ObjectiveFunction, cons: List[Constraints]) -> Point:
         bound_res = self.check_unbounded(obj, cons)
         if not bound_res.bounded:
-            raise UnboundedException2D(stage="Solve For Certificate",unbounded_index=bound_res.unbounded_index)
+            raise UnboundedException2D(stage="Solve For Certificate",unbounded_index=bound_res.unbounded_index )
 
         h1_idx = bound_res.bound_certificate[0]
         h2_idx = bound_res.bound_certificate[1]
@@ -137,6 +135,7 @@ class ConvexSolver(Solver):
 
         point_find_func = None
         v = h1.find_intersection(h2)
+        active_idx = [0, 1]
         for idx, c in enumerate(cons):
             assert not np.isinf(v.x) and not np.isnan(
                 v.y), "v never should be inf or nan"
@@ -145,14 +144,16 @@ class ConvexSolver(Solver):
 
             one_d_constraints = to_1d_constraint(c, cons=cons[:idx])
             point_find_func = c.find_point_with_x if not c.is_vertical() else c.find_point_with_y
-            x, left, right = solve_1d_linear_program_with_left_and_right_index(
-                one_d_constraints, get_one_d_optimize_direction(obj, c))
+            one_d_obj = get_one_d_optimize_direction(obj, c)
+            x, left, right = solve_1d_linear_program_with_left_and_right_index(one_d_constraints, one_d_obj)
+            active_idx[0] = idx
+            active_idx[1] = right if one_d_obj else left
             if x is None:
                 d3_certificate = (altered_index[idx], altered_index[left], altered_index[right])
                 raise NoSolutionException2D(stage="Solve For Three D Certificate", three_d_bounded_certificate=d3_certificate)
             v = point_find_func(x)
 
-        return v
+        return v,active_idx
 
     def switch_index(self, h1_idx: int, h2_idx: int, cons: List[Constraints]) -> Tuple(Constraints, Constraints):
         h1,h2 = cons[h1_idx],cons[h2_idx]
