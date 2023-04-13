@@ -160,7 +160,13 @@ class ConvexSolver(Solver):
         h2_read_idx = cons.index(h2)
         cons[1], cons[h2_read_idx] = cons[h2_read_idx], cons[1]
         return h1,h2
-        
-def solve_with_convex(program) -> Point:
-    solver = ConvexSolver()
-    return solver.solve(program[0], program[1])
+    
+    @staticmethod    
+    def solve_with_convex(program) -> Point:
+        solver = ConvexSolver()
+        try:
+            return solver.solve(program[0], program[1])
+        except NoSolutionException2D:
+            return "INFEASIBLE"
+        except UnboundedException2D:
+            return "UNBOUNDED"

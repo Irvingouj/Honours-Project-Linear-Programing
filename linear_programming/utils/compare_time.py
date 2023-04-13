@@ -10,7 +10,7 @@ from linear_programming.utils.exceptions import NoSolutionException, ResultNotEq
 from linear_programming.utils.linear_program_generator import gen_random_2d_feasible, gen_random_2d_infeasible, gen_random_2d_unbounded, gen_random_3d_bounded, gen_random_3d_infeasible, gen_random_3d_unbounded
 from linear_programming.utils.problem_reader import PROJECT_ROOT, ProblemType
 from linear_programming.utils.problem_writer import write_bad_3d_program, write_bad_program, write_bad_program_no_analysis, write_report
-from linear_programming.solvers import Convex3DSolver, OsToolSolver,ConvexSolver
+from linear_programming.solvers import Convex3DSolver, OrToolSolver,ConvexSolver
 
 TIME_DATA_DIR_2d = PROJECT_ROOT.joinpath("time_data").joinpath("2d")
 TIME_DATA_DIR_3d = PROJECT_ROOT.joinpath("time_data").joinpath("3d")
@@ -35,7 +35,7 @@ def solve_calculate_time(program) -> Tuple[float, float]:
 
     """
     convex_solver = ConvexSolver()
-    os_tool_solver = OsToolSolver()
+    os_tool_solver = OrToolSolver()
 
     os_time_start = time.time()
     os_res = os_tool_solver.solve(program[0], program[1])
@@ -73,7 +73,7 @@ def retry(size, gen_func):
         retry(size, gen_func)
 
 
-def test_with_time(problem_type: ProblemType, range: range, result_name: str = "result.txt") -> str:
+def test_with_time(problem_type: ProblemType, rang: range, result_name: str = "result.txt") -> str:
 
     gen_func = None
     if problem_type == ProblemType.UNBOUNDED:
@@ -90,7 +90,7 @@ def test_with_time(problem_type: ProblemType, range: range, result_name: str = "
 
     f = open(TIME_DATA_DIR_2d.joinpath(result_name), 'w', encoding='utf-8')
     f.write("n,convex_time,os_time\n")
-    for n in range:
+    for n in rang:
         print(f"testing for n = {n} \n")
         program = gen_func(num_constrains=n)
         try:
@@ -111,7 +111,7 @@ def solve_with_time_3d(obj,cons) -> Tuple[float,float]:
     c_total_time = time.time() - c_start_time
     
     o_start_time = time.time()
-    o_res = o_res = OsToolSolver.solve3d(obj,cons)
+    o_res = o_res = OrToolSolver.solve3d(obj,cons)
     o_total_time = time.time() - o_start_time
     
     if o_res != c_res:
@@ -120,7 +120,7 @@ def solve_with_time_3d(obj,cons) -> Tuple[float,float]:
     return c_total_time,o_total_time
 
 
-def test_with_time_3d(problem_type: ProblemType, rang:range):
+def test_with_time_3d(problem_type: ProblemType, rang:range, result_name:str = "result.txt"):
     match problem_type:
         case ProblemType.UNBOUNDED:
             gen_func = gen_random_3d_unbounded
@@ -131,27 +131,17 @@ def test_with_time_3d(problem_type: ProblemType, rang:range):
         case _:
             raise ValueError("problem type not supported")
     
-    data_file = open(TIME_DATA_DIR_3d.joinpath(f"{problem_type}_{str(uuid.uuid4())}"), 'w', encoding='utf-8')
-    n = 0
-    counter = 0
-    report = []
-    while True:
-        n = rang[counter]
+ 
+    f = open(TIME_DATA_DIR_3d.joinpath(result_name), 'w', encoding='utf-8')
+    f.write("n,convex_time,os_time\n")
+    for n in rang:
+        print(f"testing for n = {n} \n")
+        program = gen_func(num_constrains=n)
         try:
-            program = gen_func(num_constrains=n)
-            c_time,o_time = solve_with_time_3d(*program)
-            if c_time is None or o_time is None:
-                print("retrying, something went wrong,result do not match")
-                report.append(f"do not match + {len(report)}")
-                continue
-            print(f"n = {n}")
-            counter += 1
-            data_file.write(f"{n},{c_time},{o_time}\n")
-        except Exception as e:
-            print("retrying, something went wrong,error: ",type(e).__name__,e)
-            report.append(f"error occurs + {len(report)} + {type(e).__name__} + {e}")
-            continue
-        if counter >= len(rang):
-            break
-    write_report(f"{uuid.uuid4}",report)
-    data_file.close()
+            cons_time, os_time = solve_calculate_time(program)
+        except PerceptionException:
+            print("perception error")
+        csv.writer(f).writerow([n, cons_time, os_time])
+    f.close()
+
+    return TIME_DATA_DIR_3d.joinpath(result_name)
