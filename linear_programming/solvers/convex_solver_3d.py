@@ -164,5 +164,5 @@ class Convex3DSolver(Solver):
             return Convex3DSolver().solve(obj, cons)
         except NoSolutionException3D:
             return "INFEASIBLE" 
-        except UnboundedException2D:
+        except UnboundedException3D:
             return "UNBOUNDED"
