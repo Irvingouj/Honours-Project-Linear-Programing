@@ -124,7 +124,7 @@ class Convex3DSolver(Solver):
             obj = ObjectiveFunction(1,1)
             res,active_idx = ConvexSolver().solve_with_3d_certificate(obj, two_d_cons)
         except NoSolutionException2D as err:
-            if err.three_d_bound_certificate is not None:
+            if err.three_d_bound_certificate is not None and len(err.three_d_bound_certificate) == 3:
                 return CheckBoundResult3D(is_bounded=True,certificates=err.three_d_bound_certificate)
             raise AbnormalException("This may have a solution, but we can't find it") from err
         except UnboundedException2D as err:
@@ -153,7 +153,7 @@ class Convex3DSolver(Solver):
             A_inv = np.linalg.inv(A)
         except np.linalg.LinAlgError as err:
             # we should have some solution here
-            raise NoSolutionException3D(stage="3D No Intersection") from err
+            raise AbnormalException("The check bound returns Wrong Bounded Costraints") from err
 
         x = A_inv @ np.array([c1.d, c2.d, c3.d])
         return Point3D(x[0], x[1], x[2])

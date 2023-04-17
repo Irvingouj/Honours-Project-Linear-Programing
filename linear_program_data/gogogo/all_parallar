@@ -1,6 +1,8 @@
+# the problem is that the objective function is perpendicular to the constraints
 max -1x+-1y+-1z
 1x+1y+0z <=40
-1x+1y+0z >=-40
+#1x+1y+0z >=-40
+1x+2y+0z >=-40
 1x+-1y+0z <=40
 -1x+1y+0z <=40
 0x+0y+-1z <=-10

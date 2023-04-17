@@ -18,10 +18,10 @@ def to_1d_constraint(curr: Constraints, cons: List[Constraints]) -> List[OneDCon
 
     # convert the 2d constraint to 1d constraint
     one_d = []
-    for h in cons:
+    for idx,h in enumerate(cons):
         if h.is_parallel_but_share_no_common_area(curr):
             # What should the three d bound certificate be?
-            raise NoSolutionException2D(stage="Parallel Checking", three_d_bounded_certificate=None)
+            raise NoSolutionException2D(stage="Parallel Checking", three_d_bounded_certificate=[idx,len(cons)])
 
         p = curr.find_intersection(h)
         if p is not None:

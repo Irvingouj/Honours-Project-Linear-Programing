@@ -198,3 +198,16 @@ def gen_random_3d_infeasible(num_constrains: int,  max_value: int = 10) -> Progr
             cons.append(c.flip_sign())
 
     return (random_obj_3d(), cons)
+
+
+def gen_random_2d(n):
+    res = []
+    while len(res) < n:
+        res.append(random_constraint())
+    return (random_obj(), res)
+
+def gen_random_3d(n):
+    res = []
+    while len(res) < n:
+        res.append(random_constraint_3d())
+    return (random_obj_3d(), res)
