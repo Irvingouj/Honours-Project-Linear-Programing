@@ -17,8 +17,8 @@ def main():
 
     gen_parser = subparsers.add_parser('generate', help='Generate a linear program')
 
-    gen_parser.add_argument('-n', '--num_constrains', type=int)
-    gen_parser.add_argument('-t', '--type', type=str,choices=['bounded','infeasible','unbounded'])
+    gen_parser.add_argument('-n', '--num_constrains', type=int,default=10)
+    gen_parser.add_argument('-t', '--type', type=str,choices=['bounded','infeasible','unbounded'],default='bounded')
     gen_parser.add_argument('-d', '--dimension', type=int,default=2)
     gen_parser.add_argument('-f', '--file_path', type=str, default="program.txt")
 
